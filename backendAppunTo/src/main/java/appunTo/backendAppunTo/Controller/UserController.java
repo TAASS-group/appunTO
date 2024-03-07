@@ -25,7 +25,6 @@ public class UserController {
     // CREATE RANDOM USER
     @GetMapping ("/createRandom")
     public MyUser createRandomUser() {
-        // test
         MyUser user = new MyUser("User" + Math.random(), "user" + Math.random() + "@mail.com", "password", "user");
         return userRepository.save(user);
     }
