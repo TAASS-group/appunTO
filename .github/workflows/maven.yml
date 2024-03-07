@@ -12,7 +12,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'backend/**'
+      - 'backendAppunTo/**'
   pull_request:
     branches: [ "main" ]
 
