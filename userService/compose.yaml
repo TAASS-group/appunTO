@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        firebase_service_account_file: firebase_service_account_file.json
+    networks:
+      - internal
+
+  db:
+    image: postgres
+    restart: unless-stopped
+    volumes:
+      - volume:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    networks:
+      - internal
+
+volumes:
+  volume: {}
+
+networks:
+  internal:
+    driver: bridge

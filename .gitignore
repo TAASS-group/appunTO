@@ -23,3 +23,8 @@
 hs_err_pid*
 replay_pid*
 #test
+
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
