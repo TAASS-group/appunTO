@@ -27,7 +27,7 @@ public class CommentService {
         commentRepository.deleteAll();
     }
 
-    public Comment getCommentByCommitId(String commitId) {
+    public List<Comment> getCommentsByCommitId(String commitId) {
         return commentRepository.findCommentsByCommit_Id(commitId).orElse(null);
     }
 

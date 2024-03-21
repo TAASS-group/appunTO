@@ -25,13 +25,18 @@ public class FileServiceApplication {
 		return (args) -> {
 			MyFile file = new MyFile("TestPDF", "txt", "1KB", "D:\\Download\\CV5720132.pdf");
 			MyFile file2 = new MyFile("TestMD", "txt", "1KB", "D:\\Download\\provamd.md");
-			Commit commit1 = new Commit("Initial commit", "2021-07-01", "John Doe", file);
+			Commit commit1 = new Commit("Initial commit SIUUUUUUUM", "2021-07-01", "John Doe", file);
 			Commit commit2 = new Commit("Update README.md", "2021-07-02", "John Doe", file);
+
+			Comment comment1 = new Comment("John Doe", "text", commit1);
+			Comment comment2 = new Comment("John Doe", "text", commit1);
 
 			fileRepository.save(file);
 			fileRepository.save(file2);
 
 			commitRepository.saveAll(List.of(commit1, commit2));
+
+			commentRepository.saveAll(List.of(comment1, comment2));
 		};
 	}
 

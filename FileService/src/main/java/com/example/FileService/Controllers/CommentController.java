@@ -34,8 +34,8 @@ public class CommentController {
     }
 
     @GetMapping(path = "/getbycommit/{commitId}")
-    public Comment getCommentByCommitId(@PathVariable("commitId") String commitId) {
-        return commentService.getCommentByCommitId(commitId);
+    public List<Comment> getCommentByCommitId(@PathVariable("commitId") String commitId) {
+        return commentService.getCommentsByCommitId(commitId);
     }
 
     @GetMapping(path = "/get/{id}")
