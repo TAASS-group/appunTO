@@ -1,7 +1,9 @@
 package com.example.FileService;
 
+import com.example.FileService.Models.Comment;
 import com.example.FileService.Models.Commit;
 import com.example.FileService.Models.MyFile;
+import com.example.FileService.Repository.CommentRepository;
 import com.example.FileService.Repository.CommitRepository;
 import com.example.FileService.Repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +21,15 @@ public class FileServiceApplication {
 	}
 
 	@Bean
-	CommandLineRunner runner(FileRepository fileRepository, CommitRepository commitRepository) {
+	CommandLineRunner runner(FileRepository fileRepository, CommitRepository commitRepository, CommentRepository commentRepository) {
 		return (args) -> {
-			MyFile file = new MyFile("Test", "txt", "1KB", "C:/Users/username/Documents");
+			MyFile file = new MyFile("TestPDF", "txt", "1KB", "D:\\Download\\CV5720132.pdf");
+			MyFile file2 = new MyFile("TestMD", "txt", "1KB", "D:\\Download\\provamd.md");
 			Commit commit1 = new Commit("Initial commit", "2021-07-01", "John Doe", file);
 			Commit commit2 = new Commit("Update README.md", "2021-07-02", "John Doe", file);
+
 			fileRepository.save(file);
+			fileRepository.save(file2);
 
 			commitRepository.saveAll(List.of(commit1, commit2));
 		};
