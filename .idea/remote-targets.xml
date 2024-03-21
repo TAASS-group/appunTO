@@ -2,7 +2,7 @@
 <project version="4">
   <component name="RemoteTargetsManager">
     <targets>
-      <target name="app" type="docker-compose" uuid="2e277da7-9966-4c42-b177-70694239921f">
+      <target name="userService-app" type="docker-compose" uuid="2e277da7-9966-4c42-b177-70694239921f">
         <config>
           <option name="targetPlatform">
             <TargetPlatform />
@@ -10,6 +10,25 @@
           <option name="configurationFiles">
             <list>
               <option value="C:\Users\Andrea\Documents\appunTO\userService\compose.yaml" />
+            </list>
+          </option>
+          <option name="serviceName" value="app" />
+        </config>
+        <ContributedStateBase type="JavaLanguageRuntime">
+          <config>
+            <option name="homePath" value="/usr/lib/jvm/java-21-amazon-corretto" />
+            <option name="javaVersionString" value="21.0.2" />
+          </config>
+        </ContributedStateBase>
+      </target>
+      <target name="fileService-app" type="docker-compose" uuid="79f4119a-ab37-4c4a-aaa3-d1e1b5f2b7b7">
+        <config>
+          <option name="targetPlatform">
+            <TargetPlatform />
+          </option>
+          <option name="configurationFiles">
+            <list>
+              <option value="C:\Users\Andrea\Documents\appunTO\fileService\compose.yaml" />
             </list>
           </option>
           <option name="serviceName" value="app" />

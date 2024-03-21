@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="userService-app" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="appunTO.backend.userService" />
-    <target name="app" />
+    <target name="userService-app" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.appunto.userservice.UserServiceApplication" />
     <method v="2">
       <option name="Make" enabled="true" />

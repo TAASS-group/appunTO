@@ -24,7 +24,21 @@ hs_err_pid*
 replay_pid*
 #test
 
+# maven
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+# intellij
+# Default ignored files
+.idea/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+.idea/httpRequests/
+# Datasource local storage ignored files
+.idea/dataSources/
+.idea/dataSources.local.xml
+# GitHub Copilot persisted chat sessions
+.idea/copilot/chatSession
+*.iml

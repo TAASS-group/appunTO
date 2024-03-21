@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="fileService-app" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="appunTO.backend.fileService" />
+    <target name="fileService-app" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.appunto.fileservice.FileServiceApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="fileService-db" run_configuration_type="docker-deploy" />
+    </method>
+  </configuration>
+</component>
