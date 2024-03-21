@@ -9,7 +9,7 @@
           </option>
           <option name="configurationFiles">
             <list>
-              <option value="C:\Users\Andrea\Documents\appunTO\userService\compose.yaml" />
+              <option value="$PROJECT_DIR$\userService\compose.yaml" />
             </list>
           </option>
           <option name="serviceName" value="app" />
@@ -28,7 +28,7 @@
           </option>
           <option name="configurationFiles">
             <list>
-              <option value="C:\Users\Andrea\Documents\appunTO\fileService\compose.yaml" />
+              <option value="$PROJECT_DIR$\fileService\compose.yaml" />
             </list>
           </option>
           <option name="serviceName" value="app" />
