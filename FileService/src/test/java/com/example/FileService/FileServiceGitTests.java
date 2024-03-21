@@ -68,6 +68,12 @@ class FileServiceGitTests {
         }
     }
 
+    @Test
+    void commitHistory() {
+        Repository repository = GitUtils.openExistingRepository("test\\.git");
+        GitUtils.commitHistory(repository);
+    }
+
 
 
 }

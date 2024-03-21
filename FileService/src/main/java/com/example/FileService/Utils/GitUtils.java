@@ -107,82 +107,19 @@ public class GitUtils {
         }
     }
 
-    public void getCommitHistory(String repositoryPath) {
-
-    }
-
-    public static void getDiff(Repository repository, ObjectId oldHead, ObjectId head) {
-        // The {tree} will return the underlying tree-id instead of the commit-id itself!
-        // For a description of what the carets do see e.g. http://www.paulboxley.com/blog/2011/06/git-caret-and-tilde
-        // This means we are selecting the parent of the parent of the parent of the parent of current HEAD and
-        // take the tree-ish of it
-
-
-        // prepare the two iterators to compute the diff between
-        try (ObjectReader reader = repository.newObjectReader()) {
-            System.out.println("Printing diff between tree: " + oldHead + " and " + head);
-
-            CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-            oldTreeIter.reset(reader, oldHead);
-
-            CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-            newTreeIter.reset(reader, head);
-
-            // finally get the list of changed files
-            try (Git git = new Git(repository)) {
-                List<DiffEntry> diffs= git.diff()
-                        .setNewTree(newTreeIter)
-                        .setOldTree(oldTreeIter)
-                        .call();
-                System.out.println("Found: " + diffs.size() + " differences");
-                for (DiffEntry diff : diffs) {
-                    printDiff(diff);
-                }
-            } catch (GitAPIException e) {
-                throw new RuntimeException(e);
+    public static void commitHistory(Repository repository) {
+        try (Git git = new Git(repository)) {
+            Iterable<RevCommit> commits = git.log().all().call();
+            int count = 0;
+            for (RevCommit commit : commits) {
+                System.out.println("LogCommit: " + commit);
+                count++;
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /*public static void diffFile(Repository repo, String oldCommit,
-                                               String newCommit, String path) {
-        Config config = new Config();
-        config.setBoolean("diff", null, "renames", true);
-        DiffConfig diffConfig = config.get(DiffConfig.KEY);
-        try (Git git = new Git(repo)) {
-            List<DiffEntry> diffList = git.diff().
-                    setOldTree(prepareTreeParser(repo, oldCommit)).
-                    setNewTree(prepareTreeParser(repo, newCommit)).
-                    setPathFilter(FollowFilter.create(path, diffConfig)).
-                    call();
-            for (DiffEntry diff : diffList) {
-                printDiff(diff);
-            }
-            System.out.println("Found: " + diffList.size() + " differences");
-
+            System.out.println(count);
         } catch (IOException | GitAPIException e) {
-            throw new RuntimeException(e);
+            log.error("Error getting commit history", e);
         }
     }
-    private static AbstractTreeIterator prepareTreeParser(Repository repository, String objectId) throws IOException {
-        // from the commit we can build the tree which allows us to construct the TreeParser
-        //noinspection Duplicates
-        try (RevWalk walk = new RevWalk(repository)) {
-            RevCommit commit = walk.parseCommit(repository.resolve(objectId));
-            RevTree tree = walk.parseTree(commit.getTree().getId());
-
-            CanonicalTreeParser treeParser = new CanonicalTreeParser();
-            try (ObjectReader reader = repository.newObjectReader()) {
-                treeParser.reset(reader, tree.getId());
-            }
-
-            walk.dispose();
-
-            return treeParser;
-        }
-    }*/
 
     public static void diffFile(Repository repository, ObjectId oldCommit, ObjectId newCommit) {
         try (RevWalk revWalk = new RevWalk(repository)) {
