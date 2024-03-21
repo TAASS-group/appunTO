@@ -41,4 +41,3 @@ target/
 .idea/dataSources.local.xml
 # GitHub Copilot persisted chat sessions
 .idea/copilot/chatSession
-*.iml
