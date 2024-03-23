@@ -1,23 +1,29 @@
 package com.appunto.userservice.model;
 
 import com.google.firebase.auth.UserRecord;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.*;
 
-@Builder @Getter @Setter
+@Entity @Table(name = "users")
+@Data @Builder @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
 public class User {
-  private String displayName;
-  private String email;
-  private String phoneNumber;
-  private String photoUrl;
-  private @NonNull String uid;
+  private @NonNull @Id String uid;
+  private @Transient String displayName;
+  private @Transient String email;
+  private @Transient String phoneNumber;
+  private @Transient String photoUrl;
+  private String bio;
 
-  public static User fromUserRecord(UserRecord userRecord) {
-    return User.builder()
-        .displayName(userRecord.getDisplayName())
-        .email(userRecord.getEmail())
-        .phoneNumber(userRecord.getPhoneNumber())
-        .photoUrl(userRecord.getPhotoUrl())
-        .uid(userRecord.getUid())
-        .build();
+  public User populateFromFirebase(UserRecord userRecord) {
+    uid = userRecord.getUid();
+    displayName = userRecord.getDisplayName();
+    email = userRecord.getEmail();
+    phoneNumber = userRecord.getPhoneNumber();
+    photoUrl = userRecord.getPhotoUrl();
+
+    return this;
   }
 }
