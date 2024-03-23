@@ -1,0 +1,5 @@
+@docker-https-port = 62047
+@default-uid = GtO6PJ07MlTP5J2ALrEMFV7w4Pz1
+
+### getUserById
+GET http://localhost:{{docker-https-port}}/user/info?uid={{default-uid}}
