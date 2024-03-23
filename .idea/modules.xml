@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/appunTO.iml" filepath="$PROJECT_DIR$/.idea/appunTO.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userService/appunTO.backend.userService.iml" filepath="$PROJECT_DIR$/userService/appunTO.backend.userService.iml" />
     </modules>
   </component>
 </project>
