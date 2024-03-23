@@ -4,11 +4,13 @@ services:
       context: .
       args:
         firebase_service_account_file: firebase_service_account_file.json
+    container_name: app
     networks:
       - internal
 
   db:
     image: postgres
+    container_name: db
     restart: unless-stopped
     volumes:
       - data:/var/lib/postgresql/data
