@@ -23,7 +23,7 @@ public class UserServiceRESTController {
     User dbData = repositrory.findUserByUid(uid);
     if(dbData == null) dbData = createUser(uid);
 
-    log.info(STR."User \{uid} fetched");
+    log.info("User " + uid + " fetched");
 
     return dbData.populateFromFirebase(firebaseData);
   }
@@ -33,7 +33,7 @@ public class UserServiceRESTController {
     User user = User.builder().uid(uid).bio("").build();
     repositrory.save(user);
 
-    log.info(STR."User \{uid} created");
+    log.info("User " + uid + " created");
 
     return user;
   }
@@ -43,7 +43,7 @@ public class UserServiceRESTController {
     FirebaseAuth.getInstance().deleteUser(uid);
     repositrory.deleteById(uid);
 
-    log.info(STR."User \{uid} deleted");
+    log.info("User " + uid + " deleted");
   }
 
   @PostMapping("/update")
@@ -57,7 +57,7 @@ public class UserServiceRESTController {
     user.populateFromFirebase(firebaseData);
     repositrory.save(user);
 
-    log.info(STR."User \{user.getUid()} updated");
+    log.info("User " + user.getUid() + " updated");
 
     return user;
   }
@@ -65,7 +65,7 @@ public class UserServiceRESTController {
   @ExceptionHandler
   @ResponseStatus(HttpStatus.BAD_REQUEST) @ResponseBody
   public String handleFirebaseAuthException(FirebaseAuthException fae) {
-    String message = STR."Error \{fae.getErrorCode()}: \{fae.getMessage()}";
+    String message = "Error " + fae.getErrorCode() + ": " + fae.getMessage();
     log.warning(message);
     return message;
   }
