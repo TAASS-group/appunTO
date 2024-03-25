@@ -5,8 +5,12 @@ services:
       args:
         firebase_service_account_file: firebase_service_account_file.json
     container_name: app
+    depends_on:
+      - db
+      - rabbitmq
     networks:
       - internal
+      - rabbitmq
 
   db:
     image: postgres
@@ -22,9 +26,18 @@ services:
     networks:
       - internal
 
+  rabbitmq:
+    build:
+      context: ../rabbitMQ
+    restart: unless-stopped
+    container_name: rabbitMQ
+    networks:
+      - rabbitmq
+
+
 volumes:
   data: {}
 
 networks:
-  internal:
-    driver: bridge
+  internal: {}
+  rabbitmq: {}
