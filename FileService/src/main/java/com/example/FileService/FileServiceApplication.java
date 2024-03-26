@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.util.Date;
 import java.util.List;
 
 @SpringBootApplication
@@ -20,13 +21,13 @@ public class FileServiceApplication {
 		SpringApplication.run(FileServiceApplication.class, args);
 	}
 
-	@Bean
+/*	@Bean
 	CommandLineRunner runner(FileRepository fileRepository, CommitRepository commitRepository, CommentRepository commentRepository) {
 		return (args) -> {
-			MyFile file = new MyFile("TestPDF", "txt", "1KB", "D:\\Download\\CV5720132.pdf");
-			MyFile file2 = new MyFile("TestMD", "txt", "1KB", "D:\\Download\\provamd.md");
-			Commit commit1 = new Commit("Initial commit SIUUUUUUUM", "2021-07-01", "John Doe", file);
-			Commit commit2 = new Commit("Update README.md", "2021-07-02", "John Doe", file);
+			MyFile file = new MyFile("1", "D:\\Download\\CV5720132.pdf");
+			MyFile file2 = new MyFile("1", "D:\\Download\\provamd.md");
+			Commit commit1 = new Commit("Initial commit SIUUUUUUUM", new Date(), "John Doe", file);
+			Commit commit2 = new Commit("Update README.md", new Date(), "John Doe", file);
 
 			Comment comment1 = new Comment("John Doe", "text", commit1);
 			Comment comment2 = new Comment("John Doe", "text", commit1);
@@ -39,5 +40,7 @@ public class FileServiceApplication {
 			commentRepository.saveAll(List.of(comment1, comment2));
 		};
 	}
+	*/
+
 
 }

@@ -7,21 +7,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.diff.DiffConfig;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.*;
-import org.eclipse.jgit.revwalk.FollowFilter;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 @Slf4j
 public class GitUtils {
@@ -88,7 +84,7 @@ public class GitUtils {
 
     }
 
-    public static void commit(Repository repository, String message) {
+    public static ObjectId commit(Repository repository, String message) {
         try {
             if (repository == null) {
                 throw new IOException("Could not open repository at " + repository.getDirectory());
@@ -96,15 +92,15 @@ public class GitUtils {
 
             try (Git git = new Git(repository)) {
                 // and then commit the changes
-                git.commit()
+                 RevCommit commit = git.commit()
                         .setMessage(message)
                         .call();
-
-                System.out.println("Committed file to repository at " + repository.getDirectory());
+                 return commit.getId();
             }
         } catch (IOException | GitAPIException e) {
             log.error("Error adding file", e);
         }
+        return null;
     }
 
     public static void commitHistory(Repository repository) {
@@ -121,7 +117,7 @@ public class GitUtils {
         }
     }
 
-    public static void diffFile(Repository repository, ObjectId oldCommit, ObjectId newCommit) {
+    public static String diffFile(Repository repository, ObjectId oldCommit, ObjectId newCommit) {
         try (RevWalk revWalk = new RevWalk(repository)) {
 
             RevCommit oldCommitObj = revWalk.parseCommit(oldCommit);
@@ -133,21 +129,24 @@ public class GitUtils {
                         .setNewTree(prepareTreeParser(repository, newCommitObj))
                         .call();
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
+                StringBuilder diffText = new StringBuilder();
                 try (DiffFormatter formatter = new DiffFormatter(out)) {
                     formatter.setRepository(repository);
                     formatter.setContext(0); // 0 = no context, only changed lines
 
                     for (DiffEntry entry : diff) {
                         formatter.format(entry);
-                        String diffText = out.toString(StandardCharsets.UTF_8);
-                        System.out.println(diffText);
+                       //  String diffText = out.toString(StandardCharsets.UTF_8);
+                        diffText.append(out.toString(StandardCharsets.UTF_8));
                         out.reset(); // clear the buffer for the next entry
                     }
                 }
+                return diffText.toString();
             }
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private static AbstractTreeIterator prepareTreeParser(Repository repository, RevCommit commit) throws IOException {

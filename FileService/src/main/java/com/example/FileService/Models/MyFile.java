@@ -10,15 +10,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class MyFile {
     @Id
     private String id;
-    private String name;
-    private String type;
-    private String size;
     private String path;
+    private String courseId;
 
-    public MyFile(String name, String type, String size, String path) {
-        this.name = name;
-        this.type = type;
-        this.size = size;
+    public MyFile(String courseId, String path) {
         this.path = path;
+        this.courseId = courseId;
     }
 }

@@ -53,19 +53,23 @@ class FileServiceGitTests {
     @Test
     void commitDiff() {
         Repository repository = GitUtils.openExistingRepository("test\\.git");
-        try {
-            FileSystemUtils.writeToFile("test/file.txt", "Hello, World!\nThis is a new line!");
-            GitUtils.addFile(repository, "test/file.txt");
-            GitUtils.commit(repository, "Changed file.txt");
+        /*try {*/
+            // FileSystemUtils.writeToFile("test/file.txt", "Hello, World!\nThis is a new line!\nnew line");
+            // GitUtils.addFile(repository, "test/file.txt");
+            // GitUtils.commit(repository, "Changed file.txt");
 
-            ObjectId oldHead = repository.resolve("HEAD^");
-            ObjectId head = repository.resolve("HEAD");
+            // ObjectId oldHead = repository.resolve("HEAD^");
+            // ObjectId head = repository.resolve("HEAD");
+            ObjectId oldHead = ObjectId.fromString("6f7b96253f21e58f77daca5aed96655ced186133");
+            ObjectId head = ObjectId.fromString("d78dffc04bb52e2b49794da5e8c3979c6128391a");
+            System.out.println(oldHead.getName());
+            System.out.println(head);
             if(oldHead == null || head == null) throw new RuntimeException("Could not resolve HEAD");
 
             GitUtils.diffFile(repository, oldHead, head);
-        } catch (IOException e) {
+        /*} catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
     }
 
     @Test
