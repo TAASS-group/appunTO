@@ -1,0 +1,58 @@
+version: '2.1'
+
+services:
+  dbpostgresql:
+    container_name: postgres
+    image: "postgres"
+    ports:
+      - "5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+#    networks:
+#      - appbootrestnet
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_DB: appuntoDb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      restart: unless-stopped
+  pgadmin:
+        container_name: pgadmin4_container
+        image: dpage/pgadmin4
+        restart: always
+        environment:
+          PGADMIN_DEFAULT_EMAIL: admin@admin.com
+          PGADMIN_DEFAULT_PASSWORD: root
+          PGADMIN_LISTEN_PORT: 50
+        ports:
+          - "5050:50"
+        volumes:
+          - pgadmin-data:/var/lib/pgadmin
+        depends_on:
+          - dbpostgresql
+#        networks:
+#          - appbootrestnet
+#  app:
+#      build: .
+#      image: appbootrest
+#      container_name: appbootrest
+#      ports:
+#        - "8080:8080"
+#      depends_on:
+#        - dbpostgresql
+#      networks:
+#        - appbootrestnet
+#      environment:
+#       - SPRING_DATASOURCE_URL=jdbc:postgresql://dbpostgresql:5432/appuntoDb
+#       - SPRING_DATASOURCE_USERNAME=admin
+#       - SPRING_DATASOURCE_PASSWORD=admin
+#       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+volumes:
+  db-data:
+  pgadmin-data:
+#networks:
+#  appbootrestnet:
+#    driver: bridge
+# docker-compose build && docker-compose up
+
