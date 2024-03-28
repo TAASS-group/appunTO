@@ -31,11 +31,10 @@ public class UserServiceRESTController {
   @GetMapping("/create")
   public User createUser(@RequestParam String uid) {
     User user = User.builder().uid(uid).bio("").build();
-    repositrory.save(user);
 
     log.info("User " + uid + " created");
 
-    return user;
+    return repositrory.save(user);
   }
 
   @GetMapping("/delete")
@@ -55,11 +54,10 @@ public class UserServiceRESTController {
         .setPhotoUrl(user.getPhotoUrl());
     UserRecord firebaseData = FirebaseAuth.getInstance().updateUser(request);
     user.populateFromFirebase(firebaseData);
-    repositrory.save(user);
 
     log.info("User " + user.getUid() + " updated");
 
-    return user;
+    return repositrory.save(user);
   }
 
   @GetMapping("/enroll")
