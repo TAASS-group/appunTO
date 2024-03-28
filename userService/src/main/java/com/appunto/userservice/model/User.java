@@ -1,11 +1,10 @@
 package com.appunto.userservice.model;
 
 import com.google.firebase.auth.UserRecord;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Set;
 
 @Entity @Table(name = "users")
 @Data @Builder @AllArgsConstructor(access = AccessLevel.PRIVATE) @NoArgsConstructor
@@ -16,6 +15,7 @@ public class User {
   private @Transient String phoneNumber;
   private @Transient String photoUrl;
   private String bio;
+  private @Singular @ElementCollection Set<Long> enrolledCourses;
 
   public User populateFromFirebase(UserRecord userRecord) {
     uid = userRecord.getUid();

@@ -62,11 +62,33 @@ public class UserServiceRESTController {
     return user;
   }
 
+  @GetMapping("/enroll")
+  public User enroll(@RequestParam String uid, @RequestParam long courseId) throws FirebaseAuthException {
+    User user = getUserById(uid);
+    user.getEnrolledCourses().add(courseId);
+
+    log.info("User " + uid + " enrolled in course " + courseId);
+
+    return repositrory.save(user);
+  }
+
+  @GetMapping("/leave")
+  public User leave(@RequestParam String uid, @RequestParam long courseId) throws FirebaseAuthException {
+    User user = getUserById(uid);
+    user.getEnrolledCourses().remove(courseId);
+
+    log.info("User " + uid + " left course " + courseId);
+
+    return repositrory.save(user);
+  }
+
   @ExceptionHandler
   @ResponseStatus(HttpStatus.BAD_REQUEST) @ResponseBody
   public String handleFirebaseAuthException(FirebaseAuthException fae) {
     String message = "Error " + fae.getErrorCode() + ": " + fae.getMessage();
+
     log.warning(message);
+
     return message;
   }
 }
