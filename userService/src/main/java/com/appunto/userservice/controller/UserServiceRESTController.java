@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @Log
 @RestController @RequestMapping("/user")
 public class UserServiceRESTController {
+  private final UserServiceRepositrory repositrory;
 
-  @Autowired
-  private UserServiceRepositrory repositrory;
+  public UserServiceRESTController(UserServiceRepositrory repositrory) {
+    this.repositrory = repositrory;
+  }
 
   @GetMapping("/info")
   public User getUserById(@RequestParam String uid) throws FirebaseAuthException {
