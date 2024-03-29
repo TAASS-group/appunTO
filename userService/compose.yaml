@@ -29,8 +29,11 @@ services:
   rabbitmq:
     build:
       context: ../rabbitMQ
-    restart: unless-stopped
     container_name: rabbitMQ
+    restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672 # management
     networks:
       - rabbitmq
 
