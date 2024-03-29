@@ -1,14 +1,15 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="fileService-db" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+  <configuration default="false" name="userService-dependencies" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
         <option name="envFilePath" value="" />
         <option name="services">
           <list>
             <option value="db" />
+            <option value="rabbitmq" />
           </list>
         </option>
-        <option name="sourceFilePath" value="fileService/compose.yaml" />
+        <option name="sourceFilePath" value="userService/compose.yaml" />
       </settings>
     </deployment>
     <method v="2" />
