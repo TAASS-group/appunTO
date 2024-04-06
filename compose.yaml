@@ -38,6 +38,15 @@ services:
     networks:
       - internal
 
+  eurekaserver_app:
+    build:
+      context: eurekaServer
+    container_name: eurekaserver_app
+    ports:
+      - 8761:8761
+    networks:
+      - internal
+
 #  rabbitmq:
 #    build:
 #      context: rabbitMQ

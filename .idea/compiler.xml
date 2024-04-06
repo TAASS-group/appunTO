@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="appunTO.backend.fileService" />
+        <module name="appunTO.backend.eurekaServer" />
         <module name="appunTO.backend.userService" />
         <module name="appunTO.backend.apiGateway" />
       </profile>
@@ -16,6 +17,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="appunTO.backend.apiGateway" options="-parameters" />
+      <module name="appunTO.backend.eurekaServer" options="-parameters" />
       <module name="appunTO.backend.fileService" options="-parameters" />
       <module name="appunTO.backend.userService" options="-parameters" />
     </option>
