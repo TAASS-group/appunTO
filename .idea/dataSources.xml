@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="userService-db@localhost" uuid="c11b87e2-9afc-4f3f-9d7b-19b4437d9eb0">
+    <data-source source="LOCAL" name="userservice@localhost" uuid="d13ede87-f8c5-4efa-a2f1-8a0254f9f127">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
-      <imported>true</imported>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/userservice</jdbc-url>
       <jdbc-additional-properties>
