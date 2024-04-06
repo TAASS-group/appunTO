@@ -9,8 +9,11 @@ services:
       - userservice_db
     # - rabbitmq
     networks:
-      - userservice_internal
-      - internal
+      userservice_internal:
+      internal:
+        aliases:
+          - userservice
+
 
   userservice_db:
     image: postgres
@@ -30,6 +33,8 @@ services:
     build:
       context: apigateway
     container_name: apigateway_app
+    ports:
+      - 8080:8080
     networks:
       - internal
 
