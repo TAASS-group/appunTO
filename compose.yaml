@@ -7,13 +7,12 @@ services:
     container_name: userservice_app
     depends_on:
       - userservice_db
-    # - rabbitmq
+      - eurekaserver_app
     networks:
       userservice_internal:
       internal:
         aliases:
           - userservice
-
 
   userservice_db:
     image: postgres
@@ -33,6 +32,8 @@ services:
     build:
       context: apigateway
     container_name: apigateway_app
+    depends_on:
+      - eurekaserver_app
     ports:
       - 8080:8080
     networks:
@@ -45,7 +46,9 @@ services:
     ports:
       - 8761:8761
     networks:
-      - internal
+      internal:
+        aliases:
+          - eurekaserver
 
 #  rabbitmq:
 #    build:
