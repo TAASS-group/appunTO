@@ -2,7 +2,7 @@
 @default-uid = GtO6PJ07MlTP5J2ALrEMFV7w4Pz1
 
 ### test
-GET localhost:8080/user/info?uid={{default-uid}}
+GET http://localhost:8080/user/info?uid={{default-uid}}
 
 ### getUserById
 GET http://localhost:{{docker-https-port}}/user/info?uid={{default-uid}}
