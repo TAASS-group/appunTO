@@ -26,7 +26,9 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
     networks:
-      - userservice_internal
+      userservice_internal:
+        aliases:
+          - userservicedb
 
   apigateway_app:
     build:
