@@ -18,11 +18,11 @@ public class User {
   private @Singular @ElementCollection Set<Long> enrolledCourses;
 
   public User populateFromFirebase(UserRecord userRecord) {
-    uid = userRecord.getUid();
-    displayName = userRecord.getDisplayName();
-    email = userRecord.getEmail();
-    phoneNumber = userRecord.getPhoneNumber();
-    photoUrl = userRecord.getPhotoUrl();
+    uid = userRecord.getUid() != null ? userRecord.getUid() : "";
+    displayName = userRecord.getDisplayName() != null ? userRecord.getDisplayName() : "";
+    email = userRecord.getEmail() != null ? userRecord.getEmail() : "";
+    phoneNumber = userRecord.getPhoneNumber() != null ? userRecord.getPhoneNumber() : "";
+    photoUrl = userRecord.getPhotoUrl() != null ? userRecord.getPhotoUrl() : "";
 
     return this;
   }
