@@ -1,1 +1,1 @@
-docker compose -f compose_dev.yaml --build $args
+docker compose -f compose_dev.yaml up --build
