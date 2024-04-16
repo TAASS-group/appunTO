@@ -7,7 +7,6 @@
         <artifactId>backend</artifactId>
         <version>dev</version>
     </parent>
-    <groupId>com.appunTO.backend</groupId>
     <artifactId>fileService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>fileService</name>
