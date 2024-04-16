@@ -3,6 +3,19 @@ Documentazione per il progetto di tecniche e archietture avanzate per lo svilupp
 
 **Autori**: Andrea Delmastro, Mattia Mondino, Simone Multari, Loris Signoretti 
 
+## Struttura del progetto
+Il progetto ha la seguente struttura:
+```
+appunTO
+└─── backend [modulo]
+     └─── apiGateway [modulo]
+     └─── eurekaServer [modulo]
+     └─── fileService [modulo]
+     └─── userService [modulo]
+     └─── rabbitMQ
+```
+dove i moduli Maven sono organizzati secondo una struttura gerarchica di pom file.
+
 ## Compilazione
 Per compilare i sorgenti è necessario eseguire il comando `build.ps1` (Windows) - `build.sh` (Linux/MacOS). Entrambi i metodi sfruttano il Maven wrapper.
 

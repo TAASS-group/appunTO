@@ -3,12 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.3</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.appunTO.backend</groupId>
+        <artifactId>backend</artifactId>
+        <version>dev</version>
     </parent>
-    <groupId>com.appunTO</groupId>
+    <groupId>com.appunTO.backend</groupId>
     <artifactId>fileService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>fileService</name>

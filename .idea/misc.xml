@@ -8,6 +8,11 @@
         <option value="$PROJECT_DIR$/fileService/pom.xml" />
         <option value="$PROJECT_DIR$/apiGateway/pom.xml" />
         <option value="$PROJECT_DIR$/eurekaServer/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/eurekaServer/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/userService/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/fileService/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/apiGateway/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/pom.xml" />
       </list>
     </option>
   </component>
