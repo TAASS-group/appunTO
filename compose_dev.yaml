@@ -1,52 +1,52 @@
 services:
-  userservice_app:
+  userservice-app:
     build:
       context: userservice
       args:
         firebase_service_account_file: firebase_service_account_file.json
-    container_name: userservice_app
+    container_name: userservice-app
     depends_on:
-      - userservice_db
-      - eurekaserver_app
+      - userservice-db
+      - eurekaserver-app
     ports:
       - 8081:8080
     networks:
-      userservice_internal:
+      userservice-internal:
       internal:
         aliases:
           - userservice
 
-  userservice_db:
+  userservice-db:
     image: postgres
-    container_name: userservice_db
+    container_name: userservice-db
     restart: unless-stopped
     volumes:
-      - userservice_db_data:/var/lib/postgresql/data
+      - userservice-db-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
     networks:
-      userservice_internal:
+      userservice-internal:
         aliases:
           - userservicedb
 
-  apigateway_app:
+  apigateway-app:
     build:
       context: apigateway
-    container_name: apigateway_app
+    container_name: apigateway-app
     depends_on:
-      - eurekaserver_app
+      - eurekaserver-app
     ports:
       - 8080:8080
     networks:
       - internal
 
-  eurekaserver_app:
+  eurekaserver-app:
     build:
       context: eurekaServer
-    container_name: eurekaserver_app
+    container_name: eurekaserver-app
     ports:
       - 8761:8761
     networks:
@@ -67,8 +67,8 @@ services:
 
 
 volumes:
-  userservice_db_data: {}
+  userservice-db-data: {}
 
 networks:
   internal : {}
-  userservice_internal: {}
+  userservice-internal: {}
