@@ -17,7 +17,8 @@ appunTO
 dove i moduli Maven sono organizzati secondo una struttura gerarchica di pom file.
 
 ## Compilazione
-Per compilare i sorgenti è necessario eseguire il comando `build.ps1` (Windows) - `build.sh` (Linux/MacOS). Entrambi i metodi sfruttano il Maven wrapper.
+### Backend
+Per compilare i sorgenti è necessario eseguire lo script `backend\build.ps1` (Windows) - `backend/build.sh` (Linux/MacOS). Entrambi i metodi sfruttano il Maven wrapper.
 
 ## Utilizzo e installazione
 ### Tramite Docker compose
