@@ -19,5 +19,6 @@
         <module>fileService</module>
         <module>userService</module>
         <module>courseService</module>
+        <module>forumService</module>
     </modules>
 </project>

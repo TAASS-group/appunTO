@@ -1,4 +1,4 @@
-package appunTo.courseService.Models;
+package com.appunTo.courseService.Models;
 
 
 import jakarta.persistence.Entity;

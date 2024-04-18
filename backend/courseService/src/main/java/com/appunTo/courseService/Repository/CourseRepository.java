@@ -1,6 +1,6 @@
-package appunTo.courseService.Repository;
+package com.appunTo.courseService.Repository;
 
-import appunTo.courseService.Models.Course;
+import com.appunTo.courseService.Models.Course;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 

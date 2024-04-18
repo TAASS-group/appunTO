@@ -14,6 +14,7 @@
         <module name="apiGateway" />
         <module name="fileService" />
         <module name="appunTO.backend.eurekaServer" />
+        <module name="forumService" />
         <module name="eurekaServer" />
         <module name="appunTO.backend.courseService" />
         <module name="userService" />
@@ -35,6 +36,7 @@
       <module name="eurekaServer" options="-parameters" />
       <module name="fileService" options="-parameters" />
       <module name="fileService (1)" options="-parameters" />
+      <module name="forumService" options="-parameters" />
       <module name="userService" options="-parameters" />
     </option>
   </component>

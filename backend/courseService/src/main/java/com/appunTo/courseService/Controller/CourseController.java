@@ -1,7 +1,7 @@
-package appunTo.courseService.Controller;
+package com.appunTo.courseService.Controller;
 
-import appunTo.courseService.Models.Course;
-import appunTo.courseService.Services.CourseService;
+import com.appunTo.courseService.Models.Course;
+import com.appunTo.courseService.Services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

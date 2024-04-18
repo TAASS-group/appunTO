@@ -1,10 +1,10 @@
-package appunTo.courseService;
+package com.appunto.forumservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ServiceCourseApplicationTests {
+class ServiceForumApplicationTests {
 
 	@Test
 	void contextLoads() {
