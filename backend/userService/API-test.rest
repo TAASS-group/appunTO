@@ -1,9 +1,9 @@
 @userservice-port = 8081
-@apigateway-pot = 8080
+@apigateway-port = 8080
 @default-uid = GtO6PJ07MlTP5J2ALrEMFV7w4Pz1
 
 ### getUserById
-GET http://localhost:{{userservice-port}}/user/info?uid={{default-uid}}
+GET http://localhost:{{apigateway-port}}/user/info?uid={{default-uid}}
 
 ### enroll
 GET http://localhost:{{userservice-port}}/user/enroll?uid={{default-uid}}&courseId=123

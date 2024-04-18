@@ -20,8 +20,6 @@ services:
     restart: unless-stopped
     volumes:
       - userservice-db-data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
@@ -45,8 +43,6 @@ services:
     build:
       context: backend/eurekaServer
     container_name: eurekaserver-app
-    ports:
-      - 8761:8761
     networks:
       internal:
         aliases:

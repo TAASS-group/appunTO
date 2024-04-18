@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="userService" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+    <deployment type="docker-compose.yml">
+      <settings>
+        <option name="envFilePath" value="" />
+        <option name="services">
+          <list>
+            <option value="userservice_app" />
+          </list>
+        </option>
+        <option name="sourceFilePath" value="compose_dev.yaml" />
+      </settings>
+    </deployment>
+    <method v="2">
+      <option name="Maven.BeforeRunTask" enabled="true" file="C:\Users\Andrea\Documents\appunTO\userService/pom.xml" goal="install" />
+    </method>
+  </configuration>
+</component>
