@@ -14,6 +14,7 @@
         <option value="$PROJECT_DIR$/backend/apiGateway/pom.xml" />
         <option value="$PROJECT_DIR$/backend/pom.xml" />
         <option value="$PROJECT_DIR$/backend/courseService/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/forumService/pom.xml" />
       </list>
     </option>
   </component>

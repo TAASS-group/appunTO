@@ -1,7 +1,7 @@
-package appunTo.courseService.Services;
+package com.appunTo.courseService.Services;
 
-import appunTo.courseService.Models.Course;
-import appunTo.courseService.Repository.CourseRepository;
+import com.appunTo.courseService.Models.Course;
+import com.appunTo.courseService.Repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
