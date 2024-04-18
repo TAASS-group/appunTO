@@ -18,5 +18,6 @@
         <module>apiGateway</module>
         <module>fileService</module>
         <module>userService</module>
+        <module>courseService</module>
     </modules>
 </project>

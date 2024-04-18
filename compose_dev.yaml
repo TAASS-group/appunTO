@@ -23,7 +23,7 @@ services:
     volumes:
       - userservice-db-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
@@ -31,6 +31,69 @@ services:
       userservice-internal:
         aliases:
           - userservicedb
+
+  fileservice-app:
+    build:
+      context: backend/fileService
+    container_name: fileservice-app
+    depends_on:
+      - fileservice-db
+      - eurekaserver-app
+    ports:
+      - 8082:8080
+    networks:
+      fileservice-internal:
+      internal:
+        aliases:
+          - fileservice
+
+  fileservice-db:
+    image: mongo
+    container_name: fileservice-db
+    ports:
+      - 27017:27017
+    volumes:
+      - fileservice-db-data:/data/db
+      - fileservice-db-config:/data/configdb
+    # environment: TODO: mettere a posto credenziali!
+      # MONGO_INITDB_ROOT_USERNAME: admin
+      # MONGO_INITDB_ROOT_PASSWORD: password
+      # MONGO_INITDB_DATABASE: fileservice
+    networks:
+      fileservice-internal:
+        aliases:
+          - fileservicedb
+
+  courseservice-app:
+    build:
+      context: backend/courseservice
+    container_name: courseservice-app
+    depends_on:
+      - courseservice-db
+      - eurekaserver-app
+    ports:
+      - 8083:8080
+    networks:
+      courseservice-internal:
+      internal:
+        aliases:
+          - courseservice
+
+  courseservice-db:
+    image: postgres
+    container_name: courseservice-db
+    restart: unless-stopped
+    volumes:
+      - courseservice-db-data:/var/lib/postgresql/data
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    networks:
+      courseservice-internal:
+        aliases:
+          - courseservicedb
 
   apigateway-app:
     build:
@@ -68,7 +131,12 @@ services:
 
 volumes:
   userservice-db-data: {}
+  fileservice-db-data: {}
+  fileservice-db-config: {}
+  courseservice-db-data: {}
 
 networks:
-  internal : {}
+  internal: {}
   userservice-internal: {}
+  fileservice-internal: {}
+  courseservice-internal: {}
