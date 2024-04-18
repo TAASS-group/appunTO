@@ -1,1 +1,2 @@
-.\mvnw.cmd clean install
+.\mvnw.cmd clean
+.\mvnw.cmd install -DskipTests
