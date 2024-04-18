@@ -95,6 +95,37 @@ services:
         aliases:
           - courseservicedb
 
+  forumservice-app:
+    build:
+      context: backend/forumService
+    container_name: forumservice-app
+    depends_on:
+      - forumservice-db
+      - eurekaserver-app
+    ports:
+      - 8084:8080
+    networks:
+      forumservice-internal:
+      internal:
+        aliases:
+          - forumservice
+
+  forumservice-db:
+    image: postgres
+    container_name: forumservice-db
+    restart: unless-stopped
+    volumes:
+      - forumservice-db-data:/var/lib/postgresql/data
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    networks:
+      forumservice-internal:
+        aliases:
+          - forumservicedb
+
   apigateway-app:
     build:
       context: backend/apigateway
@@ -134,9 +165,11 @@ volumes:
   fileservice-db-data: {}
   fileservice-db-config: {}
   courseservice-db-data: {}
+  forumservice-db-data: {}
 
 networks:
   internal: {}
   userservice-internal: {}
   fileservice-internal: {}
   courseservice-internal: {}
+  forumservice-internal: {}
