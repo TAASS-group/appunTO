@@ -1,13 +1,14 @@
 services:
-  userservice-app:
+  appunto-userservice-app:
     build:
       context: backend/userservice
       args:
         firebase_service_account_file: firebase_service_account_file.json
+    image: appunto-userservice-app
     container_name: userservice-app
     depends_on:
-      - userservice-db
-      - eurekaserver-app
+      - appunto-userservice-db
+      - appunto-eurekaserver-app
     ports:
       - 8081:8080
     networks:
@@ -16,7 +17,7 @@ services:
         aliases:
           - userservice
 
-  userservice-db:
+  appunto-userservice-db:
     image: postgres
     container_name: userservice-db
     restart: unless-stopped
@@ -32,13 +33,14 @@ services:
         aliases:
           - userservicedb
 
-  fileservice-app:
+  appunto-fileservice-app:
     build:
       context: backend/fileService
+    image: appunto-fileservice-app
     container_name: fileservice-app
     depends_on:
-      - fileservice-db
-      - eurekaserver-app
+      - appunto-fileservice-db
+      - appunto-eurekaserver-app
     ports:
       - 8082:8080
     networks:
@@ -47,7 +49,7 @@ services:
         aliases:
           - fileservice
 
-  fileservice-db:
+  appunto-fileservice-db:
     image: mongo
     container_name: fileservice-db
     ports:
@@ -64,13 +66,14 @@ services:
         aliases:
           - fileservicedb
 
-  courseservice-app:
+  appunto-courseservice-app:
     build:
       context: backend/courseservice
+    image: appunto-courseservice-app
     container_name: courseservice-app
     depends_on:
-      - courseservice-db
-      - eurekaserver-app
+      - appunto-courseservice-db
+      - appunto-eurekaserver-app
     ports:
       - 8083:8080
     networks:
@@ -79,7 +82,7 @@ services:
         aliases:
           - courseservice
 
-  courseservice-db:
+  appunto-courseservice-db:
     image: postgres
     container_name: courseservice-db
     restart: unless-stopped
@@ -95,13 +98,14 @@ services:
         aliases:
           - courseservicedb
 
-  forumservice-app:
+  appunto-forumservice-app:
     build:
       context: backend/forumService
+    image: appunto-forumservice-app
     container_name: forumservice-app
     depends_on:
-      - forumservice-db
-      - eurekaserver-app
+      - appunto-forumservice-db
+      - appunto-eurekaserver-app
     ports:
       - 8084:8080
     networks:
@@ -110,7 +114,7 @@ services:
         aliases:
           - forumservice
 
-  forumservice-db:
+  appunto-forumservice-db:
     image: postgres
     container_name: forumservice-db
     restart: unless-stopped
@@ -126,20 +130,22 @@ services:
         aliases:
           - forumservicedb
 
-  apigateway-app:
+  appunto-apigateway-app:
     build:
       context: backend/apigateway
+    image: appunto-apigateway-app
     container_name: apigateway-app
     depends_on:
-      - eurekaserver-app
+      - appunto-eurekaserver-app
     ports:
       - 8080:8080
     networks:
       - internal
 
-  eurekaserver-app:
+  appunto-eurekaserver-app:
     build:
       context: backend/eurekaServer
+    image: appunto-eurekaserver-app
     container_name: eurekaserver-app
     ports:
       - 8761:8761
