@@ -1,14 +1,13 @@
 services:
-  appunto-userservice-app:
+  userservice-app:
     build:
-      context: backend/userservice
+      context: ../../../backend/userService
       args:
         firebase_service_account_file: firebase_service_account_file.json
-    image: appunto-userservice-app
     container_name: userservice-app
     depends_on:
-      - appunto-userservice-db
-      - appunto-eurekaserver-app
+      - userservice-db
+      - eurekaserver-app
     ports:
       - 8081:8080
     networks:
@@ -17,7 +16,7 @@ services:
         aliases:
           - userservice
 
-  appunto-userservice-db:
+  userservice-db:
     image: postgres
     container_name: userservice-db
     restart: unless-stopped
@@ -33,14 +32,13 @@ services:
         aliases:
           - userservicedb
 
-  appunto-fileservice-app:
+  fileservice-app:
     build:
-      context: backend/fileService
-    image: appunto-fileservice-app
+      context: ../../../backend/fileService
     container_name: fileservice-app
     depends_on:
-      - appunto-fileservice-db
-      - appunto-eurekaserver-app
+      - fileservice-db
+      - eurekaserver-app
     ports:
       - 8082:8080
     networks:
@@ -49,7 +47,7 @@ services:
         aliases:
           - fileservice
 
-  appunto-fileservice-db:
+  fileservice-db:
     image: mongo
     container_name: fileservice-db
     ports:
@@ -66,14 +64,13 @@ services:
         aliases:
           - fileservicedb
 
-  appunto-courseservice-app:
+  courseservice-app:
     build:
-      context: backend/courseservice
-    image: appunto-courseservice-app
+      context: ../../../backend/courseservice
     container_name: courseservice-app
     depends_on:
-      - appunto-courseservice-db
-      - appunto-eurekaserver-app
+      - courseservice-db
+      - eurekaserver-app
     ports:
       - 8083:8080
     networks:
@@ -82,7 +79,7 @@ services:
         aliases:
           - courseservice
 
-  appunto-courseservice-db:
+  courseservice-db:
     image: postgres
     container_name: courseservice-db
     restart: unless-stopped
@@ -98,14 +95,13 @@ services:
         aliases:
           - courseservicedb
 
-  appunto-forumservice-app:
+  forumservice-app:
     build:
-      context: backend/forumService
-    image: appunto-forumservice-app
+      context: ../../../backend/forumService
     container_name: forumservice-app
     depends_on:
-      - appunto-forumservice-db
-      - appunto-eurekaserver-app
+      - forumservice-db
+      - eurekaserver-app
     ports:
       - 8084:8080
     networks:
@@ -114,7 +110,7 @@ services:
         aliases:
           - forumservice
 
-  appunto-forumservice-db:
+  forumservice-db:
     image: postgres
     container_name: forumservice-db
     restart: unless-stopped
@@ -130,22 +126,20 @@ services:
         aliases:
           - forumservicedb
 
-  appunto-apigateway-app:
+  apigateway-app:
     build:
-      context: backend/apigateway
-    image: appunto-apigateway-app
+      context: ../../../backend/apigateway
     container_name: apigateway-app
     depends_on:
-      - appunto-eurekaserver-app
+      - eurekaserver-app
     ports:
       - 8080:8080
     networks:
       - internal
 
-  appunto-eurekaserver-app:
+  eurekaserver-app:
     build:
-      context: backend/eurekaServer
-    image: appunto-eurekaserver-app
+      context: ../../../backend/eurekaServer
     container_name: eurekaserver-app
     ports:
       - 8761:8761

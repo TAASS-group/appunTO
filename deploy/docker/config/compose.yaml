@@ -1,7 +1,7 @@
 services:
   userservice-app:
     build:
-      context: backend/userService
+      context: ../../../backend/userService
       args:
         firebase_service_account_file: firebase_service_account_file.json
     container_name: userservice-app
@@ -41,7 +41,7 @@ services:
 
   eurekaserver-app:
     build:
-      context: backend/eurekaServer
+      context: ../../../backend/eurekaServer
     container_name: eurekaserver-app
     networks:
       internal:
