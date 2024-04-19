@@ -27,6 +27,7 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: userservice
     networks:
       userservice-internal:
         aliases:
@@ -90,6 +91,7 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: courseservice
     networks:
       courseservice-internal:
         aliases:
@@ -121,6 +123,7 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: forumservice
     networks:
       forumservice-internal:
         aliases:
