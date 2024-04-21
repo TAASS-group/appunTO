@@ -13,8 +13,6 @@ services:
     networks:
       userservice-internal:
       internal:
-        aliases:
-          - userservice
 
   userservice-db:
     image: postgres
@@ -30,8 +28,6 @@ services:
       POSTGRES_DB: userservice
     networks:
       userservice-internal:
-        aliases:
-          - userservicedb
 
   fileservice-app:
     build:
@@ -45,8 +41,6 @@ services:
     networks:
       fileservice-internal:
       internal:
-        aliases:
-          - fileservice
 
   fileservice-db:
     image: mongo
@@ -62,8 +56,6 @@ services:
       # MONGO_INITDB_DATABASE: fileservice
     networks:
       fileservice-internal:
-        aliases:
-          - fileservicedb
 
   courseservice-app:
     build:
@@ -77,8 +69,6 @@ services:
     networks:
       courseservice-internal:
       internal:
-        aliases:
-          - courseservice
 
   courseservice-db:
     image: postgres
@@ -94,8 +84,6 @@ services:
       POSTGRES_DB: courseservice
     networks:
       courseservice-internal:
-        aliases:
-          - courseservicedb
 
   forumservice-app:
     build:
@@ -109,8 +97,6 @@ services:
     networks:
       forumservice-internal:
       internal:
-        aliases:
-          - forumservice
 
   forumservice-db:
     image: postgres
@@ -126,8 +112,6 @@ services:
       POSTGRES_DB: forumservice
     networks:
       forumservice-internal:
-        aliases:
-          - forumservicedb
 
   apigateway-app:
     build:
@@ -148,8 +132,6 @@ services:
       - 8761:8761
     networks:
       internal:
-        aliases:
-          - eurekaserver
 
 #  rabbitmq:
 #    build:
