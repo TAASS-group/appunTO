@@ -1,18 +1,21 @@
 services:
   userservice-app:
     build:
-      context: ../../../backend/userService
+      context: ../../backend/userService
       args:
         firebase_service_account_file: firebase_service_account_file.json
     container_name: userservice-app
+    ports:
+      - 8080
     depends_on:
+      - apigateway-app
       - userservice-db
       - eurekaserver-app
-    ports:
-      - 8081:8080
     networks:
       userservice-internal:
       internal:
+    labels:
+      kompose.image-pull-policy: Never
 
   userservice-db:
     image: postgres
@@ -21,7 +24,7 @@ services:
     volumes:
       - userservice-db-data:/var/lib/postgresql/data
     ports:
-      - 5433:5432
+      - 5432
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
@@ -31,26 +34,29 @@ services:
 
   fileservice-app:
     build:
-      context: ../../../backend/fileService
+      context: ../../backend/fileService
     container_name: fileservice-app
+    ports:
+      - 8080
     depends_on:
+      - apigateway-app
       - fileservice-db
       - eurekaserver-app
-    ports:
-      - 8082:8080
     networks:
       fileservice-internal:
       internal:
+    labels:
+      kompose.image-pull-policy: Never
 
   fileservice-db:
     image: mongo
     container_name: fileservice-db
     ports:
-      - 27017:27017
+      - 27017
     volumes:
       - fileservice-db-data:/data/db
       - fileservice-db-config:/data/configdb
-    # environment: TODO: mettere a posto credenziali!
+      # environment: TODO: mettere a posto credenziali!
       # MONGO_INITDB_ROOT_USERNAME: admin
       # MONGO_INITDB_ROOT_PASSWORD: password
       # MONGO_INITDB_DATABASE: fileservice
@@ -61,14 +67,17 @@ services:
     build:
       context: ../../../backend/courseservice
     container_name: courseservice-app
+    ports:
+      - 8080
     depends_on:
+      - apigateway-app
       - courseservice-db
       - eurekaserver-app
-    ports:
-      - 8083:8080
     networks:
       courseservice-internal:
       internal:
+    labels:
+      kompose.image-pull-policy: Never
 
   courseservice-db:
     image: postgres
@@ -77,7 +86,7 @@ services:
     volumes:
       - courseservice-db-data:/var/lib/postgresql/data
     ports:
-      - 5434:5432
+      - 5432
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
@@ -87,16 +96,19 @@ services:
 
   forumservice-app:
     build:
-      context: ../../../backend/forumService
+      context: ../../backend/forumService
     container_name: forumservice-app
+    ports:
+      - 8080
     depends_on:
+      - apigateway-app
       - forumservice-db
       - eurekaserver-app
-    ports:
-      - 8084:8080
     networks:
       forumservice-internal:
       internal:
+    labels:
+      kompose.image-pull-policy: Never
 
   forumservice-db:
     image: postgres
@@ -105,7 +117,7 @@ services:
     volumes:
       - forumservice-db-data:/var/lib/postgresql/data
     ports:
-      - 5435:5432
+      - 5432
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
@@ -120,18 +132,23 @@ services:
     depends_on:
       - eurekaserver-app
     ports:
-      - 8080:8080
+      - 8080
     networks:
       - internal
+    labels:
+      kompose.image-pull-policy: Never
+      kompose.service.type: loadbalancer
 
   eurekaserver-app:
     build:
-      context: ../../../backend/eurekaServer
+      context: ../../backend/eurekaServer
     container_name: eurekaserver-app
     ports:
-      - 8761:8761
+      - 8761
     networks:
       internal:
+    labels:
+      kompose.image-pull-policy: Never
 
 #  rabbitmq:
 #    build:
