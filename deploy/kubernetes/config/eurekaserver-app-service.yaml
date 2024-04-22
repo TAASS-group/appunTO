@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f compose.yaml -o config/
+    kompose.image-pull-policy: Never
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: eurekaserver-app
+  name: eurekaserver-app
+spec:
+  ports:
+    - name: "8761"
+      port: 8761
+      targetPort: 8761
+  selector:
+    io.kompose.service: eurekaserver-app

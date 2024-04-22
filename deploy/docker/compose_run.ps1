@@ -1,0 +1,1 @@
+docker compose -p appunto -f compose.yaml up --build
