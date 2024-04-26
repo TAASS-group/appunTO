@@ -50,10 +50,10 @@ services:
     volumes:
       - fileservice-db-data:/data/db
       - fileservice-db-config:/data/configdb
-      # environment: TODO: mettere a posto credenziali!
-      # MONGO_INITDB_ROOT_USERNAME: admin
-      # MONGO_INITDB_ROOT_PASSWORD: password
-      # MONGO_INITDB_DATABASE: fileservice
+    environment: #TODO: mettere a posto credenziali!
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: fileservice
     networks:
       fileservice-internal:
 
