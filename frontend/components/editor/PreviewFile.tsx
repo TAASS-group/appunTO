@@ -8,6 +8,7 @@ import {
   ToolbarNames,
   StaticTextDefaultValue,
   ExposeParam,
+  Themes,
 } from "md-editor-rt";
 import "md-editor-rt/lib/preview.css";
 import "md-editor-rt/lib/style.css";
@@ -46,6 +47,7 @@ import {
 import { exportAsPdf } from "./export";
 import { Emoji, Mark, ExportPDF } from "@vavt/rt-extension";
 import "@vavt/rt-extension/lib/asset/style.css";
+import FileHistory from "./history/FileHistory";
 export default function PreviewFile() {
   const textprova = `## 😲 md-editor-rt
 
@@ -104,7 +106,9 @@ note、abstract、info、tip、success、question、warning、failure、danger�
 `;
 
   const [id] = useState("preview-only");
-  const [preview, setPreview] = useState(false);
+  const [status, setStatus] = useState<"edit" | "preview" | "history">(
+    "history"
+  );
   const [catalog, setCatalog] = useState(false);
   const [text, setText] = useState(textprova);
 
@@ -153,15 +157,15 @@ note、abstract、info、tip、success、question、warning、failure、danger�
       const el = document.getElementsByClassName(
         "md-editor-input-wrapper"
       )[0] as HTMLDivElement;
-      if (preview == true) {
+      if (status == "preview") {
         el.style.visibility = "hidden";
         el.style.width = "0";
-      } else {
+      } else if (status == "edit") {
         el.style.visibility = "visible";
         el.style.width = "50%";
       }
     }
-  }, [preview]);
+  }, [status]);
 
   const editorRef = useRef<ExposeParam>();
 
@@ -179,29 +183,32 @@ note、abstract、info、tip、success、question、warning、failure、danger�
     element.click();
   };
 
+  const exportPdfRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className="flex flex-col w-full overflow-hidden px-4 pt-8">
       <div className="flex flex-col">
         <div className="text-center">
-          <span className="text-xl">
-            <span className="font-semibold">Titolo appunto</span>{" "}
-            <span className="text-sm">written by</span>{" "}
-            <span className="font-semibold">Me</span>
-          </span>
+          <span className="text-2xl font-semibold">Title</span>
         </div>
         <div className="w-full flex justify-between py-4">
           <div className="flex gap-4">
-            <Button onClick={() => setPreview((prev) => !prev)}>
-              {preview ? "Edit" : "Preview"}
+            <Button
+              className=" capitalize"
+              onClick={() =>
+                setStatus((prev) => (prev != "edit" ? "edit" : "preview"))
+              }
+            >
+              {status != "edit" ? "edit" : "preview"}
             </Button>
-            <Button>asd</Button>
+            <Button onClick={() => setStatus("history")}>History</Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">Download</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="">
                 <DropdownMenuItem
-                  onClick={() => editorRef?.current?.triggerSave()}
+                  onClick={() => exportAsPdf(exportPdfRef.current)}
                 >
                   <User className="mr-2 h-4 w-4" />
                   <span>Pdf</span>
@@ -228,27 +235,29 @@ note、abstract、info、tip、success、question、warning、failure、danger�
           </div>
         </div>
       </div>
-      <ExportPDF key="ExportPDF" modelValue={text} height="700px" />
       <div>
-        <MdEditor
-          className="!w-full !max-w-full"
-          ref={editorRef}
-          editorId={id}
-          modelValue={text}
-          onChange={setText}
-          language={"en-US"}
-          defToolbars={[
-            <Mark key="mark-extension" />,
-            <Emoji key="emoji-extension" />,
-            <ExportPDF key="ExportPDF" modelValue={text} height="700px" />,
-          ]}
-          toolbars={preview ? previewToolbar : editToolbar}
-          onSave={(value, html) => {
-            html.then((h) => {
-              exportAsPdf(h);
-            });
+        {status === "history" ? (
+          <FileHistory />
+        ) : (
+          <MdEditor
+            className="!w-full !max-w-full"
+            ref={editorRef}
+            editorId={id}
+            modelValue={text}
+            theme={(theme as Themes) || "light"}
+            onChange={setText}
+            language={"en-US"}
+            defToolbars={[
+              <Mark key="mark-extension" />,
+              <Emoji key="emoji-extension" />,
+            ]}
+            toolbars={status == "preview" ? previewToolbar : editToolbar}
+            onSave={(value, html) => {
+              html.then((h) => {
+                exportAsPdf(h);
+              });
 
-            /* html.then((h) => {
+              /* html.then((h) => {
               const doc = new jsPDF();
               const htmltag = document.createElement("html");
               const bodytag = document.createElement("body");
@@ -267,8 +276,19 @@ note、abstract、info、tip、success、question、warning、failure、danger�
                 windowWidth: 650, //window width in CSS pixels
               });
             }); */
-          }}
-        />
+            }}
+          />
+        )}
+      </div>
+      <div className="hidden">
+        <div ref={exportPdfRef}>
+          <MdPreview
+            editorId={"daksjdk"}
+            modelValue={text}
+            theme={(theme as Themes) || "light"}
+            style={{ padding: "10mm" }}
+          />
+        </div>
       </div>
     </div>
   );
