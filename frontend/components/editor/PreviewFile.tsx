@@ -14,6 +14,7 @@ import "md-editor-rt/lib/preview.css";
 import "md-editor-rt/lib/style.css";
 import { Button } from "../ui/button";
 import { useTheme } from "next-themes";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,7 +49,12 @@ import { exportAsPdf } from "./export";
 import { Emoji, Mark, ExportPDF } from "@vavt/rt-extension";
 import "@vavt/rt-extension/lib/asset/style.css";
 import FileHistory from "./history/FileHistory";
+import { genericFetchRequest } from "@/lib/utils";
+import { useParams } from "next/navigation";
 export default function PreviewFile() {
+  const { course_id } = useParams();
+
+  const queryClient = useQueryClient();
   const textprova = `## 😲 md-editor-rt
 
 Markdown Editor for React, developed in jsx and typescript, support different themes、beautify content by prettier.
@@ -105,12 +111,40 @@ note、abstract、info、tip、success、question、warning、failure、danger�
 ## ☘️ em...
 `;
 
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["getFileContent", course_id],
+    queryFn: async () => {
+      const res = await genericFetchRequest(
+        `/file/getFileContent/${course_id}`,
+        "GET"
+      );
+      console.log(res);
+      return res.text();
+    },
+    enabled: !!course_id, // !! is a trick to convert a string to a boolean
+  });
+
+  // TODO: check if is the correct way to set the text
+  useEffect(() => {
+    if (data) {
+      setText(data);
+      setPreviusText(data);
+    }
+  }, [data]);
+
+  /* useEffect(() => {
+    if (error) {
+      alert("il corso cercato non esiste");
+    }
+  }, [error]); */
+
   const [id] = useState("preview-only");
   const [status, setStatus] = useState<"edit" | "preview" | "history">(
     "history"
   );
   const [catalog, setCatalog] = useState(false);
   const [text, setText] = useState(textprova);
+  const [previusText, setPreviusText] = useState(textprova);
 
   const previewToolbar: ToolbarNames[] = [
     "=",
@@ -170,8 +204,15 @@ note、abstract、info、tip、success、question、warning、failure、danger�
   const editorRef = useRef<ExposeParam>();
 
   const { theme } = useTheme();
-  const save = () => {
-    console.log(text);
+  const save = async () => {
+    //
+    await genericFetchRequest("/file/updatefile/test1", "POST", {
+      content: text,
+      author: "author",
+      message: "update to a new version",
+    });
+    alert("saved");
+    queryClient.invalidateQueries({ queryKey: ["getFileContent"] });
   };
 
   const downloadMd = () => {
@@ -221,14 +262,14 @@ note、abstract、info、tip、success、question、warning、failure、danger�
             </DropdownMenu>
           </div>
           <div className="flex gap-4">
-            <Button disabled={text == textprova} onClick={save}>
+            <Button disabled={text == previusText} onClick={save}>
               Save
             </Button>
             <Button
               variant={"outline"}
               className="border-destructive text-destructive"
-              disabled={text == textprova}
-              onClick={() => setText(textprova)}
+              disabled={text == previusText}
+              onClick={() => setText(previusText)}
             >
               Reset
             </Button>

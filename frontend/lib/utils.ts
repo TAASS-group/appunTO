@@ -55,3 +55,25 @@ export function parseDiffToJSON(diffText: string) {
 
   return result;
 }
+
+export async function genericFetchRequest(
+  url: string,
+  method: string,
+  body?: any,
+  headers?: Record<string, string>
+) {
+  const ret = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...headers,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!ret.ok) {
+    throw new Error(`Failed to fetch ${url}`);
+  }
+
+  return ret;
+}
