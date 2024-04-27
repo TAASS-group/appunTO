@@ -57,10 +57,14 @@ public class FileService {
         return fileRepository.findById(id).orElse(null);
     }
 
+    public MyFile getFileByCourseId(String courseId) {
+        return fileRepository.findByCourseId(courseId).orElse(null);
+    }
+
     public void deleteFileById(String id) {
         fileRepository.deleteById(id);
     }
-    public Commit updateFile(String fileId, String message, String author,  String text) {
+    public Commit updateFile(String fileId, String message, String author, String text) {
         MyFile file = fileRepository.findById(fileId).orElseThrow(() -> new IllegalArgumentException("Invalid file ID: " + fileId));
         return updateFile(file, message, author, text);
     }
