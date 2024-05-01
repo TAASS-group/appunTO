@@ -83,7 +83,6 @@ public class FileController {
             Commit commit = fileService.updateFile(file.getId(), message, author, content);
             if(commit == null) return ResponseEntity.notFound().build();
 
-
             return ResponseEntity.ok(commit);
         } catch (Exception e) {
             e.printStackTrace();
