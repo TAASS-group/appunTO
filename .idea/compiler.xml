@@ -10,6 +10,7 @@
         <module name="appunTO.backend.apiGateway" />
         <module name="appunTO.backend.userService" />
         <module name="courseService" />
+        <module name="messageService" />
         <module name="appunTO.backend.fileService" />
         <module name="apiGateway" />
         <module name="fileService" />
@@ -37,6 +38,7 @@
       <module name="fileService" options="-parameters" />
       <module name="fileService (1)" options="-parameters" />
       <module name="forumService" options="-parameters" />
+      <module name="messageService" options="-parameters" />
       <module name="userService" options="-parameters" />
     </option>
   </component>

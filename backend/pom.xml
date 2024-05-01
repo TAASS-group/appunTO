@@ -20,5 +20,6 @@
         <module>userService</module>
         <module>courseService</module>
         <module>forumService</module>
+        <module>messageService</module>
     </modules>
 </project>

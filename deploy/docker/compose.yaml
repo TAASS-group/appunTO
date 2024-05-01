@@ -36,6 +36,7 @@ services:
     depends_on:
       - fileservice-db
       - eurekaserver-app
+      - messageservice-app
     ports:
       - 8082:8080
     networks:
@@ -133,16 +134,34 @@ services:
     networks:
       internal:
 
-#  rabbitmq:
-#    build:
-#      context: rabbitMQ
-#    container_name: rabbitMQ
-#    restart: unless-stopped
-#    ports:
-#      - 5672:5672
-#      - 15672:15672 # management
-#    networks:
-#      - internal
+  messageservice-app:
+      build:
+        context: ../../backend/messageService
+      container_name: messageservice-app
+      depends_on:
+        - eurekaserver-app
+        - rabbitmq
+      ports:
+        - 8085:8080
+      networks:
+        internal:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # AMQP protocol port
+      - "15672:15672"   # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    volumes:
+      - ./data:/var/lib/rabbitmq
+      - ./log:/var/log/rabbitmq
+    restart: unless-stopped
+    networks:
+      internal:
+
 
 
 volumes:
