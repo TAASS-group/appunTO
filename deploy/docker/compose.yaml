@@ -162,8 +162,6 @@ services:
     networks:
       internal:
 
-
-
 volumes:
   userservice-db-data: {}
   fileservice-db-data: {}
