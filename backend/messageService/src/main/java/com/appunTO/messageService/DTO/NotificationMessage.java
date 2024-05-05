@@ -8,14 +8,17 @@ public class NotificationMessage implements Serializable {
     private String message;
     private String title;
 
+    private String courseId;
+
     // Constructors
     public NotificationMessage() {
     }
 
-    public NotificationMessage(String userId, String title, String message) {
+    public NotificationMessage(String userId, String title, String message, String courseId) {
         this.userId = userId;
         this.title = title;
         this.message = message;
+        this.courseId = courseId;
     }
 
     public void setUserId(String userId) {
@@ -40,6 +43,14 @@ public class NotificationMessage implements Serializable {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
     // toString method for logging purposes

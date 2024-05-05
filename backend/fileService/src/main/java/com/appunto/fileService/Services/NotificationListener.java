@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class NotificationListener {
-        @RabbitListener(queues = RabbitListenerConfig.QUEUE)
-        public void handleMessage(NotificationMessage message) {
-            System.out.println("Received notification: " + message);
-            // Implement logic to handle message, e.g., sending it to the frontend via WebSocket
-        }
+    @RabbitListener(queues = "test1.notifications")
+    public void receiveNotification(String message) {
+        System.out.println("Received notification for test1 course: " + message);
+        // Process notification as needed
+    }
 }
 
 
