@@ -1,6 +1,5 @@
 package com.appunTO.messageService.Services;
 
-import com.appunTO.messageService.Config.RabbitMqConfig;
 import com.appunTO.messageService.DTO.NotificationMessage;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ public class NotificationService {
     private RabbitTemplate rabbitTemplate;
 
     public void sendNotification(NotificationMessage message) {
-        rabbitTemplate.convertAndSend(RabbitMqConfig.EXCHANGE, "notification.user", message);
+       String routingKey = message.getCourseId();
+       rabbitTemplate.convertAndSend(RabbitMQService.EXCHANGE, "notification.test1", message);
     }
 }

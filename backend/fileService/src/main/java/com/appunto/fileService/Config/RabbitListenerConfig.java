@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitListenerConfig {
-    public static final String QUEUE = "userNotificationQueue";
+    public static final String QUEUE = "course.notification.queue";
 
     @Autowired
     private ConnectionFactory connectionFactory;
