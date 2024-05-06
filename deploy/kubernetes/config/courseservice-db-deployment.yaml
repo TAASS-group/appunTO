@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --file compose.yaml --out config
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: courseservice-db
+  name: courseservice-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: courseservice-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --file compose.yaml --out config
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/kubernetes-courseservice-internal: "true"
+        io.kompose.service: courseservice-db
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: courseservice
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: admin
+          image: postgres
+          name: courseservice-db
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: courseservice-db-data
+      restartPolicy: Always
+      volumes:
+        - name: courseservice-db-data
+          persistentVolumeClaim:
+            claimName: courseservice-db-data
