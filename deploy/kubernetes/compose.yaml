@@ -5,12 +5,12 @@ services:
       args:
         firebase_service_account_file: firebase_service_account_file.json
     container_name: userservice-app
-    ports:
-      - 8080
     depends_on:
       - apigateway-app
       - userservice-db
       - eurekaserver-app
+    ports:
+      - 8080
     networks:
       userservice-internal:
       internal:
@@ -36,12 +36,12 @@ services:
     build:
       context: ../../backend/fileService
     container_name: fileservice-app
-    ports:
-      - 8080
     depends_on:
       - apigateway-app
       - fileservice-db
       - eurekaserver-app
+    ports:
+      - 8080
     networks:
       fileservice-internal:
       internal:
@@ -65,14 +65,14 @@ services:
 
   courseservice-app:
     build:
-      context: ../../../backend/courseservice
+      context: ../../backend/courseservice
     container_name: courseservice-app
-    ports:
-      - 8080
     depends_on:
       - apigateway-app
       - courseservice-db
       - eurekaserver-app
+    ports:
+      - 8080
     networks:
       courseservice-internal:
       internal:
@@ -98,12 +98,12 @@ services:
     build:
       context: ../../backend/forumService
     container_name: forumservice-app
-    ports:
-      - 8080
     depends_on:
       - apigateway-app
       - forumservice-db
       - eurekaserver-app
+    ports:
+      - 8080
     networks:
       forumservice-internal:
       internal:
@@ -127,7 +127,7 @@ services:
 
   apigateway-app:
     build:
-      context: ../../../backend/apigateway
+      context: ../../backend/apigateway
     container_name: apigateway-app
     depends_on:
       - eurekaserver-app
@@ -178,15 +178,14 @@ services:
     networks:
       internal:
 
-
 volumes:
   userservice-db-data: {}
   fileservice-db-data: {}
   fileservice-db-config: {}
   courseservice-db-data: {}
   forumservice-db-data: {}
-  rabbitmq-data: { }
-  rabbitmq-log: { }
+  rabbitmq-data: {}
+  rabbitmq-log: {}
 
 networks:
   internal: {}
