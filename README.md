@@ -9,12 +9,21 @@ Il progetto ha la seguente struttura:
 appunTO
 └─── backend [modulo]
      └─── apiGateway [modulo]
+     └─── courseService [modulo]
      └─── eurekaServer [modulo]
      └─── fileService [modulo]
+     └─── formuService [module]
+     └─── messageService [module]
      └─── userService [modulo]
-     └─── rabbitMQ
 ```
-dove i moduli Maven sono organizzati secondo una struttura gerarchica di pom file.
+dove gni modulo ha la seguente struttura:
+```
+src [sorgenti]
+target [eseguibili]
+Dockerfile
+pom.xml
+```
+all'interno di una gerarchia Maven.
 
 ## Compilazione
 Nella cartella `backend` eseguire il comando `build.ps1` (Windows) - `build.sh` (Linux/MacOS). Entrambi i metodi 
