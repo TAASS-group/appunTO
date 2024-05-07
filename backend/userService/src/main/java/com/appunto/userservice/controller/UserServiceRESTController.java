@@ -9,14 +9,18 @@ import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 @Log
 @RestController @RequestMapping("/user")
 public class UserServiceRESTController {
   private final UserServiceRepositrory repositrory;
+  private final RestTemplate restTemplate;
 
-  public UserServiceRESTController(UserServiceRepositrory repositrory) {
+  @Autowired
+  public UserServiceRESTController(UserServiceRepositrory repositrory, RestTemplate restTemplate) {
     this.repositrory = repositrory;
+    this.restTemplate = restTemplate;
   }
 
   @GetMapping("/info")
