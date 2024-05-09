@@ -3,15 +3,14 @@ kind: Service
 metadata:
   annotations:
     kompose.cmd: kompose convert --file compose.yaml --out config
-    kompose.image-pull-policy: Never
     kompose.version: 1.32.0 (HEAD)
   labels:
-    io.kompose.service: userservice-app
-  name: userservice-app
+    io.kompose.service: messageservice-app
+  name: messageservice-app
 spec:
   ports:
     - name: "8080"
       port: 8080
       targetPort: 8080
   selector:
-    io.kompose.service: userservice-app
+    io.kompose.service: messageservice-app

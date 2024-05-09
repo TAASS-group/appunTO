@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert -f compose.yaml -o config/
+    kompose.cmd: kompose convert --file compose.yaml --out config
     kompose.version: 1.32.0 (HEAD)
   labels:
     io.kompose.service: forumservice-db
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f compose.yaml -o config/
+        kompose.cmd: kompose convert --file compose.yaml --out config
         kompose.version: 1.32.0 (HEAD)
       labels:
         io.kompose.network/kubernetes-forumservice-internal: "true"

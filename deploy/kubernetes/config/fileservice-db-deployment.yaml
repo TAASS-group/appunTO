@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert -f compose.yaml -o config/
+    kompose.cmd: kompose convert --file compose.yaml --out config
     kompose.version: 1.32.0 (HEAD)
   labels:
     io.kompose.service: fileservice-db
@@ -17,14 +17,21 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f compose.yaml -o config/
+        kompose.cmd: kompose convert --file compose.yaml --out config
         kompose.version: 1.32.0 (HEAD)
       labels:
         io.kompose.network/kubernetes-fileservice-internal: "true"
         io.kompose.service: fileservice-db
     spec:
       containers:
-        - image: mongo
+        - env:
+            - name: MONGO_INITDB_DATABASE
+              value: fileservice
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: root
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: admin
+          image: mongo
           name: fileservice-db
           ports:
             - containerPort: 27017
