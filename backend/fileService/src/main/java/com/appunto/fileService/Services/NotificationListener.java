@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class NotificationListener {
-    @RabbitListener(queues = "test1.notifications")
-    public void receiveNotification(String message) {
-        System.out.println("Received notification for test1 course: " + message);
-        // Process notification as needed
-    }
+//    @RabbitListener(queues = "test1.notifications")
+//    public void receiveNotification(String message) {
+//        System.out.println("Received notification for test1 course: " + message);
+//        // Process notification as needed
+//    }
 }
 
 
