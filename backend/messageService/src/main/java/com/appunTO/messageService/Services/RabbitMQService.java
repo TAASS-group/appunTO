@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class RabbitMQService {
     private final RabbitAdmin rabbitAdmin;
+    private final NotificationListener notificationListener;
     public static final String EXCHANGE = "appunto-exchange";
+
     public void createExchange() {
         log.info("Creating exchange");
         rabbitAdmin.declareExchange(new DirectExchange(EXCHANGE));
@@ -24,5 +26,6 @@ public class RabbitMQService {
         log.info("Creating queue");
         rabbitAdmin.declareQueue(new Queue(queueName));
         rabbitAdmin.declareBinding(new Binding(queueName, Binding.DestinationType.QUEUE, exchangeName, routingKey, null));
+        notificationListener.startListening(queueName);
     }
 }
