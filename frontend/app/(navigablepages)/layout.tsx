@@ -1,3 +1,4 @@
+import UserProfile from "@/components/auth/UserProfile";
 import { DarkmodeToggle } from "@/components/DarkmodeToggle";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -35,7 +36,7 @@ export default function NavigableLayout({
           <Input placeholder="Search" className="pl-8 " />
         </div>
         <div className=" w-1/3 flex justify-end ">
-          <DarkmodeToggle />
+          <UserProfile />
         </div>
       </header>
       <main>{children}</main>
