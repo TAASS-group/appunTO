@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Set;
+
 @Log
 @RestController @RequestMapping("/user")
 public class UserServiceRESTController {
@@ -85,6 +87,16 @@ public class UserServiceRESTController {
 
     return repositrory.save(user);
   }
+
+  @GetMapping("/enrolledCourses")
+  public Set<Long> getEnrolledCourses(@RequestParam String uid) {
+    Set<Long> enrolledCourses = repositrory.findUserByUid(uid).getEnrolledCourses();
+
+    log.info("Enrolled courses " + enrolledCourses + " for user " + uid + " fetched");
+
+    return enrolledCourses;
+  }
+
 
   @ExceptionHandler
   @ResponseStatus(HttpStatus.BAD_REQUEST) @ResponseBody
