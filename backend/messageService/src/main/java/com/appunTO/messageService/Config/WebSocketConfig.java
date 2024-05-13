@@ -1,5 +1,6 @@
 package com.appunTO.messageService.Config;
 
+import com.appunTO.messageService.Repository.NotificationRepository;
 import com.appunTO.messageService.Services.CustomWebSocketHandler;
 import com.appunTO.messageService.Services.WebSocketMessageBroker;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +15,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Autowired
     private WebSocketMessageBroker broker;
-
+    @Autowired
+    private NotificationRepository notificationRepository;
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new CustomWebSocketHandler(broker), "/ws").setAllowedOrigins("*");
+        registry.addHandler(new CustomWebSocketHandler(broker,notificationRepository), "/ws").setAllowedOrigins("*");
     }
 }

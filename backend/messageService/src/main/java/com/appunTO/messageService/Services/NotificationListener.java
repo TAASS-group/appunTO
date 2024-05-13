@@ -1,5 +1,10 @@
 package com.appunTO.messageService.Services;
 
+import com.appunTO.messageService.DTO.NotificationMessage;
+import com.appunTO.messageService.Model.Notification;
+import com.appunTO.messageService.Repository.NotificationRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.MessageListener;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.AbstractMessageListenerContainer;
@@ -21,6 +26,9 @@ public class NotificationListener {
     private RabbitListenerEndpointRegistry registry;
 
     @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
     private ConnectionFactory connectionFactory;  // Inietta la ConnectionFactory
 
     public void startListening(String queueName) {
@@ -32,7 +40,27 @@ public class NotificationListener {
             @Override
             public void onMessage(org.springframework.amqp.core.Message message) {
                 String messageBody = new String(message.getBody());
-                broker.broadcastToCourse(messageBody, queueName);
+
+                // read json message
+                ObjectMapper objectMapper = new ObjectMapper();
+                Notification notification = null;
+                try {
+                    notification = objectMapper.readValue(messageBody, Notification.class);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                // save message to database
+                if (notification != null) {
+                    notificationRepository.save(notification);
+                    NotificationMessage notificationMessage = new NotificationMessage(notification);
+                    try {
+                        String notificationJson = objectMapper.writeValueAsString(notificationMessage);
+                        broker.broadcastToCourse(notificationJson, queueName);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
             }
         }));
         container.start();
