@@ -22,6 +22,7 @@ export function NotificationProvider({
     socket.onmessage = (event) => {
       console.log(event.data);
       const message = JSON.parse(event.data);
+      // put first not seen and then seen
       setNotifications((prev: any[]) => [...prev, message]);
     };
     socket.onerror = function (error) {

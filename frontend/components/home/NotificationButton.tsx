@@ -26,55 +26,63 @@ export function NotificationButton() {
         title: "Test Title",
         course: "Test Course",
         timestamp: "2022-01-01T00:00:00Z",
+        seen: true,
       },
       {
-        id: 1,
+        id: 2,
         message: "The course has been updated with new content and assignments",
         title: "Test Title",
         course: "Test Course",
         timestamp: "2022-01-01T00:00:00Z",
+        seen: true,
       },
       {
-        id: 1,
+        id: 3,
         message: "The course has been updated with new content and assignments",
         title: "Test Title",
         course: "Test Course",
         timestamp: "2022-01-01T00:00:00Z",
+        seen: true,
       },
       {
-        id: 1,
+        id: 4,
         message: "The course has been updated with new content and assignments",
         title: "Test Title",
         course: "Test Course",
         timestamp: "2022-01-01T00:00:00Z",
+        seen: false,
       },
       {
-        id: 1,
+        id: 5,
         message: "The course has been updated with new content and assignments",
         title: "Test Title",
         course: "Test Course",
         timestamp: "2022-01-01T00:00:00Z",
+        seen: false,
       },
       {
-        id: 1,
+        id: 6,
         message: "The course has been updated with new content and assignments",
         title: "Test Title",
         course: "Test Course",
         timestamp: "2022-01-01T00:00:00Z",
+        seen: false,
       },
       {
-        id: 1,
+        id: 7,
         message: "The course has been updated with new content and assignments",
         title: "Test Title",
         course: "Test Course",
         timestamp: "2022-01-01T00:00:00Z",
+        seen: false,
       },
       {
-        id: 1,
+        id: 8,
         message: "The course has been updated with new content and assignments",
         title: "Test Title",
         course: "Test Course",
         timestamp: "2022-01-01T00:00:00Z",
+        seen: false,
       },
     ]);
   }, []);
@@ -98,8 +106,12 @@ export function NotificationButton() {
             </div>
             <div className="flex flex-col-reverse">
               {notifications.map((notification: any, index: number) => (
-                <div key={index}>
-                  <div className="-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
+                <div onClick={() => alert(notification.id)} key={index}>
+                  <div
+                    className={`-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground ${
+                      notification.seen ? "bg-accent" : "text-accent-foreground"
+                    } }`}
+                  >
                     <div className="space-y-1">
                       <p className="text-sm font-medium leading-none">
                         {notification.title}
