@@ -1,65 +1,45 @@
 package com.appunTO.messageService.DTO;
 
-import java.io.Serializable;
+import com.appunTO.messageService.Model.Notification;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.io.Serializable;
+@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class NotificationMessage implements Serializable {
-    // Getters and setters
-    private String userId;
+    private Long id;
     private String message;
     private String title;
-
     private String courseId;
+    private String timestamp;
+    private boolean seen;
 
-    // Constructors
-    public NotificationMessage() {
+    public NotificationMessage(Notification notification) {
+        this.id = notification.getId();
+        this.message = notification.getMessage();
+        this.title = notification.getTitle();
+        this.courseId = notification.getCourseId();
+        this.timestamp = notification.getTimestamp();
+    }
+    public NotificationMessage(Notification notification, boolean seen) {
+        this.id = notification.getId();
+        this.message = notification.getMessage();
+        this.title = notification.getTitle();
+        this.courseId = notification.getCourseId();
+        this.timestamp = notification.getTimestamp();
+        this.seen = seen;
     }
 
-    public NotificationMessage(String userId, String title, String message, String courseId) {
-        this.userId = userId;
-        this.title = title;
-        this.message = message;
-        this.courseId = courseId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
-    }
-
-    // toString method for logging purposes
     @Override
     public String toString() {
         return "NotificationMessage{" +
-                "userId='" + userId + '\'' +
                 ", title='" + title + '\'' +
                 ", message='" + message + '\'' +
+                ", courseId='" + courseId + '\'' +
                 '}';
     }
 }
