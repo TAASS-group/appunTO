@@ -15,6 +15,9 @@ public class SeenService {
     private NotificationRepository notificationRepository;
     public void acknowledgeNotification(long notificationId, String userId) {
         Notification notification = notificationRepository.findNotificationById(notificationId);
+        if (notification == null) {
+            throw new RuntimeException("Notification not found");
+        }
         seenRepository.save(new Seen(notification, userId));
     }
 }

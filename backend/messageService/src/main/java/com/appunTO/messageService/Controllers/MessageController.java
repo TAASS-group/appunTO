@@ -6,11 +6,14 @@ import com.appunTO.messageService.DTO.NotificationMessage;
 import com.appunTO.messageService.Services.NotificationService;
 import com.appunTO.messageService.Services.RabbitMQService;
 import com.appunTO.messageService.Services.SeenService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 @RestController
+@Log4j2
 @RequestMapping(path = "api/v1/message")
 public class MessageController {
     private final NotificationService notificationService;
@@ -31,6 +34,7 @@ public class MessageController {
 
     @PostMapping(path = "/ackowledge")
     public void acknowledgeMessage(@RequestBody AcknowledgeMessageDTO ack) {
+        System.out.println("Acknowledge message: " + ack.getNotificationId() + " by user: " + ack.getUserId());
         seenService.acknowledgeNotification(ack.getNotificationId(), ack.getUserId());
     }
     @PostMapping(path = "/createExchange")
