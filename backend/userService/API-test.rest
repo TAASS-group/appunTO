@@ -1,0 +1,12 @@
+@userservice-port = 8081
+@apigateway-port = 8080
+@default-uid = GtO6PJ07MlTP5J2ALrEMFV7w4Pz1
+
+### getUserById
+GET http://localhost:{{apigateway-port}}/user/info?uid={{default-uid}}
+
+### enroll
+GET http://localhost:{{userservice-port}}/user/enroll?uid={{default-uid}}&courseId=123
+
+### leave
+GET http://localhost:{{userservice-port}}/user/leave?uid={{default-uid}}&courseId=123
