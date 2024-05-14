@@ -36,7 +36,6 @@ services:
     depends_on:
       - fileservice-db
       - eurekaserver-app
-      - messageservice-app
     ports:
       - 8082:8080
     networks:
@@ -141,10 +140,26 @@ services:
       depends_on:
         - eurekaserver-app
         - rabbitmq
+        - messageservice-db
       ports:
         - 8085:8080
       networks:
         internal:
+
+  messageservice-db:
+    image: postgres
+    container_name: messageservice-db
+    restart: unless-stopped
+    volumes:
+      - messageservice-db-data:/var/lib/postgresql/data
+    ports:
+      - 5436:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: messageservice
+    networks:
+      internal:
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -168,6 +183,7 @@ volumes:
   fileservice-db-config: {}
   courseservice-db-data: {}
   forumservice-db-data: {}
+  messageservice-db-data: {}
   rabbitmq-data: {}
   rabbitmq-log: {}
 
