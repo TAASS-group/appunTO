@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --file compose.yaml --out config
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: messageservice-app
+  name: messageservice-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: messageservice-app
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --file compose.yaml --out config
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/kubernetes-internal: "true"
+        io.kompose.service: messageservice-app
+    spec:
+      containers:
+        - image: appunto-messageservice-app
+          name: messageservice-app
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+      restartPolicy: Always

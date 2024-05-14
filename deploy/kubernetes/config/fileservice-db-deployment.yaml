@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --file compose.yaml --out config
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: fileservice-db
+  name: fileservice-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: fileservice-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --file compose.yaml --out config
+        kompose.version: 1.32.0 (HEAD)
+      labels:
+        io.kompose.network/kubernetes-fileservice-internal: "true"
+        io.kompose.service: fileservice-db
+    spec:
+      containers:
+        - env:
+            - name: MONGO_INITDB_DATABASE
+              value: fileservice
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: root
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: admin
+          image: mongo
+          name: fileservice-db
+          ports:
+            - containerPort: 27017
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /data/db
+              name: fileservice-db-data
+            - mountPath: /data/configdb
+              name: fileservice-db-config
+      restartPolicy: Always
+      volumes:
+        - name: fileservice-db-data
+          persistentVolumeClaim:
+            claimName: fileservice-db-data
+        - name: fileservice-db-config
+          persistentVolumeClaim:
+            claimName: fileservice-db-config

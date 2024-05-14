@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --file compose.yaml --out config
+    kompose.image-pull-policy: Never
+    kompose.version: 1.32.0 (HEAD)
+  labels:
+    io.kompose.service: courseservice-app
+  name: courseservice-app
+spec:
+  ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+  selector:
+    io.kompose.service: courseservice-app
