@@ -36,7 +36,6 @@ services:
     depends_on:
       - fileservice-db
       - eurekaserver-app
-      - messageservice-app
     ports:
       - 8082:8080
     networks:
