@@ -64,11 +64,11 @@ public class FileService {
     public void deleteFileById(String id) {
         fileRepository.deleteById(id);
     }
-    public Commit updateFile(String fileId, String message, String author, String text) {
+    public Commit updateFile(String fileId, String title, String message, String author, String text) {
         MyFile file = fileRepository.findById(fileId).orElseThrow(() -> new IllegalArgumentException("Invalid file ID: " + fileId));
-        return updateFile(file, message, author, text);
+        return updateFile(file, title, message, author, text);
     }
-    private Commit updateFile(MyFile file, String message, String author, String text) {
+    private Commit updateFile(MyFile file, String title, String message, String author, String text) {
         String path = file.getCourseId();
         if(!FileSystemUtils.getResource(path).exists()) {
            return null;
@@ -82,7 +82,7 @@ public class FileService {
             return null;
         }
 
-        Commit commit = new Commit(message, new Date(), author, file);
+        Commit commit = new Commit(message, new Date(), author, file, title);
         commit.setGitCommitId(commitid.getName());
 
         return commitRepository.save(commit);
@@ -117,5 +117,9 @@ public class FileService {
         }
         Repository repository = GitUtils.openExistingRepository(path + "/.git");
         return GitUtils.diffFile(repository, ObjectId.fromString(previous.getGitCommitId()), ObjectId.fromString(selected.getGitCommitId()));
+    }
+
+    public List<Commit> getCommits(String fileId) {
+        return commitRepository.findCommitsByFile_IdOrderByCreatedAtDesc(fileId).orElse(null);
     }
 }
