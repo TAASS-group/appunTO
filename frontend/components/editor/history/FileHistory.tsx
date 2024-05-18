@@ -1,28 +1,28 @@
 "use client";
-import React from "react";
+import React, { use, useEffect } from "react";
 import Commit from "./Commit";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { genericFetchRequest } from "@/lib/utils";
 
 export type CommitType = {
-  id: string;
-  title: string;
-  message: string;
-  author: {
-    name: string;
-    img: string;
+  commit: {
+    id: string;
+    title: string;
+    message: string;
+    author: string;
+    createdAt: string;
+    comments: string[];
   };
-  createdAt: string;
-  comments: string[];
+  diff: string;
 };
 
-const fakeData: CommitType[] = [
+/* const fakeData: CommitType[] = [
   {
     id: "1",
     title: "Initial commit",
     message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    author: {
-      name: "<NAME>",
-      img: "https://avatars.githubusercontent.com/u/123456789?v=4",
-    },
+    author: "John Doe",
     createdAt: "2020-01-01T00:00:00.000Z",
     comments: [],
   },
@@ -31,10 +31,7 @@ const fakeData: CommitType[] = [
     title: "Add new feature",
     message:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur velit vel met tellus et sapien et sapien et sapien",
-    author: {
-      name: "<NAME>",
-      img: "https://avatars.githubusercontent.com/u/123456789?v=4",
-    },
+    author: "John Doe",
     createdAt: "2020-01-01T00:00:00.000Z",
     comments: [],
   },
@@ -42,22 +39,39 @@ const fakeData: CommitType[] = [
     id: "3",
     title: "Fix bug",
     message: "Fix bug",
-    author: {
-      name: "<NAME>",
-      img: "https://avatars.githubusercontent.com/u/123456789?v=4",
-    },
+    author: "John Doe",
     createdAt: "2020-01-01T00:00:00.000Z",
     comments: [],
   },
-];
+]; */
 
 export default function FileHistory() {
-  const [commits, setCommits] = React.useState<CommitType[]>(fakeData);
+  const { course_id } = useParams();
+
+  const queryClient = useQueryClient();
+
+  const {
+    isLoading,
+    error,
+    data: commits,
+  } = useQuery({
+    queryKey: ["commits", course_id],
+    queryFn: async () => {
+      const response = await genericFetchRequest(
+        `/file/getCommmits/${course_id}`,
+        "GET"
+      );
+      return response.json();
+    },
+    enabled: !!course_id,
+  });
+
   return (
     <div className="w-full">
-      {commits.map((commit: CommitType, index: number) => (
-        <Commit key={index} commit={commit} />
-      ))}
+      {commits &&
+        commits.map((commit: CommitType, index: number) => (
+          <Commit key={index} commit={commit} />
+        ))}
     </div>
   );
 }

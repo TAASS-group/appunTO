@@ -51,6 +51,7 @@ import "@vavt/rt-extension/lib/asset/style.css";
 import FileHistory from "./history/FileHistory";
 import { genericFetchRequest } from "@/lib/utils";
 import { useParams } from "next/navigation";
+import { CommitDialog } from "./commitDialog";
 export default function PreviewFile() {
   const { course_id } = useParams();
 
@@ -224,6 +225,16 @@ note、abstract、info、tip、success、question、warning、failure、danger�
     element.click();
   };
 
+  const onSubmit = async (title: string, message: string) => {
+    await genericFetchRequest("/file/updatefile/test1", "POST", {
+      title,
+      content: text,
+      author: "Simone",
+      message,
+    });
+    queryClient.invalidateQueries({ queryKey: ["getFileContent"] });
+  };
+
   const exportPdfRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -262,9 +273,11 @@ note、abstract、info、tip、success、question、warning、failure、danger�
             </DropdownMenu>
           </div>
           <div className="flex gap-4">
-            <Button disabled={text == previusText} onClick={save}>
+            <CommitDialog onSubmit={onSubmit} clickable={text == previusText} />
+
+            {/* <Button disabled={text == previusText} onClick={save}>
               Save
-            </Button>
+            </Button> */}
             <Button
               variant={"outline"}
               className="border-destructive text-destructive"
