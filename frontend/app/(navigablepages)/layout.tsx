@@ -1,9 +1,11 @@
 import UserProfile from "@/components/auth/UserProfile";
 import { DarkmodeToggle } from "@/components/DarkmodeToggle";
+import { NotificationButton } from "@/components/home/NotificationButton";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { NotificationContext } from "@/providers/NotificationProvider";
+import { Search, Bell } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 export default function NavigableLayout({
   children,
@@ -36,9 +38,12 @@ export default function NavigableLayout({
           <Input placeholder="Search" className="pl-8 " />
         </div>
         <div className=" w-1/3 flex justify-end ">
+          <NotificationButton />
+          <DarkmodeToggle />
           <UserProfile />
         </div>
       </header>
+
       <main>{children}</main>
     </div>
   );

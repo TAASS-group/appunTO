@@ -6,6 +6,7 @@ import { QueryProvider } from "@/providers/QueryProvider";
 import SesProvider from "@/components/auth/SesProvider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/options";
+import { NotificationProvider } from "@/providers/NotificationProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,14 +27,16 @@ export default async function RootLayout({
       <body className={inter.className}>
         <SesProvider session={session}>
           <QueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="light"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-            </ThemeProvider>
+            <NotificationProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="light"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
+            </NotificationProvider>
           </QueryProvider>
         </SesProvider>
       </body>
