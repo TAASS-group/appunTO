@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/firebase-adapter": "^2.0.0",
+    "@next-auth/firebase-adapter": "^2.0.1",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-context-menu": "^2.1.5",
@@ -27,6 +29,7 @@
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "firebase-admin": "^12.1.0",
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",
     "lucide-react": "^0.363.0",

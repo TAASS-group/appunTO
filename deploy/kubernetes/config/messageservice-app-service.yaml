@@ -3,6 +3,7 @@ kind: Service
 metadata:
   annotations:
     kompose.cmd: kompose convert --file compose.yaml --out config
+    kompose.image-pull-policy: Never
     kompose.version: 1.32.0 (HEAD)
   labels:
     io.kompose.service: messageservice-app

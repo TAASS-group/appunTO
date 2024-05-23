@@ -24,13 +24,14 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="FileService" target="1.5" />
       <module name="fileService (1)" target="21" />
       <module name="serviceForum" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="apiGateway" options="-parameters" />
+      <module name="apiGateway" options="" />
       <module name="appunTO.backend.apiGateway" options="-parameters" />
       <module name="appunTO.backend.courseService" options="-parameters" />
       <module name="appunTO.backend.eurekaServer" options="-parameters" />
@@ -38,12 +39,12 @@
       <module name="appunTO.backend.forumService" options="-parameters" />
       <module name="appunTO.backend.messageService" options="-parameters" />
       <module name="appunTO.backend.userService" options="-parameters" />
-      <module name="courseService" options="-parameters" />
-      <module name="eurekaServer" options="-parameters" />
-      <module name="fileService" options="-parameters" />
+      <module name="courseService" options="" />
+      <module name="eurekaServer" options="" />
+      <module name="fileService" options="" />
       <module name="fileService (1)" options="-parameters" />
-      <module name="forumService" options="-parameters" />
-      <module name="messageService" options="-parameters" />
+      <module name="forumService" options="" />
+      <module name="messageService" options="" />
       <module name="userService" options="-parameters" />
     </option>
   </component>
