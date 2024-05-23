@@ -7,52 +7,38 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signIn, useSession } from "next-auth/react";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { app, auth } from "@/lib/firebase";
-import { redirect } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function UserRegisterForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
 
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
-  const { update, data: session } = useSession();
-
-  console.log("User Auth Form", session);
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
 
-    await signIn("credentials", {
-      email,
-      password,
-      redirect: true,
-      callbackUrl: "/",
-    });
-
-    setIsLoading(false);
-  }
-
-  async function signinGoogle() {
-    setIsLoading(true);
-
-    var provider = new GoogleAuthProvider();
-
-    console.log("PROVIDER", provider);
-    await signInWithPopup(auth, provider).then(async (result) => {
-      console.log("GOOGLE LOGIN", result);
-      await signIn("google", {
-        result: result,
-        redirect: false,
+    await createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up
+        const user = userCredential.user;
+        console.log(user);
+        signIn("credentials", {
+          email,
+          password,
+          redirect: true,
+          callbackUrl: "/",
+        });
+      })
+      .catch((error) => {
+        console.log("ERRORE CREAZIONE UTENTE", error);
       });
-      const boh = await update((prev: any) => ({ ...prev, name: "provaaa" }));
-      console.log("BOH", boh);
-    });
 
     setIsLoading(false);
   }
@@ -97,7 +83,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Log In with Email
+            Sign Up with Email
           </Button>
         </div>
       </form>
@@ -111,12 +97,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           </span>
         </div>
       </div>
-      <Button
-        variant="outline"
-        type="button"
-        disabled={isLoading}
-        onClick={() => signinGoogle()}
-      >
+      <Button variant="outline" type="button" disabled={isLoading}>
         {isLoading ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
