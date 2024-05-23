@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping ("/forum")
 public class ForumController {
@@ -30,6 +30,11 @@ public class ForumController {
     @DeleteMapping("/deleteForum/{forumId}")
     public void deleteForum(@PathVariable Long forumId) {
         forumService.deleteForum(forumId);
+    }
+
+    @GetMapping("/getForumByCourseId/{courseId}")
+    public Forum getForumByCourseId(@PathVariable Long courseId) {
+        return forumService.getForumByCourseId(courseId);
     }
 
 

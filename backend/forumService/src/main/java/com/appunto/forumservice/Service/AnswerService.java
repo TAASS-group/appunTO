@@ -26,7 +26,7 @@ public class AnswerService {
 
     public void createAnswer(Long questionId, Answer answer) {
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new IllegalStateException("Question with id " + questionId + " does not exist"));
-        question.addAnswer(answer);
+        answer.setQuestion(question);
         answerRepository.save(answer);
     }
 
@@ -35,17 +35,15 @@ public class AnswerService {
 
     }
 
-    public void updateAnswer(long answerId) {
+    public void updateAnswer(long answerId, int likeCount) {
         Answer answer = answerRepository.findById(answerId).orElseThrow(() -> new IllegalStateException("Answer with id " + answerId + " does not exist"));
-        answer.addUpvote();
+        answer.setUpvotes(likeCount);
         answerRepository.save(answer);
     }
 
     public void deleteAnswer(Long answerId) {
-        boolean exists = answerRepository.existsById(answerId);
-        if (!exists) {
-            throw new IllegalStateException("Answer with id " + answerId + " does not exist");
-        }
+        Answer answer = answerRepository.findById(answerId).orElseThrow(() -> new IllegalStateException("Answer with id " + answerId + " does not exist"));
+        answer.deleteQuestion();
         answerRepository.deleteById(answerId);
     }
 }

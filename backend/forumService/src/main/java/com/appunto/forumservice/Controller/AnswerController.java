@@ -1,21 +1,27 @@
 package com.appunto.forumservice.Controller;
 
+import com.appunto.forumservice.DTO.AnswerDTO;
+import com.appunto.forumservice.DTO.UserDTO;
 import com.appunto.forumservice.Models.Answer;
 import com.appunto.forumservice.Service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping ("/answer")
 public class AnswerController {
 
+    private final RestTemplate restTemplate;
     private final AnswerService answerService;
 
     @Autowired
-    public AnswerController(AnswerService answerService) {
+    public AnswerController(AnswerService answerService, RestTemplate restTemplate) {
         this.answerService = answerService;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping ("/getAll")
@@ -24,8 +30,15 @@ public class AnswerController {
     }
 
     @GetMapping("/getAll/{questionId}")
-    public List<Answer> getAllAnswerByQuestionId(@PathVariable Long questionId) {
-        return answerService.getAllAnswerByQuestionId(questionId);
+    public List<AnswerDTO> getAllAnswerByQuestionId(@PathVariable Long questionId) {
+        List<AnswerDTO> answerDTOs = new ArrayList<AnswerDTO>();
+        List<Answer> answers = answerService.getAllAnswerByQuestionId(questionId);
+        answers.forEach(answer -> {
+            UserDTO userInformation = restTemplate.getForObject("http://userService/user/info?uid=" + answer.getIdUser(), UserDTO.class);
+            assert userInformation != null;
+            answerDTOs.add(new AnswerDTO(answer, userInformation.getDisplayName(), userInformation.getPhotoUrl()));
+        });
+        return answerDTOs;
     }
 
     @PostMapping("/createAnswer/{questionId}")
@@ -34,8 +47,8 @@ public class AnswerController {
     }
 
     @PutMapping(path = "{answerId}")
-    public void updateAnswer(@PathVariable("answerId") long answerId) {
-        answerService.updateAnswer(answerId);
+    public void updateAnswer(@PathVariable("answerId") long answerId, @RequestParam("likeCount") int likeCount) {
+        answerService.updateAnswer(answerId, likeCount);
     }
 
     @DeleteMapping("/deleteAnswer/{answerId}")
