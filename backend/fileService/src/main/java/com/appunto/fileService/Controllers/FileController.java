@@ -11,20 +11,23 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RestController
 @RequestMapping(path = "api/v1/file")
 public class FileController {
     private final FileService fileService;
 
+    private RestTemplate restTemplate;
 
     @Autowired
-    public FileController(FileService fileService) {
+    public FileController(FileService fileService, RestTemplate restTemplate) {
         this.fileService = fileService;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping(path = "/downloadpdf/{id}")
@@ -68,6 +71,9 @@ public class FileController {
         try {
             MyFile file = fileService.addFile(courseId);
             if(file == null) return ResponseEntity.notFound().build();
+            String uid = "kDrhnFfbJFQBCjlltn40lqGPewG2";
+            String res = restTemplate.getForObject("http://userservice/user/info?uid=" + uid, String.class);
+            System.out.println(res);
             return ResponseEntity.ok(file);
         } catch (Exception e) {
             e.printStackTrace();

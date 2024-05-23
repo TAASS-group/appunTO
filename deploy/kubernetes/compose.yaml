@@ -161,6 +161,23 @@ services:
       - 8080
     networks:
       internal:
+    labels:
+      kompose.image-pull-policy: Never
+
+  messageservice-db:
+    image: postgres
+    container_name: messageservice-db
+    restart: unless-stopped
+    volumes:
+      - messageservice-db-data:/var/lib/postgresql/data
+    ports:
+      - 5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: messageservice
+    networks:
+      internal:
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -184,6 +201,7 @@ volumes:
   fileservice-db-config: {}
   courseservice-db-data: {}
   forumservice-db-data: {}
+  messageservice-db-data: {}
   rabbitmq-data: {}
   rabbitmq-log: {}
 
