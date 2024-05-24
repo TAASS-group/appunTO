@@ -1,0 +1,195 @@
+services:
+  userservice-app:
+    build:
+      context: ../../backend/userService
+      args:
+        firebase_service_account_file: firebase_service_account_file.json
+    container_name: userservice-app
+    depends_on:
+      - userservice-db
+      - eurekaserver-app
+    ports:
+      - 8081:8080
+    networks:
+      userservice-internal:
+      internal:
+
+  userservice-db:
+    image: postgres
+    container_name: userservice-db
+    restart: unless-stopped
+    volumes:
+      - userservice-db-data:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: userservice
+    networks:
+      userservice-internal:
+
+  fileservice-app:
+    build:
+      context: ../../backend/fileService
+    container_name: fileservice-app
+    depends_on:
+      - fileservice-db
+      - eurekaserver-app
+    ports:
+      - 8082:8080
+    networks:
+      fileservice-internal:
+      internal:
+
+  fileservice-db:
+    image: mongo
+    container_name: fileservice-db
+    ports:
+      - 27017:27017
+    volumes:
+      - fileservice-db-data:/data/db
+      - fileservice-db-config:/data/configdb
+    environment: #TODO: mettere a posto credenziali!
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: fileservice
+    networks:
+      fileservice-internal:
+
+  courseservice-app:
+    build:
+      context: ../../backend/courseservice
+    container_name: courseservice-app
+    depends_on:
+      - courseservice-db
+      - eurekaserver-app
+    ports:
+      - 8083:8080
+    networks:
+      courseservice-internal:
+      internal:
+
+  courseservice-db:
+    image: postgres
+    container_name: courseservice-db
+    restart: unless-stopped
+    volumes:
+      - courseservice-db-data:/var/lib/postgresql/data
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: courseservice
+    networks:
+      courseservice-internal:
+
+  forumservice-app:
+    build:
+      context: ../../backend/forumService
+    container_name: forumservice-app
+    depends_on:
+      - forumservice-db
+      - eurekaserver-app
+    ports:
+      - 8084:8080
+    networks:
+      forumservice-internal:
+      internal:
+
+  forumservice-db:
+    image: postgres
+    container_name: forumservice-db
+    restart: unless-stopped
+    volumes:
+      - forumservice-db-data:/var/lib/postgresql/data
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: forumservice
+    networks:
+      forumservice-internal:
+
+  apigateway-app:
+    build:
+      context: ../../backend/apigateway
+    container_name: apigateway-app
+    depends_on:
+      - eurekaserver-app
+    ports:
+      - 8080:8080
+    networks:
+      - internal
+
+  eurekaserver-app:
+    build:
+      context: ../../backend/eurekaServer
+    container_name: eurekaserver-app
+    ports:
+      - 8761:8761
+    networks:
+      internal:
+
+  messageservice-app:
+      build:
+        context: ../../backend/messageService
+      container_name: messageservice-app
+      depends_on:
+        - eurekaserver-app
+        - rabbitmq
+        - messageservice-db
+      ports:
+        - 8085:8080
+      networks:
+        internal:
+
+  messageservice-db:
+    image: postgres
+    container_name: messageservice-db
+    restart: unless-stopped
+    volumes:
+      - messageservice-db-data:/var/lib/postgresql/data
+    ports:
+      - 5436:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: messageservice
+    networks:
+      internal:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672     # AMQP protocol port
+      - 15672:15672   # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-log:/var/log/rabbitmq
+    restart: unless-stopped
+    networks:
+      internal:
+
+volumes:
+  userservice-db-data: {}
+  fileservice-db-data: {}
+  fileservice-db-config: {}
+  courseservice-db-data: {}
+  forumservice-db-data: {}
+  messageservice-db-data: {}
+  rabbitmq-data: {}
+  rabbitmq-log: {}
+
+networks:
+  internal: {}
+  userservice-internal: {}
+  fileservice-internal: {}
+  courseservice-internal: {}
+  forumservice-internal: {}

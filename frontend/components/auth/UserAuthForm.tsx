@@ -7,19 +7,54 @@ import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signIn, useSession } from "next-auth/react";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { app, auth } from "@/lib/firebase";
+import { redirect } from "next/navigation";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  const [email, setEmail] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
+  const { update, data: session } = useSession();
+
+  console.log("User Auth Form", session);
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: true,
+      callbackUrl: "/",
+    });
+
+    setIsLoading(false);
+  }
+
+  async function signinGoogle() {
+    setIsLoading(true);
+
+    var provider = new GoogleAuthProvider();
+
+    console.log("PROVIDER", provider);
+    await signInWithPopup(auth, provider).then(async (result) => {
+      console.log("GOOGLE LOGIN", result);
+      await signIn("google", {
+        result: result,
+        redirect: false,
+      });
+      const boh = await update((prev: any) => ({ ...prev, name: "provaaa" }));
+      console.log("BOH", boh);
+    });
+
+    setIsLoading(false);
   }
 
   return (
@@ -31,6 +66,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               Email
             </Label>
             <Input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               id="email"
               placeholder="name@example.com"
               type="email"
@@ -45,6 +82,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               Password
             </Label>
             <Input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               id="password"
               placeholder="*******************"
               type="password"
@@ -72,7 +111,12 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           </span>
         </div>
       </div>
-      <Button variant="outline" type="button" disabled={isLoading}>
+      <Button
+        variant="outline"
+        type="button"
+        disabled={isLoading}
+        onClick={() => signinGoogle()}
+      >
         {isLoading ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (

@@ -2,21 +2,48 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="appunTO.backend.messageService" />
+        <module name="appunTO.backend.apiGateway" />
+        <module name="courseService" />
         <module name="appunTO.backend.fileService" />
-        <module name="FileService" />
-        <module name="appunTO.backend.userService" />
+        <module name="fileService" />
+        <module name="appunTO.backend.eurekaServer" />
+        <module name="eurekaServer" />
         <module name="userService" />
+        <module name="appunTO.backend.userService" />
+        <module name="messageService" />
+        <module name="apiGateway" />
+        <module name="appunTO.backend.forumService" />
+        <module name="forumService" />
+        <module name="appunTO.backend.courseService" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="FileService" target="1.5" />
+      <module name="fileService (1)" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="apiGateway" options="" />
+      <module name="appunTO.backend.apiGateway" options="-parameters" />
+      <module name="appunTO.backend.courseService" options="-parameters" />
+      <module name="appunTO.backend.eurekaServer" options="-parameters" />
       <module name="appunTO.backend.fileService" options="-parameters" />
+      <module name="appunTO.backend.forumService" options="-parameters" />
+      <module name="appunTO.backend.messageService" options="-parameters" />
       <module name="appunTO.backend.userService" options="-parameters" />
+      <module name="courseService" options="" />
+      <module name="eurekaServer" options="" />
+      <module name="fileService" options="" />
+      <module name="fileService (1)" options="-parameters" />
+      <module name="forumService" options="" />
+      <module name="messageService" options="" />
       <module name="userService" options="-parameters" />
     </option>
   </component>
