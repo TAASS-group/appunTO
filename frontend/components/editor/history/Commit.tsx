@@ -1,13 +1,38 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { CommitType } from "./FileHistory";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { parseDiffToJSON } from "@/lib/utils";
+import { genericFetchRequest, parseDiffToJSON } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Differences from "./Differences";
+import { Collapsible } from "@radix-ui/react-collapsible";
+import { CollapsibleContent } from "@/components/ui/collapsible";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
-export default function Commit({ commit }: { commit: CommitType }) {
-  const [isHovered, setIsHovered] = useState(false);
+export type commentType = {
+  id: string;
+  text: string;
+  createdAt: Date;
+  authorName: string;
+  authorImg: string;
+};
+
+export default function Commit({
+  commit,
+  setSelectedCommit,
+  selectedCommit,
+  index,
+}: {
+  commit: CommitType;
+  setSelectedCommit: (id: number) => void;
+  selectedCommit: number | null;
+  index: number;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [comments, setComments] = useState<commentType[]>([]);
+  const [commentText, setCommentText] = useState("");
 
   /* const diffText = `diff --git a/file.txt b/file.txt
   index 89cc574..b45ef6f 100644
@@ -37,31 +62,121 @@ export default function Commit({ commit }: { commit: CommitType }) {
 
   const diff = parseDiffToJSON(diffText);
 
+  const getComments = async (commitId: string) => {
+    if (isOpen) {
+      setIsOpen((x) => !x);
+      return;
+    }
+    setIsOpen((x) => !x);
+    console.log("Getting comments for commit", commitId);
+    const data = await genericFetchRequest(
+      `/comment/getbycommit/${commitId}`,
+      "GET"
+    );
+    const res = await data.json();
+    console.log("Comments", res);
+    setComments(res);
+  };
+
+  const addComments = async (commitId: string) => {
+    console.log("Saving comments for commit", commitId);
+    const data = await genericFetchRequest(
+      `/comment/add`,
+      "POST",
+      {
+        author: "kDrhnFfbJFQBCjlltn40lqGPewG2",
+        text: commentText,
+        createdAt: new Date(),
+        commit: { id: commitId },
+      },
+      { "Content-Type": "application/json" }
+    );
+    const res = await data.json();
+    setCommentText("");
+    setComments((x) => [...x, res]);
+    console.log("Comments", res);
+  };
   return (
     <div
-      className={`flex flex-row w-full h-[200px] ${
-        isHovered ? "bg-gray-100 rounded-lg" : ""
+      className={`flex flex-row w-full min-h-[200px] ${
+        index == selectedCommit ? "bg-gray-100 rounded-lg" : ""
       }`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => setSelectedCommit(index)}
     >
-      {commit && commit.commit && (
+      {commit && (
         <>
-          <div className="py-6 pr-2">
+          <div className="py-6 pr-2 mx-4">
             <span className="text-xs text-muted-foreground">
-              {format(new Date(commit.commit.createdAt), "dd/MM/yyyy")}
+              {format(new Date(commit.createdAt), "dd/MM/yyyy")}
             </span>
           </div>
           <div className="grow px-4 py-6 flex flex-col justify-between border-l-2 border-r-2">
-            <div className="font-semibold">{commit.commit.title}</div>
-            <div className="text-sm">{commit.commit.message}</div>
-            <div className="flex justify-between">
-              <Button variant={"outline"}>Comments</Button>
-              <div>{commit.commit.author}</div>
+            <div className="grow flex flex-col space-y-8 justify-between">
+              <div className="font-semibold">{commit.title}</div>
+              <div className="text-sm">{commit.message}</div>
+              <div className="flex justify-between items-center">
+                <Button
+                  variant={"outline"}
+                  onClick={() => getComments(commit.id)}
+                >
+                  Comments
+                </Button>
+                <div className="flex items-center gap-2 mx-4">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={commit.authorImg} />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <div className="flex justify-center">{commit.authorName}</div>{" "}
+                </div>
+              </div>
             </div>
+            <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+              <CollapsibleContent>
+                <div className="flex items-center gap-2 p-4">
+                  <Textarea
+                    placeholder="Add a comment"
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                  />
+
+                  <Button
+                    onClick={() => addComments(commit.id)}
+                    disabled={!commentText.trim()}
+                  >
+                    Add
+                  </Button>
+                </div>
+                {comments &&
+                  comments.map((comment, index) => (
+                    <div
+                      key={index}
+                      className="p-4 flex space-y-2 text-xs flex-col border-t py-2"
+                    >
+                      <div className="flex justify-between">
+                        <div className="flex items-center gap-2">
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage src={comment.authorImg} />
+                            <AvatarFallback>CN</AvatarFallback>
+                          </Avatar>
+                          <div className="flex justify-center">
+                            {comment.authorName}
+                          </div>
+                        </div>
+                        <span className="text-muted-foreground">
+                          {format(new Date(comment.createdAt), "dd/MM/yyyy")}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between">{comment.text}</div>
+                    </div>
+                  ))}
+              </CollapsibleContent>
+            </Collapsible>
           </div>
           <div className="w-1/3 flex-none flex items-center">
-            {isHovered && commit.diff && <Differences diff={commit.diff} />}
+            {selectedCommit == index && commit.diff && (
+              <Differences diff={commit.diff} />
+            )}
           </div>
         </>
       )}

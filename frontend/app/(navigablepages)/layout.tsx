@@ -1,4 +1,3 @@
-"use client";
 import { DarkmodeToggle } from "@/components/DarkmodeToggle";
 import { NotificationButton } from "@/components/home/NotificationButton";
 import { Input } from "@/components/ui/input";
@@ -12,8 +11,6 @@ export default function NavigableLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isNotificationsOpen, setNotificationsOpen] = useState(false);
-
   return (
     <div>
       <header className="py-4 px-8 flex h-20 items-center">

@@ -65,7 +65,6 @@ export async function genericFetchRequest(
   const ret = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
     method,
     headers: {
-      "Content-Type": "application/json",
       ...headers,
     },
     body: JSON.stringify(body),

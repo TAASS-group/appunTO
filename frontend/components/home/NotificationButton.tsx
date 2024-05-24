@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,15 +10,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "../ui/scroll-area";
 import { NotificationContext } from "@/providers/NotificationProvider";
-import { Separator } from "../ui/separator";
-import { Bell, BellIcon } from "lucide-react";
+import { Bell } from "lucide-react";
 import { Badge } from "../ui/badge";
+import { genericFetchRequest } from "@/lib/utils";
 
 export function NotificationButton() {
-  let { notifications, setNotifications } =
-    React.useContext(NotificationContext);
+  let {
+    seenNotifications,
+    unseenNotifications,
+    setSeenNotifications,
+    setUnseenNotifications,
+  } = React.useContext(NotificationContext);
+
   React.useEffect(() => {
-    setNotifications([
+    /* setNotifications([
       {
         id: 1,
         message: "The course has been updated with new content and assignments",
@@ -84,15 +88,41 @@ export function NotificationButton() {
         timestamp: "2022-01-01T00:00:00Z",
         seen: false,
       },
-    ]);
+    ]) */
   }, []);
 
+  const ackNotification = async (notificationId: number) => {
+    console.log("ack", notificationId);
+    const ret = await fetch("http://localhost:8085/api/v1/message/ackowledge", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ notificationId, userId: 1 }),
+    });
+
+    console.log(ret);
+
+    setSeenNotifications((prev: any[]) =>
+      prev.concat(
+        unseenNotifications.filter((n: any) => n.id === notificationId)
+      )
+    );
+    setUnseenNotifications((prev: any[]) =>
+      prev.filter((n) => n.id !== notificationId)
+    );
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="relative" variant="ghost" size="icon">
+        <Button
+          className="relative"
+          variant="ghost"
+          size="icon"
+          onClick={() => alert("test")}
+        >
           <Bell className="h-[1.5rem] w-[1.5rem]"></Bell>
-          {notifications.length > 0 && (
+          {unseenNotifications.length > 0 && (
             <span className="h-[10px] w-[10px] rounded-full bg-primary absolute top-2 right-[8px] border-[1px] border-background"></span>
           )}
         </Button>
@@ -102,26 +132,58 @@ export function NotificationButton() {
           <div className="p-4">
             <div className="mb-4 flex justify-between items-center">
               <h4 className="text-xl font-bold leading-none">Notifications</h4>
-              <Badge className="rounded-full">{notifications.length}</Badge>
+              <Badge className="rounded-full">
+                {unseenNotifications.length}
+              </Badge>
             </div>
             <div className="flex flex-col-reverse">
-              {notifications.map((notification: any, index: number) => (
-                <div onClick={() => alert(notification.id)} key={index}>
+              {unseenNotifications.map((notification: any, index: number) => (
+                <div
+                  onClick={() => ackNotification(notification.id)}
+                  key={index}
+                >
                   <div
-                    className={`-mx-2 flex items-start space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground ${
-                      notification.seen ? "bg-accent" : "text-accent-foreground"
-                    } }`}
+                    className={`-mx-2 flex items-center space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground space-y-2`}
                   >
-                    <div className="space-y-1">
+                    <div className="w-2 h-2 bg-black rounded-full"></div>{" "}
+                    {/* Cerchio nero */}
+                    <div className="flex flex-col space-y-2 w-full">
                       <p className="text-sm font-medium leading-none">
                         {notification.title}
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        {notification.message}
+                      <div className="flex justify-between">
+                        <p className="text-sm text-muted-foreground">
+                          {notification.message}
+                        </p>
+                        <p className="text-xs text-muted-foreground text-right">
+                          {new Date(notification.timestamp).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col-reverse">
+              {seenNotifications.map((notification: any, index: number) => (
+                <div key={index}>
+                  <div
+                    className={`-mx-2 flex items-center space-x-4 rounded-md p-2 transition-all space-y-2`}
+                  >
+                    <div className="w-2 h-2 opacity-0"></div>{" "}
+                    {/* Elemento invisibile per spaziatura */}
+                    <div className="flex flex-col space-y-2 w-full">
+                      <p className="text-sm font-medium leading-none">
+                        {notification.title}
                       </p>
-                      <p className="text-xs text-muted-foreground text-end">
-                        {new Date(notification.timestamp).toLocaleString()}
-                      </p>
+                      <div className="flex justify-between">
+                        <p className="text-sm text-muted-foreground">
+                          {notification.message}
+                        </p>
+                        <p className="text-xs text-muted-foreground text-right">
+                          {new Date(notification.timestamp).toLocaleString()}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

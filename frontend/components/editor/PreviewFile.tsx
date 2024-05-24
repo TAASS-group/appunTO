@@ -207,11 +207,17 @@ note、abstract、info、tip、success、question、warning、failure、danger�
   const { theme } = useTheme();
   const save = async () => {
     //
-    await genericFetchRequest("/file/updatefile/test1", "POST", {
-      content: text,
-      author: "author",
-      message: "update to a new version",
-    });
+    await genericFetchRequest(
+      `/file/updatefile/${course_id}`,
+      "POST",
+      {
+        content: text,
+        author: "author",
+        message: "update to a new version",
+      },
+      { "Content-Type": "application/json" }
+    );
+
     alert("saved");
     queryClient.invalidateQueries({ queryKey: ["getFileContent"] });
   };
@@ -226,12 +232,17 @@ note、abstract、info、tip、success、question、warning、failure、danger�
   };
 
   const onSubmit = async (title: string, message: string) => {
-    await genericFetchRequest("/file/updatefile/test1", "POST", {
-      title,
-      content: text,
-      author: "Simone",
-      message,
-    });
+    await genericFetchRequest(
+      `/file/updatefile/${course_id}`,
+      "POST",
+      {
+        title,
+        content: text,
+        author: "kDrhnFfbJFQBCjlltn40lqGPewG2",
+        message,
+      },
+      { "Content-Type": "application/json" }
+    );
     queryClient.invalidateQueries({ queryKey: ["getFileContent"] });
   };
 

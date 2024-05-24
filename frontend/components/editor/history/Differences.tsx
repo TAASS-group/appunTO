@@ -1,4 +1,5 @@
 import React from "react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const Differences = ({ diff }) => {
   const parseDiff = (diffString) => {
@@ -96,8 +97,10 @@ const Differences = ({ diff }) => {
   };
 
   return (
-    <div className="h-full overflow-y-scroll w-full rounded-r-lg">
-      {parsedLines.map((line, index) => renderLine(line, index))}
+    <div className="w-full h-full">
+      <div className="h-full w-full rounded-r-lg overflow-y-hidden max-h-full">
+        {parsedLines.map((line, index) => renderLine(line, index))}
+      </div>
     </div>
   );
 };
