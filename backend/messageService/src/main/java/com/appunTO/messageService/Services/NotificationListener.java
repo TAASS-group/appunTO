@@ -31,11 +31,11 @@ public class NotificationListener {
     @Autowired
     private ConnectionFactory connectionFactory;  // Inietta la ConnectionFactory
 
-    public void startListening(String queueName) {
+    public void startListening(long queueName) {
         System.out.println("Listening to queue: " + queueName);
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
+        container.setQueueNames(String.valueOf(queueName));
         container.setMessageListener(new MessageListenerAdapter(new MessageListener() {
             @Override
             public void onMessage(org.springframework.amqp.core.Message message) {

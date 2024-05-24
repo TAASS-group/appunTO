@@ -2,6 +2,7 @@ package com.appunto.fileService.Controllers;
 
 import com.appunto.fileService.DTO.CommitWithDiff;
 import com.appunto.fileService.DTO.UpdateFileDTO;
+import com.appunto.fileService.DTO.UserDTO;
 import com.appunto.fileService.Models.Commit;
 import com.appunto.fileService.Models.MyFile;
 import com.appunto.fileService.Services.FileService;
@@ -109,16 +110,31 @@ public class FileController {
         List<Commit> commits = fileService.getCommits(file.getId());
         List<CommitWithDiff> commitsWithDiff = new ArrayList<>();
 
-        if(commits.size() == 1) {
-            commitsWithDiff.add(new CommitWithDiff(commits.get(0), ""));
-            return ResponseEntity.ok(commitsWithDiff);
-        }
+        for (int i=0; i < commits.size(); i++) {
+            Commit currentCommit = commits.get(i);
 
-        for (int i=0; i < commits.size() -1; i++) {
-            String currentCommitId = commits.get(i).getId();
-            String nextCommitId = commits.get(i+1).getId();
-            String diff = fileService.getDiff(file.getId(), currentCommitId, nextCommitId);
-            commitsWithDiff.add(new CommitWithDiff(commits.get(i), diff));
+            String currentCommitId = currentCommit.getId();
+            String diff = "";
+            if(i < commits.size() - 1) {
+                String nextCommitId = commits.get(i + 1).getId();
+                diff = fileService.getDiff(file.getId(), currentCommitId, nextCommitId);
+            }
+            UserDTO user = restTemplate.getForObject("http://userservice/user/info?uid=" + currentCommit.getAuthor(), UserDTO.class);
+            if(user == null) return ResponseEntity.notFound().build();
+
+            CommitWithDiff commitWithDiff = CommitWithDiff.builder().
+                    id(currentCommit.getId()).
+                    message(currentCommit.getMessage()).
+                    title(currentCommit.getTitle()).
+                    createdAt(currentCommit.getCreatedAt()).
+                    authorName(user.getDisplayName()).
+                    authorImg(user.getPhotoUrl()).
+                    gitCommitId(currentCommit.getGitCommitId()).
+                    file(file.getId()).
+                    diff(diff).
+                    build();
+
+            commitsWithDiff.add(commitWithDiff);
         }
         return ResponseEntity.ok(commitsWithDiff);
     }

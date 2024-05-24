@@ -16,16 +16,18 @@ public class RabbitMQService {
     private final RabbitAdmin rabbitAdmin;
     private final NotificationListener notificationListener;
     public static final String EXCHANGE = "appunto-exchange";
+    public static final String ROUTINGKEYPREFIX = "notification.";
+
 
     public void createExchange() {
         log.info("Creating exchange");
         rabbitAdmin.declareExchange(new DirectExchange(EXCHANGE));
     }
 
-    public void createQueue(String queueName, String exchangeName, String routingKey) {
+    public void createQueue(long queueName) {
         log.info("Creating queue");
-        rabbitAdmin.declareQueue(new Queue(queueName));
-        rabbitAdmin.declareBinding(new Binding(queueName, Binding.DestinationType.QUEUE, exchangeName, routingKey, null));
+        rabbitAdmin.declareQueue(new Queue(String.valueOf(queueName)));
+        rabbitAdmin.declareBinding(new Binding(String.valueOf(queueName), Binding.DestinationType.QUEUE, EXCHANGE, ROUTINGKEYPREFIX + queueName, null));
         notificationListener.startListening(queueName);
     }
 }

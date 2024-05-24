@@ -17,10 +17,9 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String message;
     private String title;
-    private String courseId;
+    private long courseId;
     private String timestamp;
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -61,16 +64,27 @@ public class CustomWebSocketHandler extends TextWebSocketHandler {
         }
 
         String userId = parts[0].trim();
-        String[] courses = parts[1].trim().split("\\s+"); // split by whitespace
+        // String[] courses = parts[1].trim().split("\\s+"); // split by whitespace
         // call the userService to get the user's courses
-        Set<Long> userCourses = restTemplate.getForObject("http://userService/user/enrolledCourses?uid=" + userId, Set.class);
-        if(userCourses != null) {
-            for (Long course : userCourses) {
-                log.info("User " + userId + " is enrolled in course " + course);
-            }
+        ResponseEntity<Set<Long>> responseEntity = restTemplate.exchange(
+                "http://userservice/user/enrolledCourses?uid=" + userId,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<Set<Long>>() {}
+        );
+
+        if(responseEntity.getStatusCode().isError()) {
+            log.error("Error getting user courses");
+            return;
         }
 
-        for (String course : courses) {
+        Set<Long> userCourses = responseEntity.getBody();
+        if (userCourses == null) {
+            log.error("user has no courses");
+            return;
+        }
+
+        for (Long course : userCourses) {
             // get from db all the not aknowledged messages for the user and the course
             List<Notification> unSeen = notificationRepository.findUnseenNotificationsByCourseAndUser(course, userId);
             List<Notification> seen = notificationRepository.findSeenNotificationsByCourseAndUser(course, userId);

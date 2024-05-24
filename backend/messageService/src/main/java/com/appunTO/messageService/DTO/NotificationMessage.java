@@ -14,7 +14,7 @@ public class NotificationMessage implements Serializable {
     private Long id;
     private String message;
     private String title;
-    private String courseId;
+    private long courseId;
     private String timestamp;
     private boolean seen;
 
