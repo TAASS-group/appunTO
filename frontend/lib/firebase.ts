@@ -2,7 +2,7 @@
 import { getFirestore } from "firebase/firestore";
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCtfthP01EVK-kKnopFtV8muv4tDskq2Vg",
@@ -22,4 +22,10 @@ const firestore = getFirestore(app);
 
 const storage = getStorage(app);
 
-export { app, auth, firestore, storage };
+const uploadImageAndGetURL = async (file: File) => {
+  const storageRef = ref(storage, `images/${file.name}`);
+  await uploadBytes(storageRef, file);
+  const downloadUrl = await getDownloadURL(storageRef);
+  return downloadUrl;
+};
+export { app, auth, firestore, storage, uploadImageAndGetURL };
