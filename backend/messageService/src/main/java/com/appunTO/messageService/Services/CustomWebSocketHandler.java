@@ -3,6 +3,7 @@ package com.appunTO.messageService.Services;
 import com.appunTO.messageService.DTO.NotificationMessage;
 import com.appunTO.messageService.Model.Notification;
 import com.appunTO.messageService.Repository.NotificationRepository;
+import com.appunTO.messageService.Utils.ApiCall;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
@@ -50,37 +51,13 @@ public class CustomWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-        log.info("Binary message received: " + message.getPayload());
-        // message: userId: course1 course2 course3
-        if (!message.getPayload().contains(":")) {
-            log.error("Invalid message format");
-            return;
-        }
+        String userId = message.getPayload();
+        log.info("Binary message received: " + userId);
 
-        String[] parts = message.getPayload().split(":", 2);
-        if (parts.length < 2 || parts[1].isEmpty()) {
-            log.error("Invalid message data");
-            return;
-        }
-
-        String userId = parts[0].trim();
-        // String[] courses = parts[1].trim().split("\\s+"); // split by whitespace
         // call the userService to get the user's courses
-        ResponseEntity<Set<Long>> responseEntity = restTemplate.exchange(
-                "http://userservice/user/enrolledCourses?uid=" + userId,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<Set<Long>>() {}
-        );
-
-        if(responseEntity.getStatusCode().isError()) {
-            log.error("Error getting user courses");
-            return;
-        }
-
-        Set<Long> userCourses = responseEntity.getBody();
+        Set<Long> userCourses = ApiCall.getUserCourses(userId, restTemplate);
         if (userCourses == null) {
-            log.error("user has no courses");
+            log.error("User has no courses");
             return;
         }
 
@@ -91,21 +68,24 @@ public class CustomWebSocketHandler extends TextWebSocketHandler {
             broker.register(session, course);
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+            String courseName = ApiCall.getCourseName(course, restTemplate);
 
             // seen messages
             for(Notification notification : seen) {
                 // convert to json and send to the user
-                NotificationMessage notificationMessage = new NotificationMessage(notification, true);
+                NotificationMessage notificationMessage = new NotificationMessage(notification, true, courseName);
                 String json = objectMapper.writeValueAsString(notificationMessage);
                 session.sendMessage(new TextMessage(json));
             }
             // unseen messages
             for (Notification notification : unSeen) {
                 // convert to json and send to the user
-                NotificationMessage notificationMessage = new NotificationMessage(notification, false);
+                NotificationMessage notificationMessage = new NotificationMessage(notification, false, courseName);
                 String json = objectMapper.writeValueAsString(notificationMessage);
                 session.sendMessage(new TextMessage(json));
             }
         }
     }
+
+
 }

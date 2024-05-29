@@ -1,6 +1,7 @@
 package com.appunto.fileService.Controllers;
 
 import com.appunto.fileService.DTO.CommitWithDiff;
+import com.appunto.fileService.DTO.NotificationMessage;
 import com.appunto.fileService.DTO.UpdateFileDTO;
 import com.appunto.fileService.DTO.UserDTO;
 import com.appunto.fileService.Models.Commit;
@@ -24,6 +25,7 @@ public class FileController {
     private final FileService fileService;
 
     private RestTemplate restTemplate;
+
 
     @Autowired
     public FileController(FileService fileService, RestTemplate restTemplate) {
@@ -53,7 +55,7 @@ public class FileController {
     }
 
     @GetMapping(path = "/getFileContent/{courseId}")
-    public ResponseEntity<String> getFileContent(@PathVariable("courseId") String courseId) {
+    public ResponseEntity<String> getFileContent(@PathVariable("courseId") long courseId) {
         try {
             MyFile file = fileService.getFileByCourseId(courseId);
             if (file == null) return ResponseEntity.notFound().build();
@@ -68,13 +70,10 @@ public class FileController {
     }
 
     @PostMapping(path = "/addfile/{courseId}")
-    public ResponseEntity<MyFile> addFile(@PathVariable("courseId") String courseId) {
+    public ResponseEntity<MyFile> addFile(@PathVariable("courseId") long courseId) {
         try {
             MyFile file = fileService.addFile(courseId);
             if(file == null) return ResponseEntity.notFound().build();
-            String uid = "kDrhnFfbJFQBCjlltn40lqGPewG2";
-            String res = restTemplate.getForObject("http://userservice/user/info?uid=" + uid, String.class);
-            System.out.println(res);
             return ResponseEntity.ok(file);
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,7 +82,7 @@ public class FileController {
     }
 
     @PostMapping(path = "/updatefile/{courseId}")
-    public ResponseEntity<Commit> updateFile(@PathVariable("courseId") String courseId, @RequestBody UpdateFileDTO updateFileDTO) {
+    public ResponseEntity<Commit> updateFile(@PathVariable("courseId") long courseId, @RequestBody UpdateFileDTO updateFileDTO) {
         try {
             MyFile file = fileService.getFileByCourseId(courseId);
             if (file == null) return ResponseEntity.notFound().build();
@@ -95,6 +94,16 @@ public class FileController {
             Commit commit = fileService.updateFile(file.getId(), title, message, author, content);
             if(commit == null) return ResponseEntity.notFound().build();
 
+            // send notification using messageService
+            NotificationMessage notificationMessage = NotificationMessage.builder().
+                    message(message).
+                    title(title).
+                    courseId(courseId).
+                    timestamp(commit.getCreatedAt()).
+                    seen(false).
+                    build();
+            restTemplate.postForObject("http://messageservice/api/v1/message/send", notificationMessage, NotificationMessage.class);
+
             return ResponseEntity.ok(commit);
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,7 +112,7 @@ public class FileController {
     }
 
     @GetMapping(path = "/getCommmits/{courseId}")
-    public ResponseEntity<List<CommitWithDiff>> getCommits(@PathVariable("courseId") String courseId) {
+    public ResponseEntity<List<CommitWithDiff>> getCommits(@PathVariable("courseId") long courseId) {
         MyFile file = fileService.getFileByCourseId(courseId);
         if(file == null) return ResponseEntity.notFound().build();
 
@@ -140,7 +149,7 @@ public class FileController {
     }
 
     @GetMapping(path = "/getDiff")
-    public ResponseEntity<String> getDiff(@RequestParam("courseId") String courseId, @RequestParam("previusCommitId") String commitId1, @RequestParam("newCommitId") String commitId2) {
+    public ResponseEntity<String> getDiff(@RequestParam("courseId") long courseId, @RequestParam("previusCommitId") String commitId1, @RequestParam("newCommitId") String commitId2) {
         MyFile file = fileService.getFileByCourseId(courseId);
         if(file == null) return ResponseEntity.notFound().build();
 

@@ -3,6 +3,7 @@ package com.appunTO.messageService.Services;
 import com.appunTO.messageService.DTO.NotificationMessage;
 import com.appunTO.messageService.Model.Notification;
 import com.appunTO.messageService.Repository.NotificationRepository;
+import com.appunTO.messageService.Utils.ApiCall;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.MessageListener;
@@ -16,6 +17,7 @@ import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistry;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class NotificationListener {
@@ -29,13 +31,18 @@ public class NotificationListener {
     private NotificationRepository notificationRepository;
 
     @Autowired
-    private ConnectionFactory connectionFactory;  // Inietta la ConnectionFactory
+    private ConnectionFactory connectionFactory;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public void startListening(long queueName) {
         System.out.println("Listening to queue: " + queueName);
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(String.valueOf(queueName));
+        String courseName = ApiCall.getCourseName(queueName, restTemplate);
+
         container.setMessageListener(new MessageListenerAdapter(new MessageListener() {
             @Override
             public void onMessage(org.springframework.amqp.core.Message message) {
@@ -52,7 +59,7 @@ public class NotificationListener {
                 // save message to database
                 if (notification != null) {
                     notificationRepository.save(notification);
-                    NotificationMessage notificationMessage = new NotificationMessage(notification);
+                    NotificationMessage notificationMessage = new NotificationMessage(notification,false, courseName);
                     try {
                         String notificationJson = objectMapper.writeValueAsString(notificationMessage);
                         broker.broadcastToCourse(notificationJson, queueName);

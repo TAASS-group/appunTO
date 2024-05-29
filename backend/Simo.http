@@ -1,9 +1,13 @@
 @apigateway-port = 8080
-@default-uid = kDrhnFfbJFQBCjlltn40lqGPewG2
+@default-uid = L85D7KahSceqjGWPXRhmzfaCv5o1
+@loris-uid = kDrhnFfbJFQBCjlltn40lqGPewG2
 @courseId = 1
 
 ### add file
 POST http://localhost:{{apigateway-port}}/api/v1/file/addfile/{{courseId}}
+
+### get file content by course id
+GET http://localhost:{{apigateway-port}}/api/v1/file/getFileContent/{{courseId}}
 
 ### create exchange
 POST http://localhost:{{apigateway-port}}/api/v1/message/createExchange
@@ -15,7 +19,7 @@ Content-Type: application/json
 {{courseId}}
 
 ### enroll user to course 1
-GET http://localhost:8080/user/enroll?uid=kDrhnFfbJFQBCjlltn40lqGPewG2&courseId={{courseId}}
+GET http://localhost:8080/user/enroll?uid={{default-uid}}&courseId={{courseId}}
 
 ### get enrolled courses
 GET http://localhost:8080/user/enrolledCourses?uid={{default-uid}}
@@ -63,3 +67,21 @@ Content-Type: application/json
 
 ### get comment by commit id
 GET http://localhost:8080/api/v1/comment/getbycommit/66509e120168ad2c79e10feb
+
+### update user info
+POST http://localhost:8080/user/update
+Content-Type: application/json
+
+{
+  "uid": "{{default-uid}}",
+  "displayName": "monex",
+  "email" : "simone@me.com",
+  "phoneNumber": "+393425529227",
+  "photoUrl": "https://cdn3.iconfinder.com/data/icons/avatars-15/64/_Ninja-2-1024.png",
+  "bio": "just me",
+  "enrolledCourses": []
+}
+
+
+### getting user info
+GET http://localhost:8080/user/info?uid={{default-uid}}

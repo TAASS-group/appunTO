@@ -17,6 +17,7 @@ public class RabbitMQService {
     private final NotificationListener notificationListener;
     public static final String EXCHANGE = "appunto-exchange";
     public static final String ROUTINGKEYPREFIX = "notification.";
+    public boolean isExchangeCreated = false;
 
 
     public void createExchange() {
@@ -25,6 +26,10 @@ public class RabbitMQService {
     }
 
     public void createQueue(long queueName) {
+        if(!isExchangeCreated) {
+            createExchange();
+            isExchangeCreated = true;
+        }
         log.info("Creating queue");
         rabbitAdmin.declareQueue(new Queue(String.valueOf(queueName)));
         rabbitAdmin.declareBinding(new Binding(String.valueOf(queueName), Binding.DestinationType.QUEUE, EXCHANGE, ROUTINGKEYPREFIX + queueName, null));
