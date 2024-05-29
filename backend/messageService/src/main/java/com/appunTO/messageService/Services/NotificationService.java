@@ -13,7 +13,7 @@ public class NotificationService {
     private RabbitTemplate rabbitTemplate;
 
     public void sendNotification(NotificationMessage message) {
-       String routingKey = message.getCourseId();
+       long routingKey = message.getCourseId();
        rabbitTemplate.convertAndSend(RabbitMQService.EXCHANGE, "notification." + routingKey, message);
     }
 

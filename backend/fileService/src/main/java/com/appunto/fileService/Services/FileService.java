@@ -32,9 +32,9 @@ public class FileService {
         return fileRepository.findAll();
     }
 
-    public MyFile addFile(String courseId) {
-        if(!FileSystemUtils.getResource(courseId).exists()) {
-            Repository repository =  GitUtils.createRepository(courseId);
+    public MyFile addFile(long courseId) {
+        if(!FileSystemUtils.getResource(String.valueOf(courseId)).exists()) {
+            Repository repository =  GitUtils.createRepository(String.valueOf(courseId));
             String path = courseId + "/note.md";
 
             FileSystemUtils.createFile(path);
@@ -57,7 +57,7 @@ public class FileService {
         return fileRepository.findById(id).orElse(null);
     }
 
-    public MyFile getFileByCourseId(String courseId) {
+    public MyFile getFileByCourseId(long courseId) {
         return fileRepository.findByCourseId(courseId).orElse(null);
     }
 
@@ -69,8 +69,8 @@ public class FileService {
         return updateFile(file, title, message, author, text);
     }
     private Commit updateFile(MyFile file, String title, String message, String author, String text) {
-        String path = file.getCourseId();
-        if(!FileSystemUtils.getResource(path).exists()) {
+        long path = file.getCourseId();
+        if(!FileSystemUtils.getResource(String.valueOf(path)).exists()) {
            return null;
         }
         Repository repository = GitUtils.openExistingRepository(path + "/.git");
@@ -90,8 +90,8 @@ public class FileService {
 
 
     public ResponseEntity<Resource> downloadFile(String id, MediaType mediaType) throws Exception {
-        String pathString = fileRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid file ID: " + id)).getCourseId();
-        Path path = Paths.get(pathString);
+        long pathDb = fileRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid file ID: " + id)).getCourseId();
+        Path path = Paths.get(String.valueOf(pathDb));
         Resource file = new UrlResource(path.toUri());
         if (file.exists() || file.isReadable()) {
             return ResponseEntity.ok()
@@ -111,8 +111,8 @@ public class FileService {
     }
 
     public String getDiff(MyFile file, Commit selected, Commit previous) {
-        String path = file.getCourseId();
-        if(!FileSystemUtils.getResource(path).exists()) {
+        long path = file.getCourseId();
+        if(!FileSystemUtils.getResource(String.valueOf(path)).exists()) {
            return null;
         }
         Repository repository = GitUtils.openExistingRepository(path + "/.git");
