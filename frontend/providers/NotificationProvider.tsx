@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import * as React from "react";
 
 export const NotificationContext = React.createContext({} as any);
@@ -14,12 +15,14 @@ export function NotificationProvider({
     []
   );
   const [ws, setWs] = React.useState<WebSocket | null>(null);
+  const { data: session } = useSession();
 
   React.useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8085/ws");
+    if (!session?.user) return;
+    const socket = new WebSocket("ws://127.0.0.1:8085/ws");
     socket.onopen = () => {
       // userid:courseId
-      socket.send("kDrhnFfbJFQBCjlltn40lqGPewG2:test1");
+      socket.send((session?.user as any).uid);
       console.log("Socket connected");
     };
     socket.onmessage = (event) => {

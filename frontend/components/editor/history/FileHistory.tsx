@@ -4,6 +4,9 @@ import Commit from "./Commit";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { genericFetchRequest } from "@/lib/utils";
+import Image from "next/image";
+import { Icons } from "@/components/icons";
+import ImageUploader from "@/components/fileUploader";
 
 export type CommitType = {
   id: string;
@@ -101,6 +104,35 @@ export default function FileHistory() {
             index={index}
           />
         ))}
+      {isLoading && (
+        <div className="w-full h-[60vh] flex justify-center items-center">
+          <div className="flex justify-center items-center gap-2">
+            <Icons.spinner className="animate-spin w-12 h-12" />
+            <p className="text-center">Loading commits</p>
+          </div>
+        </div>
+      )}
+      {(error || (commits && commits.length === 0)) && (
+        <div className="text-center items-center flex flex-col justify-center min-h-[300px] space-y-8 py-8">
+          <Image
+            src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2ljOGUwMHJteWswdzdvenkzYWtreTg5N2M3bXoxNzB2cTV5bTh5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Gf5pzZxHdyTcs/giphy.gif"
+            alt="No commits found"
+            width={400}
+            height={400}
+            className="rounded-md"
+          />
+          <div className="space-y-2">
+            <p className="text-xl md:text-2xl font-bold">
+              Oops... it's quite empty here!
+            </p>
+            <p>
+              <span className="block">
+                Start the journey by committing today.
+              </span>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

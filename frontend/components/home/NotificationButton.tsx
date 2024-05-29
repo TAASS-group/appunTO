@@ -13,6 +13,8 @@ import { NotificationContext } from "@/providers/NotificationProvider";
 import { Bell } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { genericFetchRequest } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export function NotificationButton() {
   let {
@@ -91,6 +93,8 @@ export function NotificationButton() {
     ]) */
   }, []);
 
+  const { data: session } = useSession();
+
   const ackNotification = async (notificationId: number) => {
     console.log("ack", notificationId);
     const ret = await fetch("http://localhost:8085/api/v1/message/ackowledge", {
@@ -98,7 +102,10 @@ export function NotificationButton() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ notificationId, userId: 1 }),
+      body: JSON.stringify({
+        notificationId,
+        userId: (session?.user as any).uid,
+      }),
     });
 
     console.log(ret);
@@ -136,28 +143,40 @@ export function NotificationButton() {
                 {unseenNotifications.length}
               </Badge>
             </div>
+            {unseenNotifications.length === 0 &&
+              seenNotifications.length === 0 && (
+                <div className="flex flex-col h-[20vh] items-center justify-center space-y-2">
+                  <p className="text-lg font-bold">No notifications</p>
+                  <p className="text-muted-foreground">
+                    You have no notifications to show
+                  </p>
+                </div>
+              )}
             <div className="flex flex-col-reverse">
               {unseenNotifications.map((notification: any, index: number) => (
                 <div
                   onClick={() => ackNotification(notification.id)}
                   key={index}
                 >
-                  <div
-                    className={`-mx-2 flex items-center space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground space-y-2`}
-                  >
-                    <div className="w-2 h-2 bg-black rounded-full"></div>{" "}
-                    {/* Cerchio nero */}
-                    <div className="flex flex-col space-y-2 w-full">
-                      <p className="text-sm font-medium leading-none">
-                        {notification.title}
-                      </p>
-                      <div className="flex justify-between">
-                        <p className="text-sm text-muted-foreground">
-                          {notification.message}
+                  <div className="border-t border-gray-200">
+                    <div className="-mx-2 flex items-center space-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground space-y-2">
+                      <div className="w-2 h-2 bg-black rounded-full"></div>{" "}
+                      <div className="flex flex-col space-y-2 w-full">
+                        <p className="font-medium leading-none">
+                          {notification.courseName}
                         </p>
-                        <p className="text-xs text-muted-foreground text-right">
-                          {new Date(notification.timestamp).toLocaleString()}
-                        </p>
+                        <div className="p-2 space-y-2">
+                          <p className="text-sm font-medium leading-none  ">
+                            {notification.title}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {notification.message}
+                          </p>
+
+                          <p className="text-xs text-muted-foreground text-right">
+                            {new Date(notification.timestamp).toLocaleString()}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -167,22 +186,25 @@ export function NotificationButton() {
             <div className="flex flex-col-reverse">
               {seenNotifications.map((notification: any, index: number) => (
                 <div key={index}>
-                  <div
-                    className={`-mx-2 flex items-center space-x-4 rounded-md p-2 transition-all space-y-2`}
-                  >
-                    <div className="w-2 h-2 opacity-0"></div>{" "}
-                    {/* Elemento invisibile per spaziatura */}
-                    <div className="flex flex-col space-y-2 w-full">
-                      <p className="text-sm font-medium leading-none">
-                        {notification.title}
-                      </p>
-                      <div className="flex justify-between">
-                        <p className="text-sm text-muted-foreground">
-                          {notification.message}
+                  <div className="border-t border-gray-200">
+                    <div className="-mx-2 flex items-center space-x-4 rounded-md p-2 transition-all space-y-2">
+                      <div className="w-2 h-2 opacity-0"></div>{" "}
+                      <div className="flex flex-col space-y-2 w-full">
+                        <p className="font-medium leading-none">
+                          {"Intelligenza Artificiale"}
                         </p>
-                        <p className="text-xs text-muted-foreground text-right">
-                          {new Date(notification.timestamp).toLocaleString()}
-                        </p>
+                        <div className="p-2 space-y-2">
+                          <p className="text-sm font-medium leading-none">
+                            {notification.title}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {notification.message}
+                          </p>
+
+                          <p className="text-xs text-muted-foreground text-right">
+                            {new Date(notification.timestamp).toLocaleString()}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

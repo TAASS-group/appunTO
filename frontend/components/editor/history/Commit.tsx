@@ -10,6 +10,7 @@ import { Collapsible } from "@radix-ui/react-collapsible";
 import { CollapsibleContent } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useSession } from "next-auth/react";
 
 export type commentType = {
   id: string;
@@ -33,6 +34,7 @@ export default function Commit({
   const [isOpen, setIsOpen] = useState(false);
   const [comments, setComments] = useState<commentType[]>([]);
   const [commentText, setCommentText] = useState("");
+  const { data: session } = useSession();
 
   /* const diffText = `diff --git a/file.txt b/file.txt
   index 89cc574..b45ef6f 100644
@@ -84,7 +86,7 @@ export default function Commit({
       `/comment/add`,
       "POST",
       {
-        author: "kDrhnFfbJFQBCjlltn40lqGPewG2",
+        author: (session?.user as any).uid,
         text: commentText,
         createdAt: new Date(),
         commit: { id: commitId },
@@ -98,9 +100,9 @@ export default function Commit({
   };
   return (
     <div
-      className={`flex flex-row w-full min-h-[200px] ${
-        index == selectedCommit ? "bg-gray-100 rounded-lg" : ""
-      }`}
+      className={`flex flex-row w-full min-h-[200px] rounded-lg ${
+        index == selectedCommit ? "bg-gray-100 " : ""
+      } hover:outline-1 hover:outline outline-gray-200	`}
       onClick={() => setSelectedCommit(index)}
     >
       {commit && (

@@ -52,6 +52,7 @@ import FileHistory from "./history/FileHistory";
 import { genericFetchRequest } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { CommitDialog } from "./commitDialog";
+import { useSession } from "next-auth/react";
 export default function PreviewFile() {
   const { course_id } = useParams();
 
@@ -147,6 +148,8 @@ note、abstract、info、tip、success、question、warning、failure、danger�
   const [text, setText] = useState(textprova);
   const [previusText, setPreviusText] = useState(textprova);
 
+  const { data: session } = useSession();
+
   const previewToolbar: ToolbarNames[] = [
     "=",
     "pageFullscreen",
@@ -238,7 +241,7 @@ note、abstract、info、tip、success、question、warning、failure、danger�
       {
         title,
         content: text,
-        author: "kDrhnFfbJFQBCjlltn40lqGPewG2",
+        author: (session?.user as any).uid,
         message,
       },
       { "Content-Type": "application/json" }
@@ -249,7 +252,7 @@ note、abstract、info、tip、success、question、warning、failure、danger�
   const exportPdfRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="flex flex-col w-full overflow-hidden px-4 pt-8">
+    <div className="flex flex-col w-full px-4 pt-8">
       <div className="flex flex-col">
         <div className="text-center">
           <span className="text-2xl font-semibold">Title</span>
