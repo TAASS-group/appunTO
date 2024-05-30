@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
 public interface FileRepository extends MongoRepository<MyFile, String> {
-    Optional<MyFile> findByCourseId(String courseId);
+    Optional<MyFile> findByCourseId(long courseId);
 }

@@ -26,6 +26,7 @@
     <bytecodeTargetLevel>
       <module name="FileService" target="1.5" />
       <module name="fileService (1)" target="21" />
+      <module name="serviceForum" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

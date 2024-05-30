@@ -32,6 +32,11 @@ public class ForumController {
         forumService.deleteForum(forumId);
     }
 
+    @GetMapping("/getForumByCourseId/{courseId}")
+    public Forum getForumByCourseId(@PathVariable Long courseId) {
+        return forumService.getForumByCourseId(courseId);
+    }
+
 
 
 

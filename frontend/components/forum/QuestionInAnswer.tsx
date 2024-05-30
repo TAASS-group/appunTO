@@ -14,13 +14,13 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-
-export default function QuestionInAnswer() {
+import { QuestionType } from "./data/questions";
+export default function QuestionInAnswer({question} : {question: any}) {
   return (
     <div>
       <div className="flex justify-between items-center my-8 mx-2 pl-6 ">
         <h1 className="text-3xl font-semibold leading-none tracking-tight text-center ">
-          Nuovelle AI e Machine Learning
+          {question.topic}
         </h1>
 
         <Dialog>
@@ -47,30 +47,17 @@ export default function QuestionInAnswer() {
       </div>
       <div className="flex items-stretch gap-2 px-4 pb-10 pl-7 pr-12">
         <Avatar className="h-12 w-12">
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={
+                question.imageUrl == ""
+                  ? "https://github.com/shadcn.png"
+                  : question.imageUrl
+              } />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
 
         <Separator orientation="vertical" className="self-stretch" />
         <p className=" text-sm border-l-2 pl-4 text-justify">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem
-          excepturi quia aut qui animi nobis explicabo veniam rem assumenda
-          temporibus. Recusandae id distinctio obcaecati eaque ad cupiditate
-          velit suscipit autem? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Quia odit quas eos blanditiis cumque? Corrupti quasi
-          officia odit veniam id quos ipsum atque maiores debitis. Quos quod qui
-          corrupti eligendi. Lorem ipsum dolor sit amet, consectetur adipisicing
-          elit. Voluptatem excepturi quia aut qui animi nobis explicabo veniam
-          rem assumenda temporibus. Recusandae id distinctio obcaecati eaque ad
-          cupiditate velit suscipit autem? Lorem ipsum dolor sit amet
-          consectetur adipisicing elit. Quia odit quas eos blanditiis cumque?
-          Corrupti quasi officia odit veniam id quos ipsum atque maiores
-          debitis. Quos quod qui corrupti eligendi. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Voluptatem excepturi quia aut qui animi
-          nobis explicabo veniam rem assumenda temporibus. Recusandae id
-          distinctio obcaecati eaque ad cupiditate velit suscipit autem? Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Quia odit quas eos
-          blanditiis
+         {question.text}
         </p>
       </div>
     </div>

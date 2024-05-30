@@ -98,4 +98,9 @@ private final CourseRepository courseRepository;
         return courses;
 
     }
+
+    public Course getCourseById(int courseId) {
+        return courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalStateException("Course with id " + courseId + " does not exist"));
+    }
 }

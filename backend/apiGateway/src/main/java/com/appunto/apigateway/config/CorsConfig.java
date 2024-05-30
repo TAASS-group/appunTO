@@ -15,7 +15,7 @@ public class CorsConfig extends CorsConfiguration {
         final CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.addAllowedOrigin("http://localhost:3000");
         corsConfig.setMaxAge(3600L);
-        corsConfig.setAllowedMethods(Arrays.asList("OPTIONS", "GET", "POST", "DELETE"));
+        corsConfig.setAllowedMethods(Arrays.asList("OPTIONS", "GET", "POST", "DELETE", "PUT"));
         corsConfig.addAllowedHeader("*");
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

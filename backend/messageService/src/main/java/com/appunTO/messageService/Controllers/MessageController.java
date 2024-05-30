@@ -1,7 +1,6 @@
 package com.appunTO.messageService.Controllers;
 
 import com.appunTO.messageService.DTO.AcknowledgeMessageDTO;
-import com.appunTO.messageService.DTO.CreateQueueDTO;
 import com.appunTO.messageService.DTO.NotificationMessage;
 import com.appunTO.messageService.Services.NotificationService;
 import com.appunTO.messageService.Services.RabbitMQService;
@@ -43,8 +42,8 @@ public class MessageController {
     }
 
     @PostMapping(path = "/createQueue")
-    public void createExchange(@RequestBody CreateQueueDTO createQueueDTO) {
-        rabbitMQService.createQueue(createQueueDTO.getQueueName(), createQueueDTO.getExchangeName(), createQueueDTO.getRoutingKey());
+    public void createExchange(@RequestBody long queueName) {
+        rabbitMQService.createQueue(queueName);
     }
 
 }

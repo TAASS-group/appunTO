@@ -1,143 +1,108 @@
-/* import React from "react";
+import React from "react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-const Differences = ({ before, after }) => {
-  // Function to create a map of changes for easy lookup
-  const mapChanges = (data, type) => {
-    return data.reduce((acc, item) => {
-      acc[item.row] = {
-        ...item,
-        type,
-      };
-      return acc;
-    }, {});
-  };
-
-  const beforeChanges = mapChanges(before, "before");
-  const afterChanges = mapChanges(after, "after");
-
-  // Finding the maximum row number to iterate over all possible rows
-  const maxRow = Math.max(
-    ...before.map((item) => item.row),
-    ...after.map((item) => item.row)
-  );
-
-  // Function to highlight the words based on the change type
-  const highlightWords = (line, wordsChanged, type) => {
-    const lineWords = line.split(" ");
-    return lineWords.map((word, index) => {
-      const key = `${type}-${index}`;
-      const highlight = wordsChanged.includes(word);
-      if (highlight) {
-        const style =
-          type === "before"
-            ? { backgroundColor: "#ff000033" }
-            : { backgroundColor: "#0080003b" };
-        return (
-          <span key={key} style={style}>
-            {word}
-          </span>
-        );
-      }
-      return word;
-    });
-  };
-
-  // Function to render each row with the correct styling
-  const renderRow = (rowIndex) => {
-    const beforeLine = beforeChanges[rowIndex];
-    const afterLine = afterChanges[rowIndex];
-    const beforeText = beforeLine
-      ? highlightWords(beforeLine.line, beforeLine.wordsChanged, "before")
-      : null;
-    const afterText = afterLine
-      ? highlightWords(afterLine.line, afterLine.wordsChanged, "after")
-      : null;
+const Differences = ({ diff }) => {
+  const parseDiff = (diffString) => {
+    let oldLineNumber = 1;
+    let newLineNumber = 1;
 
     return (
-      <div
-        key={`row-${rowIndex}`}
-        style={{ display: "flex", flexDirection: "column" }}
-      >
-        {beforeText && (
-          <div style={{ textDecoration: "line-through", color: "red" }}>
-            {rowIndex}
-            {beforeText}
-          </div>
-        )}
-        {afterText && (
-          <div style={{ color: "green" }}>
-            {rowIndex}
-            {afterText}
-          </div>
-        )}
-      </div>
+      diffString
+        .split("\n")
+        .slice(4) // start parsing after the header lines
+        .filter(
+          (line) =>
+            !line.startsWith("\\ No newline at end of file") &&
+            !line.startsWith("@@")
+        )
+        //remove last
+        .slice(0, -1)
+        .map((line) => {
+          let parsedLine = { content: line.substring(1), type: "context" };
+
+          if (line.startsWith("-")) {
+            parsedLine = {
+              ...parsedLine,
+              type: "deletion",
+              oldLineNumber: oldLineNumber++,
+              newLineNumber: "",
+            };
+          } else if (line.startsWith("+")) {
+            parsedLine = {
+              ...parsedLine,
+              type: "addition",
+              oldLineNumber: "",
+              newLineNumber: newLineNumber++,
+            };
+          } else {
+            parsedLine = {
+              ...parsedLine,
+              oldLineNumber: oldLineNumber++,
+              newLineNumber: newLineNumber++,
+            };
+          }
+
+          return parsedLine;
+        })
     );
   };
 
-  // Render the rows between 0 and the maximum found row
-  const renderDiff = () => {
-    let rows = [];
-    for (let i = 0; i <= maxRow; i++) {
-      rows.push(renderRow(i));
-    }
-    return rows;
-  };
-
-  return (
-    <div>
-      <h3>Diff Viewer</h3>
-      {renderDiff()}
-    </div>
-  );
-};
-
-export default Differences;
- */
-
-import React from "react";
-
-const Differences = ({ diff }) => {
-  // This function will parse the diff string and return an array of lines with their respective types (addition, deletion, or context)
-  const parseDiff = (diffString) => {
-    return diffString
-      .split("\n")
-      .slice(4) // start parsing after the header lines
-      .filter(
-        (line) =>
-          !line.startsWith("\\ No newline at end of file") &&
-          !line.startsWith("@@")
-      )
-      .map((line) => {
-        if (line.startsWith("-")) {
-          return { type: "deletion", content: line.substring(1) }; // remove the '-' prefix
-        } else if (line.startsWith("+")) {
-          return { type: "addition", content: line.substring(1) }; // remove the '+' prefix
-        } else {
-          return { type: "context", content: line };
-        }
-      });
-  };
-
-  // Storing the parsed diff in a state variable
   const parsedLines = parseDiff(diff);
 
-  // This function renders a single line with the appropriate styling
   const renderLine = (line, index) => {
     let style = {};
     if (line.type === "deletion") {
-      style = { backgroundColor: "pink", textDecoration: "line-through" };
+      style = { backgroundColor: "#FF6868" };
     } else if (line.type === "addition") {
-      style = { backgroundColor: "lightgreen" };
+      style = { backgroundColor: "#66DE93" };
     }
 
     return (
-      <div key={index} style={style}>
-        {line.content}
+      <div
+        key={index}
+        style={{
+          ...style,
+          display: "flex",
+          padding: "5px 10px",
+          fontFamily: "monospace",
+          borderBottom: "1px solid #ddd",
+        }}
+      >
+        {line.oldLineNumber ? (
+          <span
+            style={{
+              display: "inline-block",
+              textAlign: "right",
+              paddingRight: "10px",
+              borderRight: "1px solid #ddd",
+            }}
+          >
+            {line.oldLineNumber || ""}
+          </span>
+        ) : (
+          <span
+            style={{
+              display: "inline-block",
+              textAlign: "right",
+              paddingRight: "10px",
+              borderRight: "1px solid #ddd",
+            }}
+          >
+            {line.newLineNumber || ""}
+          </span>
+        )}
+        <span style={{ paddingLeft: "10px" }}>{line.content}</span>
       </div>
     );
   };
 
-  return <div>{parsedLines.map((line, index) => renderLine(line, index))}</div>;
+  return (
+    <div className="w-full h-full">
+      <div className="h-full w-full rounded-r-lg overflow-y-hidden max-h-full">
+        {parsedLines.map((line, index) => renderLine(line, index))}
+      </div>
+    </div>
+  );
 };
 
 export default Differences;

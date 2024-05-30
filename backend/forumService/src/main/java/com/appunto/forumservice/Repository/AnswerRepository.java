@@ -10,4 +10,6 @@ public interface AnswerRepository extends ListCrudRepository<Answer, Long> {
 
     @Query("SELECT a FROM Answer a WHERE a.question.id = ?1")
     List<Answer> findByQuestionId(Long questionId);
+
+    void deleteByQuestionId(Long questionId);
 }

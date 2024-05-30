@@ -24,6 +24,7 @@ public class FileController {
 
     private RestTemplate restTemplate;
 
+
     @Autowired
     public FileController(FileService fileService, RestTemplate restTemplate) {
         this.fileService = fileService;
@@ -134,7 +135,7 @@ public class FileController {
     }
 
     @GetMapping(path = "/getFileContent/{courseId}")
-    public ResponseEntity<String> getFileContent(@PathVariable("courseId") String courseId) {
+    public ResponseEntity<String> getFileContent(@PathVariable("courseId") long courseId) {
         try {
             MyFile file = fileService.getFileByCourseId(courseId);
             if (file == null) return ResponseEntity.notFound().build();
@@ -149,13 +150,10 @@ public class FileController {
     }
 
     @PostMapping(path = "/addfile/{courseId}")
-    public ResponseEntity<MyFile> addFile(@PathVariable("courseId") String courseId) {
+    public ResponseEntity<MyFile> addFile(@PathVariable("courseId") long courseId) {
         try {
             MyFile file = fileService.addFile(courseId);
             if(file == null) return ResponseEntity.notFound().build();
-            String uid = "kDrhnFfbJFQBCjlltn40lqGPewG2";
-            String res = restTemplate.getForObject("http://userservice/user/info?uid=" + uid, String.class);
-            System.out.println(res);
             return ResponseEntity.ok(file);
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,7 +162,7 @@ public class FileController {
     }
 
     @PostMapping(path = "/updatefile/{courseId}")
-    public ResponseEntity<Commit> updateFile(@PathVariable("courseId") String courseId, @RequestBody UpdateFileDTO updateFileDTO) {
+    public ResponseEntity<Commit> updateFile(@PathVariable("courseId") long courseId, @RequestBody UpdateFileDTO updateFileDTO) {
         try {
             MyFile file = fileService.getFileByCourseId(courseId);
             if (file == null) return ResponseEntity.notFound().build();
@@ -176,6 +174,16 @@ public class FileController {
             Commit commit = fileService.updateFile(file.getId(), title, message, author, content);
             if(commit == null) return ResponseEntity.notFound().build();
 
+            // send notification using messageService
+            NotificationMessage notificationMessage = NotificationMessage.builder().
+                    message(message).
+                    title(title).
+                    courseId(courseId).
+                    timestamp(commit.getCreatedAt()).
+                    seen(false).
+                    build();
+            restTemplate.postForObject("http://messageservice/api/v1/message/send", notificationMessage, NotificationMessage.class);
+
             return ResponseEntity.ok(commit);
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,29 +192,44 @@ public class FileController {
     }
 
     @GetMapping(path = "/getCommmits/{courseId}")
-    public ResponseEntity<List<CommitWithDiff>> getCommits(@PathVariable("courseId") String courseId) {
+    public ResponseEntity<List<CommitWithDiff>> getCommits(@PathVariable("courseId") long courseId) {
         MyFile file = fileService.getFileByCourseId(courseId);
         if(file == null) return ResponseEntity.notFound().build();
 
         List<Commit> commits = fileService.getCommits(file.getId());
         List<CommitWithDiff> commitsWithDiff = new ArrayList<>();
 
-        if(commits.size() == 1) {
-            commitsWithDiff.add(new CommitWithDiff(commits.get(0), ""));
-            return ResponseEntity.ok(commitsWithDiff);
-        }
+        for (int i=0; i < commits.size(); i++) {
+            Commit currentCommit = commits.get(i);
 
-        for (int i=0; i < commits.size() -1; i++) {
-            String currentCommitId = commits.get(i).getId();
-            String nextCommitId = commits.get(i+1).getId();
-            String diff = fileService.getDiff(file.getId(), currentCommitId, nextCommitId);
-            commitsWithDiff.add(new CommitWithDiff(commits.get(i), diff));
+            String currentCommitId = currentCommit.getId();
+            String diff = "";
+            if(i < commits.size() - 1) {
+                String nextCommitId = commits.get(i + 1).getId();
+                diff = fileService.getDiff(file.getId(), currentCommitId, nextCommitId);
+            }
+            UserDTO user = restTemplate.getForObject("http://userservice/user/info?uid=" + currentCommit.getAuthor(), UserDTO.class);
+            if(user == null) return ResponseEntity.notFound().build();
+
+            CommitWithDiff commitWithDiff = CommitWithDiff.builder().
+                    id(currentCommit.getId()).
+                    message(currentCommit.getMessage()).
+                    title(currentCommit.getTitle()).
+                    createdAt(currentCommit.getCreatedAt()).
+                    authorName(user.getDisplayName()).
+                    authorImg(user.getPhotoUrl()).
+                    gitCommitId(currentCommit.getGitCommitId()).
+                    file(file.getId()).
+                    diff(diff).
+                    build();
+
+            commitsWithDiff.add(commitWithDiff);
         }
         return ResponseEntity.ok(commitsWithDiff);
     }
 
     @GetMapping(path = "/getDiff")
-    public ResponseEntity<String> getDiff(@RequestParam("courseId") String courseId, @RequestParam("previusCommitId") String commitId1, @RequestParam("newCommitId") String commitId2) {
+    public ResponseEntity<String> getDiff(@RequestParam("courseId") long courseId, @RequestParam("previusCommitId") String commitId1, @RequestParam("newCommitId") String commitId2) {
         MyFile file = fileService.getFileByCourseId(courseId);
         if(file == null) return ResponseEntity.notFound().build();
 
