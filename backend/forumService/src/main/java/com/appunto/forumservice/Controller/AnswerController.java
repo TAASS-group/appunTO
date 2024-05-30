@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RestController
 @RequestMapping ("/answer")
 public class AnswerController {
@@ -49,6 +49,11 @@ public class AnswerController {
     @PutMapping(path = "{answerId}")
     public void updateAnswer(@PathVariable("answerId") long answerId, @RequestParam("likeCount") int likeCount) {
         answerService.updateAnswer(answerId, likeCount);
+    }
+
+    @GetMapping(path = "{answerId}")
+    public int updateAnswer(@PathVariable("answerId") long answerId) {
+       return answerService.getAnswerUpvotes(answerId);
     }
 
     @DeleteMapping("/deleteAnswer/{answerId}")

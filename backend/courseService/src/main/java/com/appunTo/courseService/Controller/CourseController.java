@@ -58,4 +58,9 @@ public class CourseController {
         return courseService.findCourse(name);
     }
 
+    @GetMapping("/getCourseById/{courseId}")
+    public Course getCourseById(@PathVariable int courseId) {
+        return courseService.getCourseById(courseId);
+    }
+
 }

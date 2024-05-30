@@ -46,4 +46,9 @@ public class AnswerService {
         answer.deleteQuestion();
         answerRepository.deleteById(answerId);
     }
+
+    public int getAnswerUpvotes(Long answerId) {
+        Answer answer = answerRepository.findById(answerId).orElseThrow(() -> new IllegalStateException("Answer with id " + answerId + " does not exist"));
+        return answer.getUpvotes();
+    }
 }

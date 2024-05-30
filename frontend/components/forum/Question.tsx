@@ -27,12 +27,17 @@ export default function Question({ question, course_id }: { question: QuestionTy
  
 
   return (
-    <Card>
+    <Card className="hover:scale-[1.01]  transition-all cursor-pointer select-none">
       <CardHeader className="pl-5">
-        <CardTitle>{question.topic}</CardTitle>
+      
+          <h3 className="font-bold leading-none">{question.topic}</h3>
+          
+        
       </CardHeader>
+      
       <CardContent className="flex gap-4 items-center py-0">
         <div className="h-12 flex gap-4">
+      
           <Avatar className="h-12 w-12">
             <AvatarImage
               src={
@@ -48,8 +53,11 @@ export default function Question({ question, course_id }: { question: QuestionTy
         </div>
         <p className="max-h-12 text-sm line-clamp-2">{question.text}</p>
       </CardContent>
+      <div className="pt-2 w-fit pl-5">
+        <p className="text-xs text-muted-foreground">{question.username}</p>
+        </div>
 
-      <CardFooter className="flex justify-end pb-1">
+      <CardFooter className="flex justify-end pb-4 h-7">
         <Link
           href={{
             pathname: `/${course_id}/forum/${question.id}/answer`,

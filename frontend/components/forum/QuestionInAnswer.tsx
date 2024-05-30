@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Plus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { QuestionType } from "./data/questions";
-export default function QuestionInAnswer({question} : {question: QuestionType}) {
+export default function QuestionInAnswer({question} : {question: any}) {
   return (
     <div>
       <div className="flex justify-between items-center my-8 mx-2 pl-6 ">
