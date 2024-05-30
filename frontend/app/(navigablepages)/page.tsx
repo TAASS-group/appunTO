@@ -15,20 +15,64 @@ import {
 } from "@/components/home/data/albums";
 import { playlists } from "@/components/home/data/playlists";
 import { HomeRecentChange } from "@/components/home/HomeRecentChange";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/options";
+import { genericFetchRequest } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: "Music App",
   description: "Example music app using the components.",
 };
 
-export default function MusicPage() {
+export type MyFile = {
+  id: string;
+  path: string;
+  courseId: string;
+};
+export type Commit = {
+  id: string;
+  message: string;
+  title: string;
+  createdAt: string;
+  author: string;
+  gitCommitId: string;
+  file: MyFile;
+};
+export type Favourite = { file: MyFile; courseName: string; content: string };
+export type RecentChange = {
+  commit: Commit;
+  courseName: string;
+  authors: string[];
+  user: {
+    uid: string;
+    displayName: string;
+    photoUrl: string;
+  };
+};
+export type HomeData = {
+  uid: string;
+  hasFavorites: boolean;
+  favourites: Favourite[];
+  recentChanged: RecentChange[];
+};
+
+export default async function Page() {
+  const session = await getServerSession(authOptions);
+  const res = await genericFetchRequest(
+    `/api/v1/file/getUserFiles/${session?.user.uid}`,
+    "GET"
+  );
+
+  const data: HomeData = await res.json();
+
+  console.log("USER DATA", res, data);
   return (
     <>
       <div className="">
         <div className="border-t">
           <div className="bg-background">
-            <div className="grid lg:grid-cols-5">
-              <Sidebar playlists={playlists} className="hidden lg:block" />
+            <div className="grid grid-cols-1 lg:grid-cols-5">
+              <Sidebar playlists={playlists} />
               <div className="col-span-3 lg:col-span-4 lg:border-l">
                 <div className="h-full px-4 py-6 lg:px-8">
                   <div className="flex items-center justify-between">
@@ -42,10 +86,10 @@ export default function MusicPage() {
                   <div className="relative">
                     <ScrollArea>
                       <div className="flex space-x-4 pb-4">
-                        {listenNowAlbums.map((album) => (
+                        {data.favourites.map((fav, index) => (
                           <HomeFileFavourite
-                            key={album.name}
-                            album={album}
+                            key={fav.file.id}
+                            favourite={fav}
                             className="w-[220px]"
                             aspectRatio="portrait"
                             width={250}
@@ -64,9 +108,12 @@ export default function MusicPage() {
                   <Separator className="my-4" />
                   <div className="relative">
                     <ScrollArea className="w-full ">
-                      <div className="flex flex-col w-full space-y-4 pb-4 pt-2 pl-2 pr-3">
-                        {madeForYouAlbums.map((album) => (
-                          <HomeRecentChange key={album.name} album={album} />
+                      <div className="flex flex-col w-full space-y-4 pb-4 pt-2 lg:pl-2 pr-2 lg:pr-3">
+                        {data.recentChanged.map((commit) => (
+                          <HomeRecentChange
+                            key={commit.commit.id}
+                            change={commit}
+                          />
                         ))}
                       </div>
                       <ScrollBar orientation="vertical" />

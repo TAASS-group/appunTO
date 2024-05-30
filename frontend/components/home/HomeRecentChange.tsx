@@ -22,9 +22,11 @@ import "md-editor-rt/lib/style.css";
 import { Card, CardContent, CardHeader } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Separator } from "../ui/separator";
+import { Commit, RecentChange } from "@/app/(navigablepages)/page";
+import Link from "next/link";
 
-interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
-  album: Album;
+interface HomeRecentChangeProps extends React.HTMLAttributes<HTMLDivElement> {
+  change: RecentChange;
 }
 
 const textprova = `## 😲 md-editor-rt
@@ -83,52 +85,47 @@ note、abstract、info、tip、success、question、warning、failure、danger�
 ## ☘️ em...
 `;
 
-export function HomeRecentChange({ album }: AlbumArtworkProps) {
+export function HomeRecentChange({ change }: HomeRecentChangeProps) {
   return (
-    <Card className="space-y-3 w-full !mx-1 hover:scale-[1.01]  transition-all cursor-pointer select-none">
-      <CardHeader className="flex flex-row justify-between  items-center pb-0">
-        <div className="space-y-1 w-fit">
-          <h3 className="font-bold leading-none">{album.name}</h3>
-          <p className="text-xs text-muted-foreground">{album.artist}</p>
-        </div>
-        <div className="!m-0 flex">
-          <Avatar className="h-8 w-8 translate-x-6 z-40 border-2 border-muted">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <Avatar className="h-8 w-8 translate-x-4 z-30 border-2 border-muted">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <Avatar className="h-8 w-8 translate-x-2 z-20 border-2 border-muted">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <Avatar className="h-8 w-8 z-10 border-2 border-muted">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-        </div>
-      </CardHeader>
-      <CardContent className="flex gap-4 items-center">
-        <div className="h-12 flex gap-4">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+    <Link href={`/${change.commit.file.courseId}`}>
+      <Card className="space-y-3 w-full !mx-1 hover:scale-[1.01]  transition-all cursor-pointer select-none">
+        <CardHeader className="flex flex-row justify-between  items-center pb-0">
+          <div className="space-y-1 w-fit">
+            <h3 className="font-bold leading-none">{change.courseName}</h3>
+            <p className="text-xs text-muted-foreground">
+              {change.user.displayName}
+            </p>
+          </div>
+          <div className="!m-0 flex">
+            {change.authors.map((a) => {
+              return (
+                <Avatar
+                  key={a}
+                  className="h-8 w-8 translate-x-4 z-30 border-2 border-muted"
+                >
+                  <AvatarImage src={a} />
+                  <AvatarFallback>UN</AvatarFallback>
+                </Avatar>
+              );
+            })}
+          </div>
+        </CardHeader>
+        <CardContent className="flex gap-4 items-center">
+          <div className="h-12 flex gap-4">
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={change.user.photoUrl} />
+              <AvatarFallback>
+                {change.user.displayName.slice(0, 2)}
+              </AvatarFallback>
+            </Avatar>
 
-          <Separator orientation="vertical" />
-        </div>
-        <p className="max-h-12 text-sm line-clamp-2">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem
-          excepturi quia aut qui animi nobis explicabo veniam rem assumenda
-          temporibus. Recusandae id distinctio obcaecati eaque ad cupiditate
-          velit suscipit autem? Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Quia odit quas eos blanditiis cumque? Corrupti quasi
-          officia odit veniam id quos ipsum atque maiores debitis. Quos quod qui
-          corrupti eligendi.
-        </p>
-      </CardContent>
-    </Card>
+            <Separator orientation="vertical" />
+          </div>
+          <p className="max-h-12 text-sm line-clamp-2">
+            {change.commit.message}
+          </p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }

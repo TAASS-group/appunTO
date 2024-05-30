@@ -8,6 +8,7 @@ import {
 import type { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import Auth0Provider from "next-auth/providers/auth0";
+import { genericFetchRequest } from "@/lib/utils";
 
 export const authOptions = {
   providers: [
@@ -27,6 +28,15 @@ export const authOptions = {
         )
           .then((userCredentials) => {
             if (userCredentials.user) {
+              /* const res = genericFetchRequest(
+                "/user/update",
+                "POST",
+                { email: userCredentials.user.email },
+                {
+                  'Content-Type': 'application/json',
+            
+                }
+              ); */
               return userCredentials.user;
             }
             console.log("UTENTE NON ESISTE");
@@ -85,9 +95,7 @@ export const authOptions = {
   session: { strategy: "jwt", maxAge: 1 * 24 * 60 * 60 },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      console.log("jwt", token, user, trigger, session);
       if (trigger === "update") {
-        console.log("UPDATEEEEEEEE", token, user, trigger, session);
         return { ...token, ...session };
       }
 

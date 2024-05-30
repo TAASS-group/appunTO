@@ -27,4 +27,8 @@ public class Commit {
         this.file = file;
         this.title = title;
     }
+
+    public int compareTo(Commit commit) {
+        return this.createdAt.compareTo(commit.getCreatedAt());
+    }
 }
