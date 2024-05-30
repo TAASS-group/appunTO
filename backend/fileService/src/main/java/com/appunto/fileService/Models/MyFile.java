@@ -13,9 +13,9 @@ public class MyFile {
     private String id;
     private String path;
     @Indexed(unique = true)
-    private String courseId;
+    private long courseId;
 
-    public MyFile(String courseId, String path) {
+    public MyFile(long courseId, String path) {
         this.path = path;
         this.courseId = courseId;
     }

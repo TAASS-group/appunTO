@@ -10,20 +10,20 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 public class WebSocketMessageBroker {
-    private HashMap<String, CopyOnWriteArrayList<WebSocketSession>> courseSessions = new HashMap<>();
+    private final HashMap<Long, CopyOnWriteArrayList<WebSocketSession>> courseSessions = new HashMap<>();
 
-    public void register(WebSocketSession session, String course) {
+    public void register(WebSocketSession session, long course) {
         courseSessions.putIfAbsent(course, new CopyOnWriteArrayList<>());
         courseSessions.get(course).addIfAbsent(session);
     }
 
     public void unregister(WebSocketSession session) {
-        for (String course : courseSessions.keySet()) {
+        for (long course : courseSessions.keySet()) {
             courseSessions.get(course).remove(session);
         }
     }
 
-    public void broadcastToCourse(String message, String course) {
+    public void broadcastToCourse(String message, long course) {
         if (courseSessions.containsKey(course)) {
             for (WebSocketSession session : courseSessions.get(course)) {
                 try {
