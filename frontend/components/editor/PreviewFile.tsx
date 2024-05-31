@@ -44,6 +44,11 @@ import {
   LifeBuoy,
   Cloud,
   LogOut,
+  Pencil,
+  Eye,
+  History,
+  ArrowDownToLine,
+  TimerReset,
 } from "lucide-react";
 import { exportAsPdf } from "./export";
 import { Emoji, Mark, ExportPDF } from "@vavt/rt-extension";
@@ -252,25 +257,55 @@ note、abstract、info、tip、success、question、warning、failure、danger�
   const exportPdfRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="flex flex-col w-full px-4 pt-8">
+    <div className="flex flex-col w-full lg:px-4 lg:pt-8 px-2 pt-4">
       <div className="flex flex-col">
         <div className="text-center">
           <span className="text-2xl font-semibold">Title</span>
         </div>
-        <div className="w-full flex justify-between py-4">
-          <div className="flex gap-4">
+        <div className="w-full flex justify-between lg:flex-row py-4 gap-2">
+          <div className="flex gap-2 lg:justify-start item-center">
             <Button
-              className=" capitalize"
+              className="lg:hidden"
+              size={"icon"}
+              onClick={() =>
+                setStatus((prev) => (prev != "edit" ? "edit" : "preview"))
+              }
+            >
+              {status != "edit" ? (
+                <Pencil className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </Button>
+            <Button
+              className="capitalize hidden lg:block"
               onClick={() =>
                 setStatus((prev) => (prev != "edit" ? "edit" : "preview"))
               }
             >
               {status != "edit" ? "edit" : "preview"}
             </Button>
-            <Button onClick={() => setStatus("history")}>History</Button>
+
+            <Button
+              className="lg:hidden"
+              size={"icon"}
+              onClick={() => setStatus("history")}
+            >
+              <History className="h-4 w-4" />
+            </Button>
+            <Button
+              className="hidden lg:block"
+              onClick={() => setStatus("history")}
+            >
+              History
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">Download</Button>
+                <Button variant="outline">
+                  <div className="hidden lg:block">Download</div>
+                  <ArrowDownToLine className="lg:hidden h-4 w-4" />
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="">
                 <DropdownMenuItem
@@ -286,7 +321,7 @@ note、abstract、info、tip、success、question、warning、failure、danger�
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2 justify-center lg:justify-start">
             <CommitDialog onSubmit={onSubmit} clickable={text == previusText} />
 
             {/* <Button disabled={text == previusText} onClick={save}>
@@ -298,7 +333,8 @@ note、abstract、info、tip、success、question、warning、failure、danger�
               disabled={text == previusText}
               onClick={() => setText(previusText)}
             >
-              Reset
+              <div className="hidden lg:block">Reset</div>
+              <TimerReset className="lg:hidden h-4 w-4" />
             </Button>
           </div>
         </div>

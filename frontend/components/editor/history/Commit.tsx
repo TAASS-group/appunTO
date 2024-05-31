@@ -11,6 +11,7 @@ import { CollapsibleContent } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useSession } from "next-auth/react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export type commentType = {
   id: string;
@@ -25,11 +26,13 @@ export default function Commit({
   setSelectedCommit,
   selectedCommit,
   index,
+  containerRef,
 }: {
   commit: CommitType;
   setSelectedCommit: (id: number) => void;
   selectedCommit: number | null;
   index: number;
+  containerRef: React.RefObject<HTMLDivElement>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [comments, setComments] = useState<commentType[]>([]);
@@ -100,26 +103,57 @@ export default function Commit({
   };
   return (
     <div
-      className={`flex flex-row w-full min-h-[200px] rounded-lg ${
+      className={`flex flex-row w-full min-h-[200px]  rounded-lg ${
         index == selectedCommit ? "bg-gray-100 " : ""
       } hover:outline-1 hover:outline outline-gray-200	`}
-      onClick={() => setSelectedCommit(index)}
+      onClick={() => {
+        setSelectedCommit(index);
+        //scroll all to right or left based on current position
+        setTimeout(() => {
+          if (containerRef.current) {
+            const scrollPosition = containerRef.current.scrollLeft;
+            const totalWidth =
+              containerRef.current.scrollWidth -
+              containerRef.current.clientWidth;
+
+            if (scrollPosition < totalWidth) {
+              // If not at the end, scroll to the right
+              containerRef.current.scrollTo({
+                left: totalWidth,
+                behavior: "smooth",
+              });
+            } else {
+              // If at the end, scroll to the left
+              containerRef.current.scrollTo({
+                left: 0,
+                behavior: "smooth",
+              });
+            }
+          }
+        }, 100);
+      }}
     >
       {commit && (
         <>
-          <div className="py-6 pr-2 mx-4">
+          <div className="hidden lg:block py-6 pr-2 mx-4">
             <span className="text-xs text-muted-foreground">
               {format(new Date(commit.createdAt), "dd/MM/yyyy")}
             </span>
           </div>
-          <div className="grow px-4 py-6 flex flex-col justify-between border-l-2 border-r-2">
-            <div className="grow flex flex-col space-y-8 justify-between">
+          <div className="grow px-4 py-6 flex flex-col justify-between lg:border-l-2 lg:border-r-2 min-w-full lg:min-w-0 lg:w-auto">
+            <div className="grow flex flex-col lg:space-y-8 space-y-2 justify-between">
+              <span className="lg:hidden text-xs text-muted-foreground">
+                {format(new Date(commit.createdAt), "dd/MM/yyyy")}
+              </span>
               <div className="font-semibold">{commit.title}</div>
               <div className="text-sm">{commit.message}</div>
               <div className="flex justify-between items-center">
                 <Button
                   variant={"outline"}
-                  onClick={() => getComments(commit.id)}
+                  onClick={(e) => {
+                    getComments(commit.id);
+                    e.stopPropagation();
+                  }}
                 >
                   Comments
                 </Button>
@@ -134,15 +168,21 @@ export default function Commit({
             </div>
             <Collapsible open={isOpen} onOpenChange={setIsOpen}>
               <CollapsibleContent>
-                <div className="flex items-center gap-2 p-4">
+                <div className="flex items-center gap-2 lg:p-4 mt-2">
                   <Textarea
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
                     placeholder="Add a comment"
                     value={commentText}
                     onChange={(e) => setCommentText(e.target.value)}
                   />
 
                   <Button
-                    onClick={() => addComments(commit.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addComments(commit.id);
+                    }}
                     disabled={!commentText.trim()}
                   >
                     Add
@@ -152,7 +192,7 @@ export default function Commit({
                   comments.map((comment, index) => (
                     <div
                       key={index}
-                      className="p-4 flex space-y-2 text-xs flex-col border-t py-2"
+                      className="lg:p-4 mt-2 flex space-y-2 text-xs flex-col border-t py-2"
                     >
                       <div className="flex justify-between">
                         <div className="flex items-center gap-2">
@@ -175,11 +215,11 @@ export default function Commit({
               </CollapsibleContent>
             </Collapsible>
           </div>
-          <div className="w-1/3 flex-none flex items-center">
+          <ScrollArea className="w-fit lg:w-1/3 flex-none h-[228px] flex items-center">
             {selectedCommit == index && commit.diff && (
               <Differences diff={commit.diff} />
             )}
-          </div>
+          </ScrollArea>
         </>
       )}
     </div>

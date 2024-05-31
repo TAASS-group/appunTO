@@ -97,7 +97,7 @@ const Differences = ({ diff }) => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full min-w-[200px]">
       <div className="h-full w-full rounded-r-lg overflow-y-hidden max-h-full">
         {parsedLines.map((line, index) => renderLine(line, index))}
       </div>

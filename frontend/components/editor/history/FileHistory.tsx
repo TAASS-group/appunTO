@@ -92,8 +92,13 @@ export default function FileHistory() {
     enabled: !!course_id,
   });
 
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
   return (
-    <div className="w-[90%] mx-auto">
+    <div
+      ref={containerRef}
+      className="lg:w-[90%] w-full mx-auto overflow-x-scroll lg:overflow-x-auto"
+    >
       {commits &&
         commits.map((commit: CommitType, index: number) => (
           <Commit
@@ -102,6 +107,7 @@ export default function FileHistory() {
             setSelectedCommit={setSelectedCommit}
             selectedCommit={selectedCommit}
             index={index}
+            containerRef={containerRef}
           />
         ))}
       {isLoading && (

@@ -9,6 +9,7 @@ import React, { useContext, useEffect, useState } from "react";
 import SearchBar from "../../components/SearchBar";
 import SearchBarMobile from "@/components/SearchBarMobile";
 import Link from "next/link";
+import { Sidebar } from "@/components/home/Sidebar";
 
 export default function NavigableLayout({
   children,
@@ -47,7 +48,12 @@ export default function NavigableLayout({
         </div>
       </header>
 
-      <main>{children}</main>
+      <main className="flex w-full">
+        <div className="w-[15%] hidden lg:flex">
+          <Sidebar className="hidden lg:block" />
+        </div>
+        {children}
+      </main>
     </div>
   );
 }
