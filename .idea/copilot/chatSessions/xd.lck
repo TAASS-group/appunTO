@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Private property of Exodus: 9988@DesktopLoris
+=======
+Private property of Exodus: 22568@DESKTOP-RBLCU6E
+>>>>>>> 53ac86f3443cfa342505271b52ef8ae0378cee7f
 
 jetbrains.exodus.io.LockingManager.lock(LockingManager.kt:88)
 jetbrains.exodus.io.LockingManager.lock(LockingManager.kt:39)

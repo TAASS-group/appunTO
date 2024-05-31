@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Save } from "lucide-react";
 import { useState } from "react";
 
 export function CommitDialog({
@@ -26,7 +27,8 @@ export function CommitDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button disabled={clickable} variant="outline">
-          Save
+          <div className="hidden lg:block">Save</div>
+          <Save className="lg:hidden w-4 h-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
