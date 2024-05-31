@@ -65,7 +65,7 @@ public class FileController {
             userFilesDTO.setHasFavorites(hasFavorites);
 
             for (Long courseId : user.getEnrolledCourses()) {
-                MyFile file = fileService.getFileByCourseId(courseId.toString());
+                MyFile file = fileService.getFileByCourseId(courseId);
                 if(file == null) continue;
                 FileContentCourseDTO fileContentCourseDTO = new FileContentCourseDTO();
                 fileContentCourseDTO.setFile(file);

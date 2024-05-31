@@ -1,5 +1,6 @@
 package com.appunTO.messageService.Utils;
 
+import com.appunTO.messageService.DTO.CourseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,26 +13,25 @@ import java.util.Set;
 @Slf4j
 public class ApiCall {
     public static String getCourseName(long courseId, RestTemplate restTemplate) {
-        //        ResponseEntity<String> courseRespEntity = restTemplate.exchange(
-        //                "http://courseservice/course/name?cid=" + courseId, //TODO: check this url
-        //                HttpMethod.GET,
-        //                null,
-        //                new ParameterizedTypeReference<String>() {}
-        //        );
-        //
-        //        if(courseRespEntity.getStatusCode().isError()) {
-        //            log.error("Error getting course name");
-        //            return "";
-        //        }
-        //
-        //        String courseName = courseRespEntity.getBody();
-        //        if (courseName == null) {
-        //            log.error("user has no courses");
-        //            return "";
-        //        }
-        //
-        //        return courseName;
-        return "Intelligenza Artificiale";
+        ResponseEntity<CourseDTO> courseRespEntity = restTemplate.exchange(
+                "http://courseservice/course/getCourseById/" + courseId,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<CourseDTO>() {}
+        );
+
+        if(courseRespEntity.getStatusCode().isError()) {
+            log.error("Error getting course name");
+            return "Placeholder Course Name";
+        }
+
+        CourseDTO course = courseRespEntity.getBody();
+        if (course == null) {
+            log.error("user has no courses");
+            return "Placeholder Course Name";
+        }
+
+        return course.getName();
     }
 
     public static Set<Long> getUserCourses(String userId, RestTemplate restTemplate) {
