@@ -7,6 +7,7 @@ import SesProvider from "@/components/auth/SesProvider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/options";
 import { NotificationProvider } from "@/providers/NotificationProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,6 +36,7 @@ export default async function RootLayout({
                 disableTransitionOnChange
               >
                 {children}
+                <Toaster />
               </ThemeProvider>
             </NotificationProvider>
           </QueryProvider>

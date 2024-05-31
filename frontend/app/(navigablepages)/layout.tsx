@@ -6,6 +6,9 @@ import { NotificationContext } from "@/providers/NotificationProvider";
 import { Search, Bell } from "lucide-react";
 import Image from "next/image";
 import React, { useContext, useEffect, useState } from "react";
+import SearchBar from "../../components/SearchBar";
+import SearchBarMobile from "@/components/SearchBarMobile";
+import Link from "next/link";
 
 export default function NavigableLayout({
   children,
@@ -14,30 +17,30 @@ export default function NavigableLayout({
 }>) {
   return (
     <div>
-      <header className="py-4 px-8 flex h-20 items-center">
+      <header className="py-4 px-8 flex h-20 items-center lg:justify-start justify-between">
         <div className=" w-1/3 h-full relative">
-          <Image
-            src="/logoblack.png"
-            fill
-            alt="logo"
-            objectFit="contain"
-            objectPosition="left"
-            className="block dark:hidden"
-          />
-          <Image
-            src="/logowhite.png"
-            fill
-            alt="logo"
-            objectFit="contain"
-            objectPosition="left"
-            className="hidden dark:block"
-          />
+          <Link href="/">
+            <Image
+              src="/logoblack.png"
+              fill
+              alt="logo"
+              objectFit="contain"
+              objectPosition="left"
+              className="block dark:hidden"
+            />
+            <Image
+              src="/logowhite.png"
+              fill
+              alt="logo"
+              objectFit="contain"
+              objectPosition="left"
+              className="hidden dark:block"
+            />
+          </Link>
         </div>
-        <div className=" relative w-1/3">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search" className="pl-8 " />
-        </div>
-        <div className=" w-1/3 flex justify-end ">
+        <SearchBar />
+        <SearchBarMobile />
+        <div className=" w-1/3  justify-end hidden lg:flex ">
           <NotificationButton />
           <DarkmodeToggle />
           <UserProfile />

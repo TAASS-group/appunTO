@@ -4,6 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 import { Playlist } from "./data/playlists";
 import { Home, PersonStanding, User } from "lucide-react";
+import Link from "next/link";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   playlists: Playlist[];
@@ -11,25 +12,27 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Sidebar({ className, playlists }: SidebarProps) {
   return (
-    <div className={cn("pb-12", className)}>
+    <div className={cn("lg:pb-12 w-full", className)}>
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
-          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+          <h2 className="mb-2 lg:px-4 text-lg font-semibold tracking-tight">
             Discover
           </h2>
-          <div className="space-y-1">
-            <Button variant="secondary" className="w-full justify-start">
+          <div className="lg:space-y-1 gap-2 flex lg:block items-center">
+            <Button variant="secondary" className="lg:w-full justify-start">
               <Home className="mr-2 h-4 w-4" />
               Home
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
-              <User className="mr-2 h-4 w-4" />
-              Profile
-            </Button>
+            <Link href="/profile">
+              <Button variant="ghost" className="lg:w-full justify-start">
+                <User className="mr-2 h-4 w-4" />
+                Profile
+              </Button>
+            </Link>
           </div>
         </div>
 
-        <div className="py-2">
+        <div className="py-2 hidden lg:block">
           <h2 className="relative px-7 text-lg font-semibold tracking-tight">
             Courses
           </h2>

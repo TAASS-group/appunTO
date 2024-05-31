@@ -1,13 +1,11 @@
 package com.appunto.fileService.Controllers;
 
-import com.appunto.fileService.DTO.CommitWithDiff;
-import com.appunto.fileService.DTO.NotificationMessage;
-import com.appunto.fileService.DTO.UpdateFileDTO;
-import com.appunto.fileService.DTO.UserDTO;
+import com.appunto.fileService.DTO.*;
 import com.appunto.fileService.Models.Commit;
 import com.appunto.fileService.Models.MyFile;
 import com.appunto.fileService.Services.FileService;
 import com.appunto.fileService.Utils.FileSystemUtils;
+import com.appunto.fileService.Utils.ListCommitFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -48,6 +46,88 @@ public class FileController {
     public ResponseEntity<Resource> downloadMd(@PathVariable("id") String id) {
         try {
             return fileService.downloadFile(id, MediaType.TEXT_MARKDOWN);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping(path = "/getUserFiles/{userId}")
+    public ResponseEntity<UserFilesDTO> getUserFiles(@PathVariable("userId") String userId) {
+        try {
+            UserDTO user = restTemplate.getForObject("http://userservice/user/info?uid=" + userId, UserDTO.class);
+            if(user == null) return null;
+            List<FileContentCourseDTO> favourites = new ArrayList<>();
+            List<RecentChangedDTO> changed = new ArrayList<>();
+            UserFilesDTO userFilesDTO = new UserFilesDTO();
+            userFilesDTO.setUid(user.getUid());
+            boolean hasFavorites = !user.getEnrolledCourses().isEmpty();
+            userFilesDTO.setHasFavorites(hasFavorites);
+
+            for (Long courseId : user.getEnrolledCourses()) {
+                MyFile file = fileService.getFileByCourseId(courseId.toString());
+                if(file == null) continue;
+                FileContentCourseDTO fileContentCourseDTO = new FileContentCourseDTO();
+                fileContentCourseDTO.setFile(file);
+                fileContentCourseDTO.setCourseName("Course Name");
+                String content = FileSystemUtils.readFromFile(file.getPath());
+                fileContentCourseDTO.setContent(content);
+                favourites.add(fileContentCourseDTO);
+                List<Commit> commits = fileService.getCommits(file.getId());
+                if(commits.isEmpty()) continue;
+                RecentChangedDTO recentChangedDTO = new RecentChangedDTO();
+                UserDTO commitUser = restTemplate.getForObject("http://userservice/user/info?uid=" + commits.getFirst().getAuthor(), UserDTO.class);
+                if(commitUser == null) return null;
+                recentChangedDTO.setCommit(commits.getFirst());
+                recentChangedDTO.setCourseName("Course Name");
+                recentChangedDTO.setUser(commitUser);
+                List<String> authors = new ArrayList<>();
+                for (Commit commit : commits) {
+                    UserDTO author = restTemplate.getForObject("http://userservice/user/info?uid=" + commit.getAuthor(), UserDTO.class);
+                    authors.add(author.getPhotoUrl());
+                }
+
+                recentChangedDTO.setAuthors(authors);
+                changed.add(recentChangedDTO);
+
+            }
+
+            if (!hasFavorites){
+                List<MyFile> allFiles = fileService.getFiles();
+
+                for (MyFile file : allFiles) {
+                    FileContentCourseDTO fileContentCourseDTO = new FileContentCourseDTO();
+                    fileContentCourseDTO.setFile(file);
+                    fileContentCourseDTO.setCourseName("Course Name");
+                    String content = FileSystemUtils.readFromFile(file.getPath());
+                    fileContentCourseDTO.setContent(content);
+                    favourites.add(fileContentCourseDTO);
+                    List<Commit> commits = fileService.getCommits(file.getId());
+                    if(commits.isEmpty()) continue;
+                    RecentChangedDTO recentChangedDTO = new RecentChangedDTO();
+                    UserDTO commitUser = restTemplate.getForObject("http://userservice/user/info?uid=" + commits.getFirst().getAuthor(), UserDTO.class);
+                    if(commitUser == null) return null;
+                    recentChangedDTO.setCommit(commits.getFirst());
+                    recentChangedDTO.setCourseName("Course Name");
+                    recentChangedDTO.setUser(commitUser);
+                    List<String> authors = new ArrayList<>();
+                    for (Commit commit : commits) {
+                        UserDTO author = restTemplate.getForObject("http://userservice/user/info?uid=" + commit.getAuthor(), UserDTO.class);
+                        authors.add(author.getPhotoUrl());
+                    }
+
+                    recentChangedDTO.setAuthors(authors);
+                    changed.add(recentChangedDTO);
+                }
+
+            }
+
+            userFilesDTO.setFavourites(favourites);
+            changed.sort( (a, b) -> b.getCommit().compareTo(a.getCommit()));
+            userFilesDTO.setRecentChanged(changed);
+
+
+            return ResponseEntity.ok(userFilesDTO);
         } catch (Exception e) {
             e.printStackTrace();
         }

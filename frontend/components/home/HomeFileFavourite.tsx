@@ -19,9 +19,12 @@ import { playlists } from "./data/playlists";
 import { MdPreview } from "md-editor-rt";
 import "md-editor-rt/lib/preview.css";
 import "md-editor-rt/lib/style.css";
+import { Favourite, MyFile } from "@/app/(navigablepages)/page";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-interface AlbumArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
-  album: Album;
+interface HomeFileFavourite extends React.HTMLAttributes<HTMLDivElement> {
+  favourite: Favourite;
   aspectRatio?: "portrait" | "square";
   width?: number;
   height?: number;
@@ -84,13 +87,14 @@ note、abstract、info、tip、success、question、warning、failure、danger�
 `;
 
 export function HomeFileFavourite({
-  album,
+  favourite,
   aspectRatio = "portrait",
   width,
   height,
   className,
   ...props
-}: AlbumArtworkProps) {
+}: HomeFileFavourite) {
+  const router = useRouter();
   return (
     <div className={cn("space-y-3", className)} {...props}>
       <ContextMenu>
@@ -112,11 +116,14 @@ export function HomeFileFavourite({
                 aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
               )}
             >
-              <div className="w-[400%] h-[400%] overflow-hidden top-0 left-0 absolute scale-[0.25]  origin-top-left">
+              <div
+                className="w-[400%] h-[400%] overflow-hidden top-0 left-0 absolute scale-[0.25]  origin-top-left"
+                onClick={() => router.push(`/${favourite.file.courseId}`)}
+              >
                 <MdPreview
                   editorId={"asd"}
                   style={{ padding: 0 }}
-                  modelValue={textprova}
+                  modelValue={favourite.content}
                   theme={"light"}
                 />
               </div>
@@ -162,8 +169,8 @@ export function HomeFileFavourite({
         </ContextMenuContent>
       </ContextMenu>
       <div className="space-y-1 text-sm">
-        <h3 className="font-medium leading-none">{album.name}</h3>
-        <p className="text-xs text-muted-foreground">{album.artist}</p>
+        <h3 className="font-medium leading-none">{favourite.courseName}</h3>
+        {/* <p className="text-xs text-muted-foreground">{file}</p> */}
       </div>
     </div>
   );
