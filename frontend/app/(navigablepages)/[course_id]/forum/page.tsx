@@ -22,6 +22,7 @@ import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
 
 import { useSession } from "next-auth/react";
+import { Icons } from "@/components/icons";
 
 
 interface QuestionType {
@@ -149,7 +150,7 @@ function Page() {
   } = useQuery(["questions", course_id], () => fetchQuestions(course_id));
 
   if (forumLoading || questionsLoading) {
-    return <div>Loading...</div>;
+    return <Icons.spinner />;
   }
 
   if (forumError) {
