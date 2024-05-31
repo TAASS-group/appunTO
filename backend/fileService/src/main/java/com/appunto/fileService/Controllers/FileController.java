@@ -65,11 +65,14 @@ public class FileController {
             userFilesDTO.setHasFavorites(hasFavorites);
 
             for (Long courseId : user.getEnrolledCourses()) {
-                MyFile file = fileService.getFileByCourseId(courseId.toString());
+                MyFile file = fileService.getFileByCourseId(courseId);
                 if(file == null) continue;
                 FileContentCourseDTO fileContentCourseDTO = new FileContentCourseDTO();
                 fileContentCourseDTO.setFile(file);
-                fileContentCourseDTO.setCourseName("Course Name");
+                CourseDTO courseDTO = restTemplate.getForObject("http://courseservice/course/getCourseById/" + courseId, CourseDTO.class);
+                if(courseDTO == null) return null;
+
+                fileContentCourseDTO.setCourseName(courseDTO.getName());
                 String content = FileSystemUtils.readFromFile(file.getPath());
                 fileContentCourseDTO.setContent(content);
                 favourites.add(fileContentCourseDTO);
@@ -79,7 +82,8 @@ public class FileController {
                 UserDTO commitUser = restTemplate.getForObject("http://userservice/user/info?uid=" + commits.getFirst().getAuthor(), UserDTO.class);
                 if(commitUser == null) return null;
                 recentChangedDTO.setCommit(commits.getFirst());
-                recentChangedDTO.setCourseName("Course Name");
+
+                recentChangedDTO.setCourseName(courseDTO.getName());
                 recentChangedDTO.setUser(commitUser);
                 List<String> authors = new ArrayList<>();
                 for (Commit commit : commits) {
@@ -98,7 +102,10 @@ public class FileController {
                 for (MyFile file : allFiles) {
                     FileContentCourseDTO fileContentCourseDTO = new FileContentCourseDTO();
                     fileContentCourseDTO.setFile(file);
-                    fileContentCourseDTO.setCourseName("Course Name");
+                    CourseDTO courseDTO = restTemplate.getForObject("http://courseservice/course/getCourseById/" + file.getCourseId(), CourseDTO.class);
+                    if(courseDTO == null) return null;
+
+                    fileContentCourseDTO.setCourseName(courseDTO.getName());
                     String content = FileSystemUtils.readFromFile(file.getPath());
                     fileContentCourseDTO.setContent(content);
                     favourites.add(fileContentCourseDTO);
@@ -108,14 +115,14 @@ public class FileController {
                     UserDTO commitUser = restTemplate.getForObject("http://userservice/user/info?uid=" + commits.getFirst().getAuthor(), UserDTO.class);
                     if(commitUser == null) return null;
                     recentChangedDTO.setCommit(commits.getFirst());
-                    recentChangedDTO.setCourseName("Course Name");
+
+                    recentChangedDTO.setCourseName(courseDTO.getName());
                     recentChangedDTO.setUser(commitUser);
                     List<String> authors = new ArrayList<>();
                     for (Commit commit : commits) {
                         UserDTO author = restTemplate.getForObject("http://userservice/user/info?uid=" + commit.getAuthor(), UserDTO.class);
                         authors.add(author.getPhotoUrl());
                     }
-
                     recentChangedDTO.setAuthors(authors);
                     changed.add(recentChangedDTO);
                 }
