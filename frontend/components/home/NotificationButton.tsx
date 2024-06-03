@@ -191,7 +191,7 @@ export function NotificationButton() {
                       <div className="w-2 h-2 opacity-0"></div>{" "}
                       <div className="flex flex-col space-y-2 w-full">
                         <p className="font-medium leading-none">
-                          {"Intelligenza Artificiale"}
+                          {notification.courseName}
                         </p>
                         <div className="p-2 space-y-2">
                           <p className="text-sm font-medium leading-none">

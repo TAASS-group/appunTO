@@ -131,6 +131,19 @@ note、abstract、info、tip、success、question、warning、failure、danger�
     enabled: !!course_id, // !! is a trick to convert a string to a boolean
   });
 
+  const { data: title } = useQuery({
+    queryKey: ["getFileTitle", course_id],
+    queryFn: async () => {
+      const res = await fetch(
+        `http://localhost:8080/course/getCourseById/${course_id}`
+      );
+      console.log(res);
+      const data = await res.json();
+      return data.name;
+    },
+    enabled: !!course_id,
+  });
+
   // TODO: check if is the correct way to set the text
   useEffect(() => {
     if (data) {
@@ -260,7 +273,7 @@ note、abstract、info、tip、success、question、warning、failure、danger�
     <div className="flex flex-col w-full lg:px-4 lg:pt-8 px-2 pt-4">
       <div className="flex flex-col">
         <div className="text-center">
-          <span className="text-2xl font-semibold">Title</span>
+          <span className="text-2xl font-semibold">{title}</span>
         </div>
         <div className="w-full flex justify-between lg:flex-row py-4 gap-2">
           <div className="flex gap-2 lg:justify-start item-center">
