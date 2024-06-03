@@ -60,14 +60,14 @@ export default function QuestionInAnswer({
 
   return (
     <div>
-      <div className="flex justify-between items-center my-8 mx-2 pl-6 ">
-        <h1 className="text-3xl font-semibold leading-none tracking-tight text-center ">
+      <div className="lg:flex lg:justify-between items-center my-8 mx-2 lg:px-6 " >
+        <h1 className="lg:text-3xl text-2xl font-semibold leading-none tracking-tight text-center ">
           {question.topic}
         </h1>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="flex gap-2">
+          <DialogTrigger asChild >
+            <Button variant="outline" className="gap-2 lg:flex hidden">
               <Plus size={15} /> Add Answer
             </Button>
           </DialogTrigger>
@@ -89,7 +89,7 @@ export default function QuestionInAnswer({
                 }}
               />
             </div>
-            <DialogFooter>
+            <DialogFooter >
               <Button type="submit" onClick={handleButtonSubmit}>
                 Publish answer
               </Button>
@@ -97,7 +97,7 @@ export default function QuestionInAnswer({
           </DialogContent>
         </Dialog>
       </div>
-      <div className="flex items-stretch gap-2 px-4 pb-10 pl-7 pr-12">
+      <div className="flex items-stretch gap-2 px-4 lg:pb-10 pb-5 lg:pl-7 lg:pr-12 pl-4 pr-7">
         <Avatar className="h-12 w-12">
           <AvatarImage
             src={

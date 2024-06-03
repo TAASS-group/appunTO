@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -43,7 +43,7 @@ function Page() {
   const params = useParams();
   const course_id = params.course_id as string;
   const { data: session } = useSession();
-  console.log((session?.user as any).uid);
+  console.log(session?.user.uid);
   const [topic, setTopic] = useState("");
   const [text, setText] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -112,7 +112,7 @@ function Page() {
           },
           body: JSON.stringify({
             topic: topic,
-            idUser: (session?.user as any).uid,
+            idUser: session?.user.uid,
             text: text,
             // Add any other data required by your API here
           }),
@@ -162,15 +162,15 @@ function Page() {
   }
 
   return (
-    <div>
-      <div className="flex justify-between items-center pt-12 pb-20">
-        <div className="w-[148.2px]"></div>
-        <h1 className="text-4xl font-semibold leading-none tracking-tight text-center ">
+    <div className="pb-4">
+      <div className="flex flex-col lg:flex-row lg:justify-between  items-center lg:pt-12 lg:pb-20  pb-5  gap-y-5">
+        <div className="lg:w-[148.2px] w-0"></div>
+        <h1 className="lg:text-4xl text-3xl font-semibold leading-none tracking-tight text-center">
           {forum?.name}
         </h1>
-
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen} >
-          <DialogTrigger asChild>
+        
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild >
             <Button
               variant="outline"
               className="flex gap-2"
@@ -217,9 +217,10 @@ function Page() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        
       </div>
 
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4 px-4 lg:px-0">
         {questions?.map((question: any) => (
           <Question
             key={question.id}

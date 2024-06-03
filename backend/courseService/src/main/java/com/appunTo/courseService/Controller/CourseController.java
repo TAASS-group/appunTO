@@ -5,6 +5,7 @@ import com.appunTo.courseService.Services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 
 import java.util.List;
@@ -13,12 +14,13 @@ import java.util.List;
 @RequestMapping("/course")
 public class CourseController {
 
-
+    private final RestTemplate restTemplate;
     private final CourseService courseService;
 
     @Autowired
-    public CourseController(CourseService courseService) {
+    public CourseController(CourseService courseService, RestTemplate restTemplate) {
         this.courseService = courseService;
+        this.restTemplate =  restTemplate;
     }
 
     @GetMapping("/getAll")
@@ -39,6 +41,9 @@ public class CourseController {
         if (c == null) {
             return ResponseEntity.badRequest().build();
         }
+        restTemplate.postForObject("http://fileservice/api/v1/file/addfile/" + c.getId(), null, String.class);
+        restTemplate.postForObject("http://messageservice/api/v1/message/createQueue", c.getId(), String.class);
+
         return ResponseEntity.ok(c);
 
     }

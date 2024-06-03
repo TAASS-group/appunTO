@@ -9,19 +9,19 @@ import { useLocation } from "react-router-dom";
 export default function Answers({ answer }: { answer: AnswerType }) {
  
   return (
-    <div className="pl-12 pr-12  ">
-      <div className="flex items-stretch gap-2 mx-4">
-        <Avatar className="h-12 w-12">
+    <div className="lg:pl-12 lg:pr-12 pl-0 pr-6 ">
+      <div className="flex items-stretch gap-1 lg:gap-2 mx-4">
+        <Avatar className="h-9 w-9 lg:h-12 lg:w-12 ">
         <AvatarImage src={
                 answer.imageUrl == ""
                   ? "https://github.com/shadcn.png"
                   : answer.imageUrl
-              } />
+              }/>
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
 
         <Separator orientation="vertical" className="self-stretch" />
-        <p className=" text-sm border-l-2 pl-4 text-justify">
+        <p className="lg:text-sm text-xs border-l-2 pl-2 lg:pl-4 text-justify">
             {answer.text}
           
         </p>
