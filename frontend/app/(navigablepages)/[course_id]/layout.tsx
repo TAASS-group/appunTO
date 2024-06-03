@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex w-screen lg:w-full">
-        <div className="lg:w-[85%] lg:px-10 w-full ">{children}</div>
+        <div className="lg:w-[85%] lg:px-10 w-full">{children}</div>
         <div className="w-[15%] hidden lg:block"></div>
       </div>
     </QueryClientProvider>
