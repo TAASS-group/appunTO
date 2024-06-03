@@ -96,12 +96,15 @@ export function HomeRecentChange({ change }: HomeRecentChangeProps) {
               {change.user.displayName}
             </p>
           </div>
-          <div className="!m-0 flex">
-            {change.authors.map((a) => {
+          <div className="!m-0 flex flex-row-reverse ">
+            {change.authors.map((a, index) => {
               return (
                 <Avatar
                   key={a}
-                  className="h-8 w-8 translate-x-4 z-30 border-2 border-muted"
+                  style={{
+                    transform: `translateX(${1 * index}rem)`,
+                  }}
+                  className="h-8 w-8 border-2 border-muted"
                 >
                   <AvatarImage src={a} />
                   <AvatarFallback>UN</AvatarFallback>

@@ -3,6 +3,22 @@
 @loris-uid = kDrhnFfbJFQBCjlltn40lqGPewG2
 @courseId = 1
 
+### create course
+POST http://localhost:8080/course/create
+Content-Type: application/json
+
+{
+  "id": {{courseId}},
+  "name": "Intelligenza artificiale e laboratorio",
+  "professor": "Simone Multari",
+  "description": "Corso di Intelligenza artificiale e laboratorio",
+  "department": "Università degli studi di Torino"
+}
+
+### get course by id
+GET http://localhost:8080/course/getCourseById/{{courseId}}
+
+
 ### add file
 POST http://localhost:{{apigateway-port}}/api/v1/file/addfile/{{courseId}}
 
