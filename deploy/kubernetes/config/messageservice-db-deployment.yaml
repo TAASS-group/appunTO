@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\Simone Multari\AppData\Local\Microsoft\WinGet\Packages\Kubernetes.kompose_Microsoft.Winget.Source_8wekyb3d8bbwe\kompose.exe convert --out .\tmp\
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: messageservice-db
+  name: messageservice-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: messageservice-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\Simone Multari\AppData\Local\Microsoft\WinGet\Packages\Kubernetes.kompose_Microsoft.Winget.Source_8wekyb3d8bbwe\kompose.exe convert --out .\tmp\
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/kubernetes-internal: "true"
+        io.kompose.service: messageservice-db
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: messageservice
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: admin
+          image: postgres
+          name: messageservice-db
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: messageservice-db-data
+      restartPolicy: Always
+      volumes:
+        - name: messageservice-db-data
+          persistentVolumeClaim:
+            claimName: messageservice-db-data
+status: {}
