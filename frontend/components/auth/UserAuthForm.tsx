@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { signIn, useSession } from "next-auth/react";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { app, auth } from "@/lib/firebase";
-import { redirect } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -21,6 +21,10 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
   const { update, data: session } = useSession();
+
+  const router = useRouter();
+
+  const searchParams = useSearchParams();
 
   console.log("User Auth Form", session);
 
@@ -44,15 +48,25 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     var provider = new GoogleAuthProvider();
 
     console.log("PROVIDER", provider);
-    await signInWithPopup(auth, provider).then(async (result) => {
-      console.log("GOOGLE LOGIN", result);
-      await signIn("google", {
-        result: result,
-        redirect: false,
+    await signInWithPopup(auth, provider)
+      .then(async (result) => {
+        console.log("GOOGLE LOGIN", result);
+        const returnSignIn = await signIn("google", {
+          result: result,
+          redirect: false,
+        });
+        console.log("RETURN SIGN IN", returnSignIn);
+        const boh = await update({
+          ...result.user,
+          photoUrl: result.user.photoURL,
+        });
+        console.log("BOH", boh);
+        router.push(searchParams.get("callbackUrl") || "/");
+      })
+      .catch(async (error) => {
+        console.error("ERROR LOGIN GOOGLE", error);
+        await update(null);
       });
-      const boh = await update((prev: any) => ({ ...prev, name: "provaaa" }));
-      console.log("BOH", boh);
-    });
 
     setIsLoading(false);
   }

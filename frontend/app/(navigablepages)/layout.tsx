@@ -10,6 +10,7 @@ import SearchBar from "../../components/SearchBar";
 import SearchBarMobile from "@/components/SearchBarMobile";
 import Link from "next/link";
 import { Sidebar } from "@/components/home/Sidebar";
+import { UserDropdown } from "@/components/auth/UserDropdown";
 
 export default function NavigableLayout({
   children,
@@ -18,7 +19,7 @@ export default function NavigableLayout({
 }>) {
   return (
     <div>
-      <header className="py-4 px-8 flex h-20 items-center lg:justify-start justify-between">
+      <header className="py-4 px-4 lg:px-8 border-b-[1px] flex h-20 items-center lg:justify-start justify-between">
         <div className=" w-1/3 h-full relative">
           <Link href="/">
             <Image
@@ -40,11 +41,14 @@ export default function NavigableLayout({
           </Link>
         </div>
         <SearchBar />
-        <SearchBarMobile />
-        <div className=" w-1/3  justify-end hidden lg:flex ">
+
+        <div className=" w-1/3 gap-4 justify-end flex ">
+          <SearchBarMobile />
           <NotificationButton />
-          <DarkmodeToggle />
-          <UserProfile />
+          <div className="hidden lg:block">
+            <DarkmodeToggle />
+          </div>
+          <UserDropdown />
         </div>
       </header>
 

@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
 
-
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -69,37 +68,88 @@ export default async function Page() {
   return (
     <>
       <div className="">
-        <div className="border-t">
+        <div>
           <div className="bg-background">
             <div className="grid grid-cols-1 lg:grid-cols-5">
-              <Sidebar playlists={playlists} />
               <div className="col-span-3 lg:col-span-4 lg:border-l">
                 <div className="h-full px-4 py-6 lg:px-8">
                   <div className="flex items-center justify-between">
                     <div className="space-y-1">
                       <h2 className="text-2xl font-semibold tracking-tight">
-                        Your favourites
+                        {data.hasFavorites ? "Your favourites" : "Files"}
                       </h2>
                     </div>
                   </div>
                   <Separator className="my-4" />
-                  <div className="relative">
-                    <ScrollArea>
-                      <div className="flex space-x-4 pb-4">
-                        {data.favourites.map((fav, index) => (
-                          <HomeFileFavourite
-                            key={fav.file.id}
-                            favourite={fav}
-                            className="w-[220px]"
-                            aspectRatio="portrait"
-                            width={250}
-                            height={330}
-                          />
-                        ))}
+                  {data.favourites.length == 0 && (
+                    <div className="flex flex-col  space-y-2">
+                      <p className=" font-bold">No files</p>
+                      <p className="text-muted-foreground text-xs">
+                        You have no favourites to show
+                      </p>
+                    </div>
+                  )}
+                  {data.hasFavorites ? (
+                    <div className="relative">
+                      <ScrollArea>
+                        <div className="flex space-x-4 pb-4">
+                          {data.favourites.map((fav, index) => (
+                            <HomeFileFavourite
+                              key={fav.file.id}
+                              favourite={fav}
+                              className="w-[220px]"
+                              aspectRatio="portrait"
+                              width={250}
+                              height={330}
+                            />
+                          ))}
+                        </div>
+                        <ScrollBar orientation="horizontal" />
+                      </ScrollArea>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="relative">
+                        <ScrollArea>
+                          <div className="flex space-x-4 pb-4">
+                            {data.favourites
+                              .slice(0, data.favourites.length / 2)
+                              .map((fav, index) => (
+                                <HomeFileFavourite
+                                  key={fav.file.id}
+                                  favourite={fav}
+                                  className="w-[220px]"
+                                  aspectRatio="portrait"
+                                  width={250}
+                                  height={330}
+                                />
+                              ))}
+                          </div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
                       </div>
-                      <ScrollBar orientation="horizontal" />
-                    </ScrollArea>
-                  </div>
+                      <div className="relative">
+                        <ScrollArea>
+                          <div className="flex space-x-4 pb-4">
+                            {data.favourites
+                              .slice(data.favourites.length / 2)
+                              .map((fav, index) => (
+                                <HomeFileFavourite
+                                  key={fav.file.id}
+                                  favourite={fav}
+                                  className="w-[220px]"
+                                  aspectRatio="portrait"
+                                  width={250}
+                                  height={330}
+                                />
+                              ))}
+                          </div>
+                          <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
+                      </div>
+                    </>
+                  )}
+
                   <div className="mt-6 space-y-1">
                     <h2 className="text-2xl font-semibold tracking-tight">
                       Recent changes
@@ -115,6 +165,14 @@ export default async function Page() {
                             change={commit}
                           />
                         ))}
+                        {data.recentChanged.length === 0 && (
+                          <div className="flex flex-col h-[20vh]  space-y-2">
+                            <p className=" font-bold">No recent changes</p>
+                            <p className="text-muted-foreground text-xs">
+                              You have no recent changes to show
+                            </p>
+                          </div>
+                        )}
                       </div>
                       <ScrollBar orientation="vertical" />
                     </ScrollArea>
