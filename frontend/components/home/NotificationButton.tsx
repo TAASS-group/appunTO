@@ -97,7 +97,7 @@ export function NotificationButton() {
 
   const ackNotification = async (notificationId: number) => {
     console.log("ack", notificationId);
-    const ret = await fetch("http://localhost:8085/api/v1/message/ackowledge", {
+    /*  const ret = await fetch("http://localhost:8085/api/v1/message/ackowledge", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +106,17 @@ export function NotificationButton() {
         notificationId,
         userId: (session?.user as any).uid,
       }),
-    });
+    }); */
+
+    const ret = await genericFetchRequest(
+      "/api/v1/message/ackowledge",
+      "POST",
+      {
+        notificationId,
+        userId: (session?.user as any).uid,
+      },
+      { "Content-Type": "application/json" }
+    );
 
     console.log(ret);
 

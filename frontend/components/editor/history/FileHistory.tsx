@@ -84,7 +84,7 @@ export default function FileHistory() {
     queryKey: ["commits", course_id],
     queryFn: async () => {
       const response = await genericFetchRequest(
-        `/file/getCommmits/${course_id}`,
+        `/api/v1/file/getCommmits/${course_id}`,
         "GET"
       );
       return response.json();

@@ -75,7 +75,7 @@ export default function Commit({
     setIsOpen((x) => !x);
     console.log("Getting comments for commit", commitId);
     const data = await genericFetchRequest(
-      `/comment/getbycommit/${commitId}`,
+      `/api/v1/comment/getbycommit/${commitId}`,
       "GET"
     );
     const res = await data.json();
@@ -86,7 +86,7 @@ export default function Commit({
   const addComments = async (commitId: string) => {
     console.log("Saving comments for commit", commitId);
     const data = await genericFetchRequest(
-      `/comment/add`,
+      `/api/v1/comment/add`,
       "POST",
       {
         author: (session?.user as any).uid,
