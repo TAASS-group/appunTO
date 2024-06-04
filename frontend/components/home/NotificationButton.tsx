@@ -138,7 +138,7 @@ export function NotificationButton() {
           size="icon"
           onClick={() => alert("test")}
         >
-          <Bell className="h-[1.5rem] w-[1.5rem]"></Bell>
+          <Bell className="h-4 w-4 lg:h-6 lg:w-6"></Bell>
           {unseenNotifications.length > 0 && (
             <span className="h-[10px] w-[10px] rounded-full bg-primary absolute top-2 right-[8px] border-[1px] border-background"></span>
           )}
