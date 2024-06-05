@@ -19,7 +19,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private  final ClientService clientService;
-    // tests
+    // test
 
     private final RestTemplate restTemplate;
 

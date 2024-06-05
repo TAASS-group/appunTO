@@ -1,20 +1,24 @@
-name: Java CI with Maven
+name: Multi-Service Build Pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
     paths:
       - "backend/fileService/**"
+      - "backend/courseService/**"
   pull_request:
-    branches: ["main"]
+    branches: [main]
+    paths:
+      - "backend/fileService/**"
+      - "backend/courseService/**"
 
 jobs:
-  build:
+  build-fileService:
     runs-on: ubuntu-latest
-
+    if: contains(github.event.head_commit.modified, 'backend/fileService/')
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: "21"
@@ -22,3 +26,17 @@ jobs:
           cache: maven
       - name: Compile with Maven
         run: mvn -B compile --file backend/fileService/pom.xml
+
+  build-courseService:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, 'backend/courseService/')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: maven
+      - name: Compile with Maven
+        run: mvn -B compile --file backend/courseService/pom.xml
