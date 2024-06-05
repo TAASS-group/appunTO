@@ -6,11 +6,6 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { UserAuthForm } from "@/components/auth/UserAuthForm";
 
-export const metadata: Metadata = {
-  title: "Authentication",
-  description: "Authentication forms built using the components.",
-};
-
 export default function AuthenticationPage() {
   return (
     <>
@@ -38,6 +33,15 @@ export default function AuthenticationPage() {
             />
           </div>
           <div className="relative z-20 mt-auto">
+            <Image
+              src="/login.png"
+              width={748}
+              height={748}
+              alt="logo"
+              objectFit="contain"
+              objectPosition="right"
+              className=""
+            />
             <blockquote className="space-y-2">
               <p className="text-lg">Qualocsa</p>
             </blockquote>

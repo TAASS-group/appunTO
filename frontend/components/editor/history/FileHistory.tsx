@@ -129,7 +129,7 @@ export default function FileHistory() {
           />
           <div className="space-y-2">
             <p className="text-xl md:text-2xl font-bold">
-              Oops... it's quite empty here!
+              Oops... it&aposs quite empty here!
             </p>
             <p>
               <span className="block">

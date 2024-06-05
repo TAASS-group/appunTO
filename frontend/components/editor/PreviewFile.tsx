@@ -54,6 +54,9 @@ import {
   Heart,
   ThumbsUp,
   ThumbsDown,
+  Star,
+  StarIcon,
+  UndoDot,
 } from "lucide-react";
 import { exportAsPdf } from "./export";
 import { Emoji, Mark, ExportPDF } from "@vavt/rt-extension";
@@ -63,6 +66,8 @@ import { genericFetchRequest } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { CommitDialog } from "./commitDialog";
 import { useSession } from "next-auth/react";
+import { StarFilledIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 export default function PreviewFile() {
   const { course_id } = useParams();
 
@@ -350,10 +355,31 @@ note、abstract、info、tip、success、question、warning、failure、danger�
   const exportPdfRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="flex flex-col w-full lg:px-4 lg:pt-8 px-2 pt-4">
+    <div className="flex flex-col relative w-full lg:px-4 lg:pt-8 px-2 pt-4">
       <div className="flex flex-col">
-        <div className="text-center flex lg:flex-row flex-col lg:justify-center items-center gap-4">
-          <span className="text-2xl font-semibold">{title}</span>
+        <div className="text-center flex flex-row lg:justify-center items-center lg:gap-4 gap-2">
+          <span className="lg:text-2xl text-xl font-semibold text-left lg:text-center">
+            {title}
+          </span>
+          <Button
+            className="flex gap-2 px-2 items-center min-w-[54px]"
+            onClick={enroll}
+          >
+            <motion.span
+              key={enrolledCount}
+              className=""
+              initial={{ y: +10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", duration: 0.3 }}
+            >
+              {enrolledCount}
+            </motion.span>
+            {!isEnrolled ? (
+              <StarIcon className="h-5 w-5" />
+            ) : (
+              <StarFilledIcon className="h-5 w-5" />
+            )}
+          </Button>
         </div>
         <div className="w-full flex justify-between lg:flex-row py-4 gap-2">
           <div className="flex gap-2 lg:justify-start item-center">
@@ -392,6 +418,21 @@ note、abstract、info、tip、success、question、warning、failure、danger�
             >
               History
             </Button>
+            <Link href={`/${course_id}/forum`}>
+              <Button
+                className="flex gap-2 px-2 items-center"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <span className="lg:block hidden">Forum</span>
+                <motion.div
+                  animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <MessageSquare className="h-5 w-5" />
+                </motion.div>
+              </Button>
+            </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -427,7 +468,7 @@ note、abstract、info、tip、success、question、warning、failure、danger�
               onClick={() => setText(previusText)}
             >
               <div className="hidden lg:block">Reset</div>
-              <TimerReset className="lg:hidden h-4 w-4" />
+              <UndoDot className="lg:hidden h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -476,38 +517,6 @@ note、abstract、info、tip、success、question、warning、failure、danger�
             }); */
               }}
             />
-            <div className="flex gap-2 justify-center py-4">
-              <Button className="flex gap-2 px-2 items-center" onClick={enroll}>
-                <motion.span
-                  key={enrolledCount}
-                  className=""
-                  initial={{ y: +10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ type: "spring", duration: 0.3 }}
-                >
-                  {enrolledCount}
-                </motion.span>
-                {!isEnrolled ? (
-                  <ThumbsUp className="h-5 w-5" />
-                ) : (
-                  <ThumbsDown className="h-5 w-5" />
-                )}
-              </Button>
-
-              <Button
-                className="flex gap-2 px-2 items-center"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                <span>Forum</span>
-                <motion.div
-                  animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <MessageSquare className="h-5 w-5" />
-                </motion.div>
-              </Button>
-            </div>
           </div>
         )}
       </div>

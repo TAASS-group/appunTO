@@ -1,8 +1,8 @@
 import React from "react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-const Differences = ({ diff }) => {
-  const parseDiff = (diffString) => {
+const Differences = ({ diff }: any) => {
+  const parseDiff = (diffString: any) => {
     let oldLineNumber = 1;
     let newLineNumber = 1;
 
@@ -11,14 +11,14 @@ const Differences = ({ diff }) => {
         .split("\n")
         .slice(4) // start parsing after the header lines
         .filter(
-          (line) =>
+          (line: any) =>
             !line.startsWith("\\ No newline at end of file") &&
             !line.startsWith("@@")
         )
         //remove last
         .slice(0, -1)
-        .map((line) => {
-          let parsedLine = { content: line.substring(1), type: "context" };
+        .map((line: any) => {
+          let parsedLine: any = { content: line.substring(1), type: "context" };
 
           if (line.startsWith("-")) {
             parsedLine = {
@@ -49,7 +49,7 @@ const Differences = ({ diff }) => {
 
   const parsedLines = parseDiff(diff);
 
-  const renderLine = (line, index) => {
+  const renderLine = (line: any, index: any) => {
     let style = {};
     if (line.type === "deletion") {
       style = { backgroundColor: "#FF6868" };
@@ -99,7 +99,7 @@ const Differences = ({ diff }) => {
   return (
     <div className="w-full h-full min-w-[200px]">
       <div className="h-full w-full rounded-r-lg overflow-y-hidden max-h-full">
-        {parsedLines.map((line, index) => renderLine(line, index))}
+        {parsedLines.map((line: any, index: any) => renderLine(line, index))}
       </div>
     </div>
   );
