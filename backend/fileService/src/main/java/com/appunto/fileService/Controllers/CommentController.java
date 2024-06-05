@@ -18,7 +18,7 @@ public class CommentController {
     private final CommentService commentService;
 
     private RestTemplate restTemplate;
-    // testss
+    // test
 
 
     @Autowired
