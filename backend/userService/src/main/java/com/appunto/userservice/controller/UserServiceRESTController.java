@@ -96,6 +96,14 @@ public class UserServiceRESTController {
 
     return enrolledCourses;
   }
+  @GetMapping("/enrolledCoursesCount")
+  public Long getEnrolledCoursesCount(@RequestParam Long courseId) {
+    Long count = repositrory.countByEnrolledCoursesContains(courseId);
+
+    log.info("Enrolled courses count " + count + " for course " + courseId + " fetched");
+
+    return count;
+  }
 
 
   @ExceptionHandler
