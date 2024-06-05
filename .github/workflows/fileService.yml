@@ -15,7 +15,6 @@ on:
 jobs:
   build-fileService:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'backend/fileService/')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 21
@@ -24,12 +23,18 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: maven
+      - name: Check for file changes
+        id: file_changes
+        uses: tj-actions/changed-files@v20
+        with:
+          files: |
+            backend/fileService/**
       - name: Compile with Maven
+        if: steps.file_changes.outputs.any_changed == 'true'
         run: mvn -B compile --file backend/fileService/pom.xml
 
   build-courseService:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'backend/courseService/')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 21
@@ -38,5 +43,12 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: maven
+      - name: Check for file changes
+        id: file_changes
+        uses: tj-actions/changed-files@v20
+        with:
+          files: |
+            backend/courseService/**
       - name: Compile with Maven
+        if: steps.file_changes.outputs.any_changed == 'true'
         run: mvn -B compile --file backend/courseService/pom.xml
