@@ -97,7 +97,7 @@ export function NotificationButton() {
 
   const ackNotification = async (notificationId: number) => {
     console.log("ack", notificationId);
-    const ret = await fetch("http://localhost:8085/api/v1/message/ackowledge", {
+    /*  const ret = await fetch("http://localhost:8085/api/v1/message/ackowledge", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +106,17 @@ export function NotificationButton() {
         notificationId,
         userId: (session?.user as any).uid,
       }),
-    });
+    }); */
+
+    const ret = await genericFetchRequest(
+      "/api/v1/message/ackowledge",
+      "POST",
+      {
+        notificationId,
+        userId: (session?.user as any).uid,
+      },
+      { "Content-Type": "application/json" }
+    );
 
     console.log(ret);
 
@@ -191,7 +201,7 @@ export function NotificationButton() {
                       <div className="w-2 h-2 opacity-0"></div>{" "}
                       <div className="flex flex-col space-y-2 w-full">
                         <p className="font-medium leading-none">
-                          {"Intelligenza Artificiale"}
+                          {notification.courseName}
                         </p>
                         <div className="p-2 space-y-2">
                           <p className="text-sm font-medium leading-none">

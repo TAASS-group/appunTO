@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+
 import {
   MdPreview,
   MdCatalog,
@@ -49,6 +51,12 @@ import {
   History,
   ArrowDownToLine,
   TimerReset,
+  Heart,
+  ThumbsUp,
+  ThumbsDown,
+  Star,
+  StarIcon,
+  UndoDot,
 } from "lucide-react";
 import { exportAsPdf } from "./export";
 import { Emoji, Mark, ExportPDF } from "@vavt/rt-extension";
@@ -58,6 +66,8 @@ import { genericFetchRequest } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { CommitDialog } from "./commitDialog";
 import { useSession } from "next-auth/react";
+import { StarFilledIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 export default function PreviewFile() {
   const { course_id } = useParams();
 
@@ -118,11 +128,12 @@ note、abstract、info、tip、success、question、warning、failure、danger�
 ## ☘️ em...
 `;
 
+  const [likeCount, setLikeCount] = useState(0);
   const { isLoading, error, data } = useQuery({
     queryKey: ["getFileContent", course_id],
     queryFn: async () => {
       const res = await genericFetchRequest(
-        `/file/getFileContent/${course_id}`,
+        `/api/v1/file/getFileContent/${course_id}`,
         "GET"
       );
       console.log(res);
@@ -130,6 +141,99 @@ note、abstract、info、tip、success、question、warning、failure、danger�
     },
     enabled: !!course_id, // !! is a trick to convert a string to a boolean
   });
+
+  const { data: title } = useQuery({
+    queryKey: ["getFileTitle", course_id],
+    queryFn: async () => {
+      /* const res = await fetch(
+        `http://localhost:8080/course/getCourseById/${course_id}`
+      ); */
+      const res = await genericFetchRequest(
+        `/course/getCourseById/${course_id}`,
+        "GET"
+      );
+      console.log(res);
+      const data = await res.json();
+      return data.name;
+    },
+    enabled: !!course_id,
+  });
+
+  const { data: isEnrolled } = useQuery({
+    queryKey: ["getIsEnrolled", course_id],
+    queryFn: async () => {
+      /* const res = await fetch(
+        `http://localhost:8080/user/enrolledCourses?uid=${session?.user?.uid}`
+      ); */
+      const res = await genericFetchRequest(
+        `/user/enrolledCourses?uid=${session?.user?.uid}`,
+        "GET"
+      );
+      if (!res.ok) return false;
+      const data = await res.json();
+
+      for (const course of data) {
+        if (course == course_id) {
+          console.log("isEnrolled", course);
+          return true;
+        }
+      }
+      console.log("isEnrolled", false);
+      return false;
+    },
+    enabled: !!course_id,
+  });
+
+  const { data: enrolledCount } = useQuery({
+    queryKey: ["getEnrolledCount", course_id],
+    queryFn: async () => {
+      /* const res = await fetch(
+        `http://localhost:8080/user/enrolledCoursesCount?courseId=${course_id}`,
+        {
+          method: "GET",
+        }
+      ); */
+      const res = await genericFetchRequest(
+        `/user/enrolledCoursesCount?courseId=${course_id}`,
+        "GET"
+      );
+      const data = await res.json();
+      console.log("enrolledCount", data);
+
+      return data;
+    },
+    enabled: !!course_id,
+  });
+
+  const enroll = async () => {
+    console.log("enroll", isEnrolled);
+    if (!isEnrolled) {
+      /*  await fetch(
+        `http://localhost:8080/user/enroll?uid=${session?.user?.uid}&courseId=${course_id}`,
+        {
+          method: "GET",
+        }
+      ); */
+      await genericFetchRequest(
+        `/user/enroll?uid=${session?.user?.uid}&courseId=${course_id}`,
+        "GET"
+      );
+    } else {
+      /*  await fetch(
+        `http://localhost:8080/user/leave?uid=${session?.user?.uid}&courseId=${course_id}`,
+        {
+          method: "GET",
+        }
+      ); */
+
+      await genericFetchRequest(
+        `/user/leave?uid=${session?.user?.uid}&courseId=${course_id}`,
+        "GET"
+      );
+    }
+    queryClient.invalidateQueries({ queryKey: ["getIsEnrolled"] });
+    queryClient.invalidateQueries({ queryKey: ["getEnrolledCount"] });
+  };
 
   // TODO: check if is the correct way to set the text
   useEffect(() => {
@@ -139,19 +243,13 @@ note、abstract、info、tip、success、question、warning、failure、danger�
     }
   }, [data]);
 
-  /* useEffect(() => {
-    if (error) {
-      alert("il corso cercato non esiste");
-    }
-  }, [error]); */
-
   const [id] = useState("preview-only");
-  const [status, setStatus] = useState<"edit" | "preview" | "history">(
-    "history"
-  );
+  const [status, setStatus] = useState<"edit" | "preview" | "history">("edit");
   const [catalog, setCatalog] = useState(false);
   const [text, setText] = useState(textprova);
   const [previusText, setPreviusText] = useState(textprova);
+
+  const [isHovered, setIsHovered] = useState(false);
 
   const { data: session } = useSession();
 
@@ -216,7 +314,7 @@ note、abstract、info、tip、success、question、warning、failure、danger�
   const save = async () => {
     //
     await genericFetchRequest(
-      `/file/updatefile/${course_id}`,
+      `/api/v1/file/updatefile/${course_id}`,
       "POST",
       {
         content: text,
@@ -241,7 +339,7 @@ note、abstract、info、tip、success、question、warning、failure、danger�
 
   const onSubmit = async (title: string, message: string) => {
     await genericFetchRequest(
-      `/file/updatefile/${course_id}`,
+      `/api/v1/file/updatefile/${course_id}`,
       "POST",
       {
         title,
@@ -257,10 +355,31 @@ note、abstract、info、tip、success、question、warning、failure、danger�
   const exportPdfRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="flex flex-col w-full lg:px-4 lg:pt-8 px-2 pt-4">
+    <div className="flex flex-col relative w-full lg:px-4 lg:pt-8 px-2 pt-4">
       <div className="flex flex-col">
-        <div className="text-center">
-          <span className="text-2xl font-semibold">Title</span>
+        <div className="text-center flex flex-row lg:justify-center items-center lg:gap-4 gap-2">
+          <span className="lg:text-2xl text-xl font-semibold text-left lg:text-center">
+            {title}
+          </span>
+          <Button
+            className="flex gap-2 px-2 items-center min-w-[54px]"
+            onClick={enroll}
+          >
+            <motion.span
+              key={enrolledCount}
+              className=""
+              initial={{ y: +10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", duration: 0.3 }}
+            >
+              {enrolledCount}
+            </motion.span>
+            {!isEnrolled ? (
+              <StarIcon className="h-5 w-5" />
+            ) : (
+              <StarFilledIcon className="h-5 w-5" />
+            )}
+          </Button>
         </div>
         <div className="w-full flex justify-between lg:flex-row py-4 gap-2">
           <div className="flex gap-2 lg:justify-start item-center">
@@ -299,6 +418,21 @@ note、abstract、info、tip、success、question、warning、failure、danger�
             >
               History
             </Button>
+            <Link href={`/${course_id}/forum`}>
+              <Button
+                className="flex gap-2 px-2 items-center"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <span className="lg:block hidden">Forum</span>
+                <motion.div
+                  animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <MessageSquare className="h-5 w-5" />
+                </motion.div>
+              </Button>
+            </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -334,7 +468,7 @@ note、abstract、info、tip、success、question、warning、failure、danger�
               onClick={() => setText(previusText)}
             >
               <div className="hidden lg:block">Reset</div>
-              <TimerReset className="lg:hidden h-4 w-4" />
+              <UndoDot className="lg:hidden h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -343,25 +477,26 @@ note、abstract、info、tip、success、question、warning、failure、danger�
         {status === "history" ? (
           <FileHistory />
         ) : (
-          <MdEditor
-            className="!w-full !max-w-full"
-            ref={editorRef}
-            editorId={id}
-            modelValue={text}
-            theme={(theme as Themes) || "light"}
-            onChange={setText}
-            language={"en-US"}
-            defToolbars={[
-              <Mark key="mark-extension" />,
-              <Emoji key="emoji-extension" />,
-            ]}
-            toolbars={status == "preview" ? previewToolbar : editToolbar}
-            onSave={(value, html) => {
-              html.then((h) => {
-                exportAsPdf(h);
-              });
+          <div>
+            <MdEditor
+              className="!w-full !max-w-full"
+              ref={editorRef}
+              editorId={id}
+              modelValue={text}
+              theme={(theme as Themes) || "light"}
+              onChange={setText}
+              language={"en-US"}
+              defToolbars={[
+                <Mark key="mark-extension" />,
+                <Emoji key="emoji-extension" />,
+              ]}
+              toolbars={status == "preview" ? previewToolbar : editToolbar}
+              onSave={(value, html) => {
+                html.then((h) => {
+                  exportAsPdf(h);
+                });
 
-              /* html.then((h) => {
+                /* html.then((h) => {
               const doc = new jsPDF();
               const htmltag = document.createElement("html");
               const bodytag = document.createElement("body");
@@ -380,10 +515,12 @@ note、abstract、info、tip、success、question、warning、failure、danger�
                 windowWidth: 650, //window width in CSS pixels
               });
             }); */
-            }}
-          />
+              }}
+            />
+          </div>
         )}
       </div>
+
       <div className="hidden">
         <div ref={exportPdfRef}>
           <MdPreview

@@ -18,10 +18,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/options";
 import { genericFetchRequest } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Music App",
-  description: "Example music app using the components.",
-};
+
 
 export type MyFile = {
   id: string;
