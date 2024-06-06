@@ -63,7 +63,6 @@ const Page = () => {
     }
   };
 
-
   const fetchQuestion = async (question_id: string) => {
     const res = await fetch(
       `http://localhost:8080/question/getQuestionById/${question_id}`
@@ -123,7 +122,14 @@ const Page = () => {
   } = useQuery(["answers", question_id], () => fetchAnswers(question_id));
 
   if (questionLoading || answersLoading) {
-    return <Icons.spinner />;
+    return (
+      <div className="w-full h-[60vh] flex justify-center items-center">
+        <div className="flex justify-center items-center gap-2">
+          <Icons.spinner className="animate-spin w-12 h-12" />
+          <p className="text-center">Loading answers</p>
+        </div>
+      </div>
+    );
   }
 
   if (questionError) {
@@ -135,7 +141,7 @@ const Page = () => {
   }
 
   return (
-    <div className=" border bg-card text-card-foreground shadow lg:my-8 my-0  space-y-4">
+    <div className=" border bg-card text-card-foreground shadow lg:my-8 my-0  space-y-4 mx-0">
       <QuestionInAnswer
         key={question?.id}
         question={question}
@@ -147,9 +153,9 @@ const Page = () => {
         <h3 className="text-xl font-semibold leading-none tracking-tight text-center ">
           Answers {answers.length}
         </h3>
-        
+
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild >
+          <DialogTrigger asChild>
             <Button variant="outline" className="gap-2 flex lg:hidden">
               <Plus size={15} /> Add Answer
             </Button>
@@ -172,7 +178,7 @@ const Page = () => {
                 }}
               />
             </div>
-            <DialogFooter >
+            <DialogFooter>
               <Button type="submit" onClick={handleButtonSubmit}>
                 Publish answer
               </Button>

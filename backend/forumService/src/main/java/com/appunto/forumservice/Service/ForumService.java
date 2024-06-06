@@ -48,7 +48,9 @@ public class ForumService {
         return forumRepository.findAll();
     }
 
-    public Forum createForum(Forum forum) {
+    public Forum createForum(Long courseId, String name) {
+        Forum forum = new Forum(name, courseId);
+
         return forumRepository.save(forum);
     }
 

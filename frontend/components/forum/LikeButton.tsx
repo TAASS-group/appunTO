@@ -9,7 +9,10 @@ export default function LikeButton({
   answerId: number;
 }) {
   const [likeCount, setLikeCount] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(() => {
+    const savedIsLiked = localStorage.getItem(`isLiked-${answerId}`);
+    return savedIsLiked ? JSON.parse(savedIsLiked) : false;
+  });
 
   const fetchLikeCount = async () => {
     const response = await fetch(`http://localhost:8080/answer/${answerId}`);
@@ -21,6 +24,10 @@ export default function LikeButton({
   useEffect(() => {
     fetchLikeCount();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem(`isLiked-${answerId}`, JSON.stringify(isLiked));
+  }, [isLiked]);
 
   const handleLikeClick = async () => {
     let updatedLikeCount = likeCount;

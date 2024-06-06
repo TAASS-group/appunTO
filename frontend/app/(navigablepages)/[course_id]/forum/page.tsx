@@ -24,7 +24,6 @@ import { useQuery } from "react-query";
 import { useSession } from "next-auth/react";
 import { Icons } from "@/components/icons";
 
-
 interface QuestionType {
   topic: string;
   text: string;
@@ -140,7 +139,6 @@ function Page() {
     data: forum,
     error: forumError,
     isLoading: forumLoading,
-    
   } = useQuery(["forum", course_id], () => fetchForum(course_id));
   const {
     data: questions,
@@ -150,7 +148,14 @@ function Page() {
   } = useQuery(["questions", course_id], () => fetchQuestions(course_id));
 
   if (forumLoading || questionsLoading) {
-    return <Icons.spinner />;
+    return (
+      <div className="w-full h-[60vh] flex justify-center items-center">
+        <div className="flex justify-center items-center gap-2">
+          <Icons.spinner className="animate-spin w-12 h-12" />
+          <p className="text-center">Loading questions</p>
+        </div>
+      </div>
+    );
   }
 
   if (forumError) {
@@ -163,14 +168,14 @@ function Page() {
 
   return (
     <div className="pb-4">
-      <div className="flex flex-col lg:flex-row lg:justify-between  items-center lg:pt-12 lg:pb-20  pb-5  gap-y-5">
-        <div className="lg:w-[148.2px] w-0"></div>
-        <h1 className="lg:text-4xl text-3xl font-semibold leading-none tracking-tight text-center">
+      <div className="flex flex-col lg:flex-row lg:justify-center  items-center lg:pt-12 lg:pb-20  pb-5  gap-y-5 lg:gap-4 lg:px-10">
+        <div className="lg:w-[] w-0"></div>
+        <h1 className="lg:text-4xl text-3xl font-semibold leading-none tracking-tight text-center lg:flex-wrap">
           {forum?.name}
         </h1>
-        
+
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild >
+          <DialogTrigger asChild>
             <Button
               variant="outline"
               className="flex gap-2"
@@ -179,7 +184,7 @@ function Page() {
               <Plus size={15} /> Add Question
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]" >
+          <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Create Question</DialogTitle>
               <DialogDescription>
@@ -195,17 +200,21 @@ function Page() {
                   id="name"
                   value={topic}
                   defaultValue=""
-                  className={isFieldEmpty ? "border-red-500 col-span-3" : "col-span-3"}
-                  onChange={(e) => {setTopic(e.target.value)
-                    setIsFieldEmpty(false);}
+                  className={
+                    isFieldEmpty ? "border-red-500 col-span-3" : "col-span-3"
                   }
+                  onChange={(e) => {
+                    setTopic(e.target.value);
+                    setIsFieldEmpty(false);
+                  }}
                 />
               </div>
               <Textarea
-              className={isFieldEmpty ? "border-red-500" : ""}
+                className={isFieldEmpty ? "border-red-500" : ""}
                 placeholder="Type your question here."
                 value={text}
-                onChange={(e) => {setText(e.target.value)
+                onChange={(e) => {
+                  setText(e.target.value);
                   setIsFieldEmpty(false);
                 }}
               />
@@ -217,10 +226,9 @@ function Page() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        
       </div>
 
-      <div className="flex flex-col space-y-4 px-4 lg:px-0">
+      <div className="flex flex-col space-y-4 px-4 lg:px-10">
         {questions?.map((question: any) => (
           <Question
             key={question.id}

@@ -41,6 +41,7 @@ public class CourseController {
         if (c == null) {
             return ResponseEntity.badRequest().build();
         }
+        restTemplate.postForObject("http://forumservice/forum/createForum/" + c.getId() + "?name=" + c.getName(),null, String.class);
         restTemplate.postForObject("http://fileservice/api/v1/file/addfile/" + c.getId(), null, String.class);
         restTemplate.postForObject("http://messageservice/api/v1/message/createQueue", c.getId(), String.class);
 

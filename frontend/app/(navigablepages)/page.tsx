@@ -72,7 +72,7 @@ export default async function Page() {
         <div className="border-t">
           <div className="bg-background">
             <div className="grid grid-cols-1 lg:grid-cols-5">
-              <Sidebar playlists={playlists} />
+              <Sidebar />
               <div className="col-span-3 lg:col-span-4 lg:border-l">
                 <div className="h-full px-4 py-6 lg:px-8">
                   <div className="flex items-center justify-between">

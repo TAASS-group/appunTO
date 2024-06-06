@@ -1,13 +1,34 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 import { Home, PersonStanding, User } from "lucide-react";
 import Link from "next/link";
+import { CollapsibleDemo } from "../forum/Collapsible";
+import { useQuery } from "@tanstack/react-query";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Sidebar({ className }: SidebarProps) {
+
+  const fetchCourses = async () => {
+    const res = await fetch("http://localhost:8080/course/getAll");
+    if (!res.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await res.json();
+    console.log(data);
+    return data
+  };
+
+  const { data: courses } = useQuery({queryKey: ["courses"],queryFn:fetchCourses});
+
   return (
     <div className={cn("lg:pb-12 w-full", className)}>
       <div className="space-y-4 py-4">
@@ -33,29 +54,11 @@ export function Sidebar({ className }: SidebarProps) {
           <h2 className="relative px-7 text-lg font-semibold tracking-tight">
             Courses
           </h2>
-          <ScrollArea className="h-[300px] px-1">
+          <ScrollArea className="h-[500px] px-1">
             <div className="space-y-1 p-2">
-              <Button
-                variant="ghost"
-                className="w-full justify-start font-normal"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mr-2 h-4 w-4"
-                >
-                  <path d="M21 15V6" />
-                  <path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
-                  <path d="M12 12H3" />
-                  <path d="M16 6H3" />
-                  <path d="M12 18H3" />
-                </svg>
-              </Button>
+              {courses?.map((course : any) => (
+                <CollapsibleDemo course={course} key={course.id} />
+              ))}
             </div>
           </ScrollArea>
         </div>

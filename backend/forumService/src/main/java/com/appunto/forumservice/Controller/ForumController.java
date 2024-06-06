@@ -22,9 +22,9 @@ public class ForumController {
         return forumService.getAllForum();
     }
 
-    @PostMapping("/createForum")
-    public Forum createForum(@RequestBody Forum forum) {
-        return forumService.createForum(forum);
+    @PostMapping("/createForum/{courseId}")
+    public Forum createForum(@PathVariable Long courseId,@RequestParam String name) {
+        return forumService.createForum(courseId, name);
     }
 
     @DeleteMapping("/deleteForum/{forumId}")
