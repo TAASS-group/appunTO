@@ -84,7 +84,7 @@ export default function FileHistory() {
     queryKey: ["commits", course_id],
     queryFn: async () => {
       const response = await genericFetchRequest(
-        `/file/getCommmits/${course_id}`,
+        `/api/v1/file/getCommmits/${course_id}`,
         "GET"
       );
       return response.json();
@@ -129,7 +129,7 @@ export default function FileHistory() {
           />
           <div className="space-y-2">
             <p className="text-xl md:text-2xl font-bold">
-              Oops... it's quite empty here!
+              Oops... it&aposs quite empty here!
             </p>
             <p>
               <span className="block">

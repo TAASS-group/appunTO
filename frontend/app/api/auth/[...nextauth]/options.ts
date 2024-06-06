@@ -54,7 +54,7 @@ export const authOptions = {
       name: "Google",
       credentials: {},
       async authorize(credentials): Promise<any> {
-        console.log("GOOOOOOOOOOOOOOGLEEEEE ", credentials);
+        /* console.log("GOOOOOOOOOOOOOOGLEEEEE ", JSON.parse(credentials.result)); */
         /*  var provider = await new GoogleAuthProvider();
 
         console.log("PROVIDER", provider);
@@ -62,7 +62,7 @@ export const authOptions = {
           console.log("GOOGLE LOGIN", result);
           return result;
         }); */
-        return {};
+        return { user: {} };
       },
 
       /* async profile(credentials): Promise<any> {

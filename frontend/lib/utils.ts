@@ -62,7 +62,7 @@ export async function genericFetchRequest(
   body?: any,
   headers?: Record<string, string>
 ) {
-  const ret = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+  const ret = await fetch(`${process.env.NEXT_PUBLIC_BACKENDURL}${url}`, {
     method,
     headers: {
       ...headers,

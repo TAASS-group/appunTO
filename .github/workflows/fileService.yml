@@ -1,0 +1,56 @@
+name: Multi-Service Build Pipeline
+
+on:
+  push:
+    paths:
+      - "backend/apiGateway/**"
+      - "backend/courseService/**"
+      - "backend/eurekaServer/**"
+      - "backend/fileService/**"
+      - "backend/forumService/**"
+      - "backend/messageService/**"
+      - "backend/userService/**"
+  pull_request:
+    paths:
+      - "backend/apiGateway/**"
+      - "backend/courseService/**"
+      - "backend/eurekaServer/**"
+      - "backend/fileService/**"
+      - "backend/forumService/**"
+      - "backend/messageService/**"
+      - "backend/userService/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          [
+            apiGateway,
+            courseService,
+            eurekaServer,
+            fileService,
+            forumService,
+            messageService,
+            userService,
+          ]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check for file changes
+        id: file_changes
+        uses: tj-actions/changed-files@v20
+        with:
+          files: |
+            backend/${{ matrix.service }}/**
+      - name: Set up JDK 21
+        if: steps.file_changes.outputs.any_changed == 'true'
+        uses: actions/setup-java@v3
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: maven
+      - name: Compile with Maven
+        if: steps.file_changes.outputs.any_changed == 'true'
+        run: mvn -B compile --file backend/${{ matrix.service }}/pom.xml

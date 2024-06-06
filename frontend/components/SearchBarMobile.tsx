@@ -47,7 +47,7 @@ export default function SearchBarMobile() {
   return (
     <Dialog>
       <DialogTrigger asChild className="lg:hidden">
-        <Button size={"icon"} variant="outline">
+        <Button size={"icon"} variant="ghost">
           <Search className="w-4 h-4" />
         </Button>
       </DialogTrigger>

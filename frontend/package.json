@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth/firebase-adapter": "^2.0.0",
+    "@ducanh2912/next-pwa": "^10.2.7",
     "@firebase/auth": "^1.7.3",
     "@hookform/resolvers": "^3.4.2",
     "@next-auth/firebase-adapter": "^2.0.1",
@@ -40,12 +41,14 @@
     "date-fns": "^3.6.0",
     "firebase": "^10.12.1",
     "firebase-admin": "^11.4.1",
+    "framer-motion": "^11.2.10",
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",
     "lucide-react": "^0.363.0",
     "md-editor-rt": "^4.12.4",
     "next": "14.1.4",
     "next-auth": "^4.24.7",
+    "next-pwa": "^5.6.0",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-day-picker": "^8.10.1",
@@ -56,6 +59,7 @@
     "react-router-dom": "^6.23.1",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
+    "workbox-webpack-plugin": "^7.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -67,6 +71,7 @@
     "eslint-config-next": "14.1.4",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "webpack": "^5.91.0"
   }
 }

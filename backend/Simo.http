@@ -35,10 +35,16 @@ Content-Type: application/json
 {{courseId}}
 
 ### enroll user to course 1
-GET http://localhost:8080/user/enroll?uid={{default-uid}}&courseId={{courseId}}
+GET http://localhost:8080/user/enroll?uid={{loris-uid}}&courseId={{courseId}}
 
 ### get enrolled courses
 GET http://localhost:8080/user/enrolledCourses?uid={{default-uid}}
+
+### get enrolled count
+GET http://localhost:8080/user/enrolledCoursesCount?courseId={{courseId}}
+
+### leave
+GET http://localhost:8080/user/leave?uid={{default-uid}}&courseId={{courseId}}
 
 
 ### send message over queue
